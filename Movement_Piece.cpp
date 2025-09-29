@@ -211,10 +211,15 @@ void Movement_Piece::handle_castling_rook()
         return;
     }
 
+    //Ottieni la posizione della torre:
+    int rook_position= move.get_to_square() > move.get_from_square() ? move.get_to_square()+1: move.get_to_square()-2;
 
+    //La casella in cui la torre si sposterà:
+    int rook_arrock= move.get_to_square() > move.get_from_square() ? move.get_to_square()-1 : move.get_to_square()+1;
 
+    //Muovi la torre:
+    piece[rook_arrock]= piece[rook_position];
+
+    //la vecchia posizione della torre andrà a null
+    piece[rook_position]=nullptr;
 }
-
-
-
-

@@ -46,8 +46,16 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
     //Imposto il colore delle caselle...
     if((row+col)%2==0)
     {
-        
-        square_color = wxColor(185,182,174);
+    /*------------------------------------------------------------------*/
+        if(x==0 && y==0)
+        {
+            square_color = wxColor(250,128,114);    //TODO: da togliere
+        }
+    /*-------------------------------------------------------------------*/
+        else
+        {
+            square_color = wxColor(185,182,174);
+        }            
     }
     else
     {
