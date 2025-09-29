@@ -29,8 +29,6 @@ public:
     void set_piece(Piece* new_piece);
     void set_captured_piece(Piece* new_captured_piece);
     void set_captured_piece_type(char new_captured_piece_type);
-
-
     /*----  FINE SETTER   ---*/
     
     ~Movement_Handler();
