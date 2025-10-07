@@ -3,6 +3,7 @@
 
 #include <stack>
 #include <iostream>
+#include <algorithm>
 
 #include "Movement_Handler.h"
 #include "Handle_Chessboard.h"
@@ -21,8 +22,8 @@ private:
     std::stack<Movement_Handler> move_stack;
     std::vector<Piece*> pieces_attacking;
     
-    Create_Piece* get_piece;
-    Handle_Chessboard* get_chessboard;
+    Create_Piece* create;
+    Handle_Chessboard* handle_chess;
 
 public:
     Movement_Piece();
@@ -50,6 +51,10 @@ public:
 
     //Gestisci lo scacco del re
     void handle_king_check();
+
+    //Aggiorna le mosse possibili sotto scacco
+    void update_moves_in_check();
+    
 };
 
 

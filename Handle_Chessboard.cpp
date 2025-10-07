@@ -52,3 +52,6 @@ Color Handle_Chessboard::get_turn()
 {
     return turn;
 }
+
+
+

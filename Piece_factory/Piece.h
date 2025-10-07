@@ -64,24 +64,38 @@ public:
     /*------FINE COSTRUTTORE--------*/
 
     /*-----------GETTER-------------*/
-
+        //Ottieni il numero della riga:
         int get_row() const;
+
+        //Ottieni il numero della colonna:
         int get_col() const;
+        
+        //Ottieni il numero della casella:
         int get_square() const;
 
+        //Ottieni il char associato al pezzo:
         char get_name_piece() const;
 
+        //Ottieni se si è mosso:
         bool get_ismoved() const;
+        
+        //Controlla se lo spostamento è legale:
         bool is_legal_move(int square) const;
 
+        //Ottieni il tipo di squadra:
         Color get_color() const;
         
+        //Ottieni le mosse legali:
         std::vector<int> get_legal_moves() const;
+        
+        //Ottieni il percorso della mappa gioco
         std::map<int,std::vector<int>> get_map_path() const;
 
+        /*Inizio: controllo se sono pezzi specifici:*/
         bool is_pawn();
         bool is_rock();
         bool is_king();
+        /*Fine: controllo se sono pezzi specifici*/
     /*-----------FINE GETTER-------------*/
 
     /*-----------SETTER------------------*/
@@ -102,20 +116,24 @@ public:
 
     /*-----------FUNZIONI-----------------*/
 
+        /*Inizio: Gestione degli spostamenti:*/
         void diagonal_move(Piece* board[64], std::vector<int> &legal_moves);
         void straight_move(Piece* board[64], std::vector<int> &legal_moves);
-    
+        /*Fine: Gestione degli spostamenti:*/
+
+        //Controlla il percorso del re
         std::vector<int> check_is_king(Piece* board[64], Piece *King);
     
+        /*Inizio: Gestione delle mosse legali che puoi fare*/
         void add_legal_move(int square);
         void remove_legal_move(int square);
-    
+        /*Fine: Gestione delle mosse legali che puoi fare*/
+
     /*-----------FINE FUNZIONI-----------------*/
     
-    /*-----------FUNZIONI VIRTUALI----------*/
-    
-        virtual void update_legal_moves(Piece*board[64])=0;
-    
+    /*-----------FUNZIONI VIRTUALI----------*/    
+        //Aggiornare le mosse legali per i pezzi specifici 
+        virtual void update_legal_moves(Piece*board[64])=0;    
     /*-----------FINE FUNZIONI VIRTUALI----------*/
 
     virtual ~Piece()= default;

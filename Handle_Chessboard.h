@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Movement_Handler.h"
+#include "Piece_factory/King/King.h"
 
 class Handle_Chessboard
 {
@@ -22,6 +23,7 @@ public:
     /*----------GETTER----------------*/
     Color get_turn();
     /*----------FINE GETTER----------------*/
+
     
 };
 

@@ -222,20 +222,85 @@ void Movement_Piece::handle_castling_rook()
 
     //la vecchia posizione della torre andrà a null
     piece[rook_position]=nullptr;
+
+    //Aggiorna la nuova posizione
+    piece[rook_arrock]->set_square(rook_arrock);
+    piece[rook_arrock]->set_ismoved(true);
 }
 
 void Movement_Piece::handle_king_check()
 {
-    King* king=WHITE? get_piece->get_white_king(): get_piece->get_black_king();
+    King* king=WHITE? create->get_white_king(): create->get_black_king();
     
     //Devo ottenere una lista di tutti i pezzi della scacchiera:
-    std::vector<Piece*> piece_different_color= get_chessboard->get_no_piece_turn();
+    std::vector<Piece*> piece_different_color= handle_chess->get_no_piece_turn();
     
     if(king->is_attack(piece,piece_different_color,pieces_attacking))
     {
         std::cout<<"King is under attack"<<std::endl;
-    }
+    }    
+}
+
+void Movement_Piece::update_moves_in_check()
+{
+    //Inizializzo il re a seconda del turno:
+    King *king=WHITE? create->get_white_king(): create->get_black_king();
     
+    //Creo un vettore inizialmente vuoto per contenere tutti i pezzi
+    //che attaccano il re così da creare un percorso possibile per un pezzo
+    //per fermare l'attacco
+    std::vector<int> piece_stop_check {};
+
+    //Mosse che stoppano attacchi al re:
+    for(Piece*pieces:pieces_attacking)
+    {
+        for(const int square : pieces->check_is_king(piece,king))
+        {
+            piece_stop_check.push_back(square);
+        }
+    }
+
+    //Aggiorna le mosse legali così che loro possano solamente spostarsi 
+    //alla casella che stoppa l'attacco:
+
+    for(Piece* pieces: piece)
+    {
+        std::vector<int> new_legal_moves;
+        if(pieces!=nullptr && 
+            pieces->get_color()==handle_chess->get_turn() && 
+            !pieces->is_king())
+        {
+            for(int move: pieces->get_legal_moves())
+            {
+                //Se c'è una mossa che ferma lo scacco allora aggiungilo 
+                //alle nuove mosse legali:
+                if(std::find(piece_stop_check.begin(),piece_stop_check.end(), move)!=piece_stop_check.end())
+                {
+                    new_legal_moves.push_back(move);
+                }
+
+                //Se la mossa può catturare il pezzo attaccante al re 
+                //aggiungila alle mosse legali:
+
+                //p è un puntatore generico per iterare i pezzi attaccanti
+                for(Piece* p: pieces_attacking)
+                {
+                    if(p->get_square()==move)
+                    {
+                        new_legal_moves.push_back(move);        
+                    }
+                }
+            
+
+            }
+            //Imposta le nuove mosse legali per questo evento:
+            pieces->set_legal_moves(new_legal_moves);
+        }
+    }
+
+
+
+
 }
 
 

@@ -241,6 +241,7 @@ void Piece::straight_move(Piece* board[64],std::vector<int> &legal_moves)
     }
 }
 
+//Controlla il percorso del re:
 std::vector<int> Piece::check_is_king(Piece* board[64], Piece *King)
 {
     //Loop attraverso tutte le direzioni della mappa
