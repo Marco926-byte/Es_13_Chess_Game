@@ -8,11 +8,10 @@ Handle_Mouse_Input::Handle_Mouse_Input(Draw_board* ptr)
 
 void Handle_Mouse_Input::OnMouseLeftUp(wxMouseEvent& event)
 {
-    /*wxPoint point=event.GetPosition();
-    mouse_x=point.x/();
-    mouse_y=point.y/(draw->GetClientSize().GetWidth()/8);
-    */
-    wxLogMessage("ei");
+    wxPoint point=event.GetPosition();
+    
+    
+    wxLogMessage("x: %d, y: %d",point.x, point.y);
   
 }
 

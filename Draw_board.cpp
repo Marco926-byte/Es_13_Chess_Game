@@ -120,10 +120,6 @@ void Draw_board::render_piece()
             wxImage image= bitmap.ConvertToImage();
             image.Rescale(square_size,square_size,wxIMAGE_QUALITY_HIGH);
             bitmap=wxBitmap(image);
-            /*if(bitmap.IsOk())
-            {
-                wxLogMessage("bitmap okay :)))");
-            }*/
             chess_piece_bitmaps[piece]=bitmap;
         }
         else
@@ -152,6 +148,6 @@ Draw_board::~Draw_board()
     delete fen_handler;
     fen_handler=nullptr;
 
-    //delete mouse_handler;
-    //mouse_handler=nullptr;
+    delete mouse_handler;
+    mouse_handler=nullptr;
 }
