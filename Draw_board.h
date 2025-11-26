@@ -8,6 +8,7 @@
 #include <map>
 #include <wx/bitmap.h>
 #include <wx/image.h>
+
 #include "Movement_Piece.h"
 #include "Handle_Fen_String.h"
 #include "Handle_Chessboard.h"
@@ -25,7 +26,7 @@
 class Draw_board: public MyPanel1
 {
 private:
-    int selected_square;
+    //int selected_square;
 
     wxBitmap bitmap;
 
@@ -33,9 +34,9 @@ private:
     std::map<char,wxBitmap> chess_piece_bitmaps;
 
     std::shared_ptr<Handle_Fen_String> fen_shared;
+
     Movement_Piece* game_movement=nullptr;
     Handle_Chessboard* chess_handler=nullptr;
-    //Handle_Fen_String* fen_handler=nullptr;
     Handle_Mouse_Input* mouse_handler=nullptr;
 
 public:

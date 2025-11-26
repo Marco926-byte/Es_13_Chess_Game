@@ -3,14 +3,15 @@
 Handle_Mouse_Input::Handle_Mouse_Input(Draw_board* ptr,
     std::shared_ptr<Handle_Fen_String> fen)
     :mouse_ptr(ptr),    
-     fen_smart(fen)    
+     fen_smart(fen),
+     handle_chessboard(new Handle_Chessboard())    
 {    
-    int count=fen_smart.use_count();
-    wxLogMessage("Counter: %d",count);
+
 }
 
-void Handle_Mouse_Input::OnMouseLeftUp(wxMouseEvent& event)
+void Handle_Mouse_Input::onMouseLeftDown(wxMouseEvent& event)
 {
+    //wxLogMessage(wxT("Entro in mouseleftdown"));
     wxPoint point=event.GetPosition();
     
     mouse_x=point.x;
@@ -23,25 +24,58 @@ void Handle_Mouse_Input::OnMouseLeftUp(wxMouseEvent& event)
     int clicked_row=mouse_y/square_size;
     int clicked_col=mouse_x/square_size;
 
-    wxLogMessage("x: %d, y: %d", clicked_row, clicked_col);
-
-    Piece *handle_piece1=fen_smart.get()->get_piece()[clicked_row*8+clicked_col];
-
-    if(handle_piece1==nullptr)
+    Piece *piece_ptr=fen_smart.get()->get_piece()[clicked_row*8+clicked_col];
+    
+    /*if(piece_ptr!=nullptr)
     {
-        return;
+        wxLogMessage(wxT("piece_ptr punta a qualcosa"));
     }
+    else
+        wxLogMessage(wxT("piece_ptr punta a una casella nullptr"));
 
+    if(piece_ptr)
+    {
+        if(piece_ptr->get_color()!=handle_chessboard->get_turn())
+        {
+            wxLogMessage(wxT("Non è il loro turno"));
+            
+        }
+        else
+        {
+            wxLogMessage(wxT("È il loro turno"));
+        }
+    }*/
+    
+    
     is_select_piece=true;
+    
     select_piece=clicked_row*8+clicked_col;
     
-    handle_piece=fen_smart.get()->get_piece()[select_piece];
+    //wxLogMessage(wxT("Il pezzo è selezionato? %d"),is_select_piece);
+    //wxLogMessage(wxT("Il pezzo selezionato è della casella: %d"),select_piece);
 
-    
+    handle_piece=fen_smart.get()->get_piece()[select_piece];  
+}
+
+void Handle_Mouse_Input::onMouseLeftUp(wxMouseEvent& event)
+{
+    wxLogMessage("entro in mouse_left_up");
+}
+
+
+bool Handle_Mouse_Input::get_is_select_piece() const
+{
+    return is_select_piece;
+}
+
+int Handle_Mouse_Input::get_selected_piece() const
+{
+    return select_piece;
 }
 
 Handle_Mouse_Input::~Handle_Mouse_Input()
 {
-
+    delete handle_chessboard;
+    handle_chessboard=nullptr;
 
 }

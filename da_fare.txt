@@ -1,11 +1,26 @@
-Problema: 
-Capire perchè nella classe handler_fen il get_piece punta sempre a qualcosa, 
-forse perchè faccio puntare anche se non c'è un char? 
-forse perchè prendo dati fittizzi? bo non saprei cosa dirti big 
+DEVO:
+1. Gestire il click da mouse sinistro in fase di salita
+2. Far partire il gioco con la gestione delle mosse legali per pezzi
+
+    I miei pensieri:
+    Vorrei che movement_piece gestisca i movimenti del pezzo, e 
+    handler_fen_string deve gestire solamente l'aggiornamento della fen 
+    durante la partita per i movimenti.
+    Quindi movement_piece piece deve gestire le mosse di tutti i pezzi
+    ma deve anche avere riferimento al gestore della fen per aggiornare 
+    lo stato della scacchiera.
+    Il problema è che devo fare il collegamento ma nella stessa instanza di
+    gioco esempio in draw_piece vorrei fare in modo che nella stessa instanza
+    instanzio il movement_piece e contemporaneamente dentro movement_piece
+    devo avere riferimento alla fen di handler_fen_string.
+
+    soluzione 1: faccio un getter in draw_piece; ma devo inizializzare il
+    puntatore da draw_piece e non è una classe comune, è di GUI quindi vorrei
+    evitare.
+    
 
 cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella per 
                                                         debuggare con Valgrind
-
 
 valgrind --leak-check=full --track-origins=yes ./w
                                                         Fa partire il memcheck

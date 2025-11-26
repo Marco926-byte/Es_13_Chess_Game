@@ -12,7 +12,7 @@ int Piece::get_col() const
     return coloum;
 }
 
-int Piece::get_square() const
+int Piece::get_square() const 
 {
     return square;
 }
@@ -120,7 +120,6 @@ void Piece::set_legal_moves(std::vector<int> new_legal_moves)
 
 Piece::Piece(int pos_square, char c)
 {
-
     this->square=pos_square;
 
     this->row=square/8;
@@ -150,13 +149,12 @@ Piece::Piece(int pos_square, char c)
     }
     else
     {
-        wxLogMessage("ERRORE NEL COSTRUTTORE DI PIECE");
-        //this->type_piece='bo';
-    }
-    //this->name_piece=mp_character[c];
+        wxLogMessage(wxT("ERRORE NEL COSTRUTTORE DI PIECE"));
     
+    }  
     //Inizializzo moved a false pk non ho ancora mosso
     this->is_moved=false;   
+    
 }
 /*Fine Costruttore*/
 
@@ -164,8 +162,7 @@ Piece::Piece(int pos_square, char c)
 
 void Piece::diagonal_move(Piece* board[64],std::vector<int> &legal_moves)
 {
-    //posizioni delle quattro diagonali della cella avanzato di 1 insomma
-    
+    //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
     int diagonal[4]{9,7,-9,-7};
     
     //posizione delle quattro diagonali della cella in totale

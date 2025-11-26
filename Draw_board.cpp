@@ -3,9 +3,9 @@
 Draw_board::Draw_board(wxFrame* parent)
     :MyPanel1(parent,6000,wxPoint(200,100)),
     //Inizializzazione dei puntatori:
-        game_movement(new Movement_Piece()),
         chess_handler(new Handle_Chessboard()),
         fen_shared(new Handle_Fen_String()),
+        game_movement(new Movement_Piece()),
         mouse_handler(new Handle_Mouse_Input(this,fen_shared))           
     {
         //Posizione iniziale:
@@ -17,7 +17,9 @@ Draw_board::Draw_board(wxFrame* parent)
         //game_movement->update_move_pieces();
         
         Bind(wxEVT_PAINT,&Draw_board::on_paint,this);
-        this->Bind(wxEVT_LEFT_UP, &Handle_Mouse_Input::OnMouseLeftUp, mouse_handler);
+     
+        this->Bind(wxEVT_LEFT_DOWN, &Handle_Mouse_Input::onMouseLeftDown, mouse_handler);
+        this->Bind(wxEVT_LEFT_UP, &Handle_Mouse_Input::onMouseLeftUp, mouse_handler);
     }
 
 
@@ -67,12 +69,19 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
 
     dc.SetPen(*wxTRANSPARENT_PEN);
 
-    if(selected_square==(row*8+col))
+    //Colora la casella selezionata
+    if(mouse_handler->get_is_select_piece())
     {
-        //Todo: fare il bordo esterno rotondo
+        if(mouse_handler->get_selected_piece()==row*8+col)
+        {
+            square_color=wxColor(50,50,50);
+            dc.SetPen(wxPen(wxColor(0,0,0),2));     
+        }
     }
-
+    
+    
     dc.SetBrush(square_color);
+
     wxRect squareRect(x, y, square_size, square_size);    
     dc.DrawRectangle(squareRect);
 }
@@ -109,9 +118,6 @@ void Draw_board::render_piece()
         bool load_result = bitmap.LoadFile(path,wxBITMAP_TYPE_PNG);
         
         int square_size= GetClientSize().GetWidth()/8;
-        //wxLogMessage("square size: %d",square_size);
-
-        
 
         //Dimensiona immagine 100x100
         if(load_result && bitmap.IsOk())
@@ -138,16 +144,12 @@ void Draw_board::OnSize(wxSizeEvent& event)
 
 
 Draw_board::~Draw_board()
-{
-    
+{    
     delete game_movement;
     game_movement=nullptr;
 
     delete chess_handler;
     chess_handler=nullptr;
-
-    //delete fen_handler;
-    //fen_handler=nullptr;
 
     delete mouse_handler;
     mouse_handler=nullptr;

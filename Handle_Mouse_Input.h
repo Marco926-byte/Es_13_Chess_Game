@@ -2,9 +2,11 @@
 #define HANDLE_MOUSE_INPUT_H
 
 #include <wx/wx.h>
+#include <memory>
+
 #include "Piece_factory/Piece.h"
 #include "Handle_Fen_String.h"
-#include <memory>
+#include "Handle_Chessboard.h"
 
 class Draw_board;   //class declaration perchè se faccio classico include mi entra nel
                     //famosissimo loop e scoppia tutto il programma
@@ -20,12 +22,21 @@ private:
     
     Draw_board* mouse_ptr=nullptr;
     Piece* handle_piece=nullptr;  
+    Handle_Chessboard* handle_chessboard=nullptr;
 public:
     Handle_Mouse_Input(Draw_board* ptr,
         std::shared_ptr<Handle_Fen_String> fen);
 
-    void OnMouseLeftUp(wxMouseEvent& event);
-    
+    /*----- EVENTI DEL MOUSE -------*/
+    void onMouseLeftUp(wxMouseEvent& event);
+    void onMouseLeftDown(wxMouseEvent& event);
+    /*----- FINE EVENTI MOUSE ------*/
+
+    /*----- INIZIO GETTER: ---------*/
+    bool get_is_select_piece() const;
+    int get_selected_piece() const;
+    /*----- FINE GETTER:   ---------*/
+
     ~Handle_Mouse_Input();
 };
 
