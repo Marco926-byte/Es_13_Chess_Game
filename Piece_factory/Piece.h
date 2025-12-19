@@ -102,6 +102,8 @@ public:
         bool is_pawn();
         bool is_rock();
         bool is_king();
+        bool is_knight();
+        bool is_bishop();
         /*Fine: controllo se sono pezzi specifici*/
     /*-----------FINE GETTER-------------*/
 

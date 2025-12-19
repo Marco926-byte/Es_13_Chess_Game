@@ -12,7 +12,7 @@ Draw_board::Draw_board(wxFrame* parent)
         //Rappresentazione dei pezzi:
         render_piece();
 
-        game_movement->update_moves_all_piece();    //qui è il problema del segfault
+        game_movement->update_moves_all_piece();   
         
         Bind(wxEVT_PAINT,&Draw_board::on_paint,this);
      
@@ -55,6 +55,7 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
     
     wxColor square_color;
 
+
     //Imposto il colore delle caselle...
     if((row+col)%2==0)
     {
@@ -72,16 +73,21 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
         if(mouse_handler->get_is_select_piece())
         {
             if(mouse_handler->get_selected_piece()==row*8+col)
-            {
+            {    
                 square_color=wxColor(50,50,50);
-                dc.SetPen(wxPen(wxColor(0,0,0),2));     
+                dc.SetPen(wxPen(wxColor(0,0,0),2));        
+            }
+            for(int future_square: mouse_handler->get_handle_piece()->get_legal_moves())
+            {
+                if(future_square==row*8+col)
+                {
+                    square_color=wxColor(4,8,200);
+                    dc.SetPen(wxPen(wxColor(7,100,5),2));
+                }
             }
         }
-    }
-    //Colora la casella selezionata
-    
-    
-    
+    } 
+
     dc.SetBrush(square_color);
 
     wxRect squareRect(x, y, square_size, square_size);    

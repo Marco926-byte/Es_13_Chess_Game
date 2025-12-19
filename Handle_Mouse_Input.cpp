@@ -17,13 +17,13 @@ Handle_Mouse_Input::Handle_Mouse_Input
 
 void Handle_Mouse_Input::onMouseLeftDown(wxMouseEvent& event)
 {
-    //wxLogMessage(wxT("Entro in mouseleftdown"));
     wxPoint point=event.GetPosition();
     
     mouse_x=point.x;
     mouse_y=point.y;
 
-    int square_size=56;     //da cambiare se cambia lo square_size di draw_board
+    int square_size=56;     
+                            //da cambiare se cambia lo square_size di draw_board
                             //ps, potrei creare una variabile dinamica in draw 
                             //così non sto a rompermi il cazzo
 
@@ -31,37 +31,11 @@ void Handle_Mouse_Input::onMouseLeftDown(wxMouseEvent& event)
     int clicked_col=mouse_x/square_size;
 
     Piece *piece_ptr=fen_smart.get()->get_piece()[clicked_row*8+clicked_col];
-    
-    //Il programma capisce se il pezzo è un pedone oppure no
-    if(piece_ptr)
-    {
-        if(piece_ptr->is_pawn())
-        {
-            const auto& move=piece_ptr->get_legal_moves();  //interessante accorciare codice
-
-            wxLogMessage(wxT("Il pezzo selezionato è un pedone"));
-            for
-            (
-                auto i=move.begin();
-                i!=move.end();
-                ++i
-            )
-            {
-                wxLogMessage(wxT("Le mosse disponibili del pedone sono: %d"),*i);
-            }
-            
-        }
-            
-        
-    }
-    
 
     is_select_piece=true;
     
     select_piece=clicked_row*8+clicked_col;
     
-    //wxLogMessage(wxT("Il pezzo è selezionato? %d"),is_select_piece);
-    //wxLogMessage(wxT("Il pezzo selezionato è della casella: %d"),select_piece);
 
     handle_piece=fen_smart.get()->get_piece()[select_piece]; 
     mouse_ptr->Refresh();
@@ -70,29 +44,7 @@ void Handle_Mouse_Input::onMouseLeftDown(wxMouseEvent& event)
 
 void Handle_Mouse_Input::onMouseLeftUp(wxMouseEvent& event)
 {
-    //Controllo preliminare:
-    if(!is_select_piece || select_piece==-1 || handle_piece==nullptr)
-    {
-        return;
-    }
-    //So già che square_size è 56 da Draw_board
-    int square_size=56;
-
-    //Ottengo coordinate di rilascio del mouse:
-    int release_row= mouse_x/square_size;
-    int release_col= mouse_y/square_size;
-    int release_square= release_row*8+release_col;
-
     
-    //handle_movement->handle_move(select_piece,release_square);
-
-    
-
-    is_select_piece=false;
-    handle_piece=nullptr;
-    select_piece=-1;
-
-    mouse_ptr->Refresh();
 }
 
 

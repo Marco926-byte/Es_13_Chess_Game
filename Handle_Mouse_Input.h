@@ -1,8 +1,8 @@
 #ifndef HANDLE_MOUSE_INPUT_H
 #define HANDLE_MOUSE_INPUT_H
 
-#include <wx/wx.h>
 #include <memory>
+#include <vector>
 
 #include "Piece_factory/Piece.h"
 #include "Handle_Fen_String.h"
@@ -26,7 +26,7 @@ private:
     Piece* handle_piece=nullptr;  
     Handle_Chessboard* handle_chessboard=nullptr;
     Movement_Piece* handle_movement=nullptr;
-
+    
 public:
     Handle_Mouse_Input
     (

@@ -1,7 +1,7 @@
 #include "Es13.h"
 
 Es13::Es13(wxWindow* parent)
-    :MyFrame1(parent,6000,wxT("immagine"))
+    :MyFrame1(parent,6000,wxT("BEST SCACCHI EVER"))
     {
         /*Creo il frame principale*/
         

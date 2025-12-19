@@ -76,6 +76,15 @@ bool Piece::is_rock()
 {
     return type_piece==ROCK;
 }
+
+bool Piece::is_bishop()
+{
+    return type_piece=BISHOP;
+}
+bool Piece::is_knight()
+{
+    return type_piece=KNIGHT;
+}
 /*Fine Getter*/
 
 /*Setter:*/
