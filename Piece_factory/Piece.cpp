@@ -59,6 +59,7 @@ bool Piece::is_legal_move(int square) const
         }
         
     }
+    
     return false;
 }
 

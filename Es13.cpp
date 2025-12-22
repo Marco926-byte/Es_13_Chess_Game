@@ -19,6 +19,6 @@ void Es13::open_board(wxCommandEvent& event)
 
 Es13::~Es13()
 {
-    delete board;
-    board=nullptr;
+    /*delete board;
+    board=nullptr;*/
 }

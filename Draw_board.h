@@ -28,9 +28,8 @@ class Handle_Mouse_Input;
 class Draw_board: public MyPanel1
 {
 private:
-    //int selected_square;
-
     wxBitmap bitmap;
+    wxCoord square_size;
 
     //Mappa che serve a disegnare i pezzi
     std::map<char,wxBitmap> chess_piece_bitmaps;
@@ -46,19 +45,17 @@ public:
     Draw_board(wxFrame* parent);
 
     //Disegno dei quadratini
-    void draw_squares(wxDC& dc, int row, int col, wxCoord square_size);
-    
+    void draw_squares(wxDC& dc, int row, int col, wxCoord square_size); 
     //Disegno pezzi
-    void draw_piece(wxDC& dc, int row, int col, wxCoord square_size);
-    
+    void draw_piece(wxDC& dc, int row, int col, wxCoord square_size);  
     //Rappresentazione dei pezzi
     void render_piece();
-
     //Disegno principale
     void on_paint(wxPaintEvent& evt);
-
     //Gestione ridimensionamento finestra
     void OnSize(wxSizeEvent& event);
+    
+    int get_square_size();
     
     ~Draw_board();
 };

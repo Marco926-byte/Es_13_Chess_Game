@@ -11,42 +11,64 @@ Handle_Mouse_Input::Handle_Mouse_Input
      fen_smart(fen),
      handle_movement(move),
      handle_chessboard(chess)    
-{    
-    
-}
+    {    
+        is_select_piece=false;
+        select_piece=-1;
+        handle_piece=nullptr;
+    }
 
 void Handle_Mouse_Input::onMouseLeftDown(wxMouseEvent& event)
-{
+{   
     wxPoint point=event.GetPosition();
     
     mouse_x=point.x;
     mouse_y=point.y;
 
-    int square_size=56;     
-                            //da cambiare se cambia lo square_size di draw_board
-                            //ps, potrei creare una variabile dinamica in draw 
-                            //così non sto a rompermi il cazzo
+    int square_size = mouse_ptr->get_square_size();    
 
     int clicked_row=mouse_y/square_size;
     int clicked_col=mouse_x/square_size;
 
-    Piece *piece_ptr=fen_smart.get()->get_piece()[clicked_row*8+clicked_col];
+    piece_ptr=fen_smart.get()->get_piece()[clicked_row*8+clicked_col];
 
-    is_select_piece=true;
+    handle_select_square(clicked_row,clicked_col);
     
-    select_piece=clicked_row*8+clicked_col;
-    
-
-    handle_piece=fen_smart.get()->get_piece()[select_piece]; 
-    mouse_ptr->Refresh();
-    
+    mouse_ptr->Refresh();  
 }
 
 void Handle_Mouse_Input::onMouseLeftUp(wxMouseEvent& event)
 {
     
+
 }
 
+void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col)
+{
+    if(select_piece==clicked_row*8+clicked_col && is_select_piece)
+    {
+        is_select_piece=false;
+        select_piece=-1;
+    }
+    else if(piece_ptr!=nullptr)
+    {
+        is_select_piece=true;
+        select_piece=clicked_row*8+clicked_col;
+    }
+    else
+    {
+        is_select_piece=false;
+        select_piece=-1;
+        
+    }
+    if(select_piece!=-1)
+    {
+        handle_piece=fen_smart.get()->get_piece()[select_piece];
+    }
+    else
+    {
+        handle_piece=nullptr;
+    }
+}
 
 bool Handle_Mouse_Input::get_is_select_piece() const
 {

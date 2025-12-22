@@ -22,8 +22,10 @@ private:
 
     std::shared_ptr<Handle_Fen_String> fen_smart;
     
-    Draw_board* mouse_ptr=nullptr;
-    Piece* handle_piece=nullptr;  
+    Piece* handle_piece=nullptr; 
+    Piece* piece_ptr=nullptr;
+
+    Draw_board* mouse_ptr=nullptr; 
     Handle_Chessboard* handle_chessboard=nullptr;
     Movement_Piece* handle_movement=nullptr;
     
@@ -44,11 +46,11 @@ public:
     /*----- INIZIO GETTER: ---------*/
     bool get_is_select_piece() const;
     void set_is_select_piece(bool select);
-
     int get_selected_piece() const;
-
     Piece* get_handle_piece() const;
     /*----- FINE GETTER:   ---------*/
+
+    void handle_select_square(int &clicked_row, int &clicked_col);
 
     ~Handle_Mouse_Input();
 };

@@ -26,8 +26,8 @@ void Draw_board::on_paint(wxPaintEvent& evt)
     wxPaintDC dc(this);
     wxSize size= GetClientSize();   //Prende la grandezza della bitmap(guarda in start)    
     
-    wxCoord square_size=size.GetWidth()/8; //Divido per 8 perchè ogni riga è formata da 8 caselle
-
+    square_size=size.GetWidth()/8; //Divido per 8 perchè ogni riga è formata da 8 caselle
+    
     //Disegno la schacchiera:
     for(int row=0; row<8; row++)
     {
@@ -150,6 +150,11 @@ void Draw_board::OnSize(wxSizeEvent& event)
     event.Skip();
 }
 
+int Draw_board::get_square_size()
+{
+    int s_size = square_size;
+    return s_size;
+}
 
 Draw_board::~Draw_board()
 {    
