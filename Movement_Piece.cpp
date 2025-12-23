@@ -24,7 +24,7 @@ void Movement_Piece::handle_move(int from, int to)
     //Gestisco la legalità dei pezzi:
     move.set_piece_status(fen_shared.get()->get_piece()[move.get_from_square()]);
 
-    if(move.get_piece_status()->is_legal_move(move.get_to_square()))
+    if(!move.get_piece_status()->is_legal_move(move.get_to_square()))
     {
         wxLogMessage(wxT("Mossa non legale"));
     }

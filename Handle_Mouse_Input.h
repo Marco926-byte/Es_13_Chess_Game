@@ -16,8 +16,9 @@ class Draw_board;   //class declaration perchè se faccio classico include mi en
 class Handle_Mouse_Input
 {
 private:
-    int mouse_x, mouse_y, select_piece;
-    
+    int mouse_x, mouse_y, select_piece, from_square, to_square;
+    int position_board;
+
     bool is_select_piece;
 
     std::shared_ptr<Handle_Fen_String> fen_smart;
@@ -51,7 +52,7 @@ public:
     /*----- FINE GETTER:   ---------*/
 
     void handle_select_square(int &clicked_row, int &clicked_col);
-
+    void reset_attributes();
     ~Handle_Mouse_Input();
 };
 
