@@ -11,8 +11,7 @@ Handle_Fen_String::Handle_Fen_String()
         piece[i]=nullptr;
     }
 
-    //wxLogMessage("Entro in fen_string_stuff");
-    fen_string="rnbqkbnr/pppppppp/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
+    fen_string="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
     //Imposto la scacchiera alla fase iniziale
     set_board_fenstring(fen_string);
 }
@@ -45,7 +44,7 @@ void Handle_Fen_String::set_board_fenstring(std::string fen_string)
                 int conv=set_board-'0'; //Nella conversione ASCII per avere 8 devo sottrare
                                         //il valore ASCII di 8 - il valore ASCII di 0 
                 col+=conv;
-                row++;
+                
             }
             else
             {

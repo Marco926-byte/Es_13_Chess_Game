@@ -32,8 +32,8 @@ public:
     Piece* find_king(Piece** board, Color color_to_find);
 
     bool handle_check_on_king_straight(Piece **board, Color current_player_color);
-    void handle_check_on_king_diagonal(Piece **board, Color current_player_color);
-    void handle_check_on_king_knight(Piece **board, Color current_player_color);
+    bool handle_check_on_king_diagonal(Piece **board, Color current_player_color);
+    bool handle_check_on_king_knight(Piece **board, Color current_player_color);
     //----------GETTER----------------
     Color get_turn();
     //----------FINE GETTER----------------

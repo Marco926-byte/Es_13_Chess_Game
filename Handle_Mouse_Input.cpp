@@ -95,7 +95,16 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         handle_movement->handle_move(from_square,position_board);
         handle_chessboard->change_turn();
         handle_movement->update_moves_all_piece();
-        handle_chessboard->handle_check_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
+        if(handle_chessboard->handle_check_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        {
+            wxLogMessage(wxT("Handle_check_on_king_straight funziona!!!"));
+        }
+        /*if(handle_chessboard->handle_check_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        {
+            wxLogMessage(wxT("Handle_king diagonal funziona!!!"));
+        }
+        else
+            wxLogMessage(wxT("diagonal esce falso"));*/
         /*if(handle_chessboard->handle_check_on_king(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
         {
             wxLogMessage(wxT("Scacco"));

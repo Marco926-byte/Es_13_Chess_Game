@@ -105,6 +105,7 @@ public:
         bool is_king();
         bool is_knight();
         bool is_bishop();
+        bool is_queen();
         /*Fine: controllo se sono pezzi specifici*/
     /*-----------FINE GETTER-------------*/
 

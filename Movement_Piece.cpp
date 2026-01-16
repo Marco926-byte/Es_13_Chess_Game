@@ -10,10 +10,10 @@ Movement_Piece::Movement_Piece
     fen_shared(fen),
     handle_chess(chess)
 {  
-    
+        
 }
 
-void Movement_Piece::handle_move(int from, int to)
+bool Movement_Piece::handle_move(int from, int to)
 {
     //Creo la nuova mossa:
     Move move;
@@ -27,8 +27,9 @@ void Movement_Piece::handle_move(int from, int to)
 
     if(!move.get_piece_status()->is_legal_move(move.get_to_square()))
     {
-        wxLogMessage(wxT("Mossa non legale"));
+        return false;
     }
+
     //Tutto okay, incremento il contatore del pareggio:
     this->draw_counter++;
 
@@ -68,6 +69,8 @@ void Movement_Piece::handle_move(int from, int to)
     //RIGENERA LA NUOVA FEN_STRING:
     std::string new_fen= fen_shared.get()->generate_fen_string();
     fen_shared.get()->add_fen_to_map(new_fen);
+
+    return true;
 }
 
 void Movement_Piece::update_moves_all_piece()
@@ -80,42 +83,4 @@ void Movement_Piece::update_moves_all_piece()
             piece[i]->update_legal_moves(fen_shared);
         }
     }
-}
-
-std::vector<int> Movement_Piece::get_path_to_king(Piece *king)
-{
-    //const auto& piece=fen_shared.get()->get_piece();
-
-    int a_prova= 10;
-    wxLogMessage(wxT("%d"),a_prova);
-    for(int i=0; i<64; i++)
-    {
-        if(fen_shared.get()->get_piece()[i]!=nullptr)
-        {
-            for(const auto& entry: fen_shared.get()->get_piece()[i]->get_map_path())
-            {   
-                wxLogMessage(wxT("entro nel loop di entry get_path_king"));
-                //wxLogMessage("Il pezzo è: %c",fen_shared.get()->get_piece()[i]->get_name_piece());
-                auto const& direction = entry.first;
-                auto const& path = entry.second;
-                int a_path=path.size();
-                
-                
-                for(auto square : path)
-                {
-                    wxLogMessage(wxT("entro nel loop di path get_path_king"));
-                    
-
-                    if(fen_shared.get()->get_piece()[square]==king)
-                    {
-                        wxLogMessage(wxT("Trovato il percorso del re"));
-                        return fen_shared.get()->get_piece()[square]->get_map_path()[direction];
-                    }
-                }
-                return {};
-            }
-        }
-    }
-    return {};
-    
 }

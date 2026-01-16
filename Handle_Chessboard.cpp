@@ -92,9 +92,10 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
 
     if(ptr_king==nullptr)
     {
-        wxLogMessage(wxT("C'è un problema, ptr_king è nullptr"));
+        //Problema: ptr_king è nullptr
         return false;
     }
+
     //Spostamento dritto fino alla fine della scacchiera
     int end_board_straight[4]=
     {
@@ -123,7 +124,7 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
             //Se durante il percorso trovo un mio stesso pezzo, esci
             if
             (
-                board[current_move]!= nullptr 
+                   board[current_move]!= nullptr 
                 && board[current_move]->get_color()==current_player_color
             )
             {
@@ -133,10 +134,9 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
             //Se durante il percorso trovo la regina o l'alfiere, devo ottenere questo percorso
             if
             (      board[current_move]!=nullptr
-                && board[current_move]->get_name_piece()=='Q' 
-                || board[current_move]->get_name_piece()=='R'
-                || board[current_move]->get_name_piece()=='q'
-                || board[current_move]->get_name_piece()=='r'
+                && board[current_move]->is_rock()
+                || board[current_move]
+                && board[current_move]->is_queen()
             ) 
             {
                 //Sono indeciso se ripartire da capo = costoso oppure ci deve essere un
@@ -151,5 +151,92 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
             }   
         }
     }
+    return false;
+}
+
+bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color current_player_color)
+{
+    //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
+    /*int diagonal[4]{-9,-7,7,9};
+
+    Piece *ptr_king=find_king(board,current_player_color);
+
+    if(!ptr_king)
+    {
+        //Problema, ptr_king è nullo
+        return false;
+    }
+
+    //posizione delle quattro diagonali della cella in totale
+    int end_board_diagonal[4]
+    {
+        /*std::min(this->row,this->coloum),
+        std::min(this->row,7-this->coloum),
+        std::min(7-this->row,this->coloum),
+        std::min(7-this->row,7-this->coloum),*/
+        
+    //};
+
+    //parte la vista del re in diagonale:
+    /*for(auto i:diagonal)
+    {
+        int current_move = ptr_king->get_square();
+        int diagonal_attack = ptr_king->get_square();
+
+        for(int j=0; j<end_board_straight[i]; j++)
+        {
+            current_move+=diagonal[i];
+            
+            //Non deve uscire dai numeri della scacchiera
+            if(current_move<0 || current_move>64)
+            {
+                //wxLogMessage(wxT("current move è uscito dal range del legale"));
+                break;
+            }
+
+            //Se durante il percorso trovo un mio stesso pezzo, esci
+            if
+            (
+                   board[current_move]!= nullptr 
+                && board[current_move]->get_color()==current_player_color
+            )
+            {
+                break;
+            }
+            //Per controllare lo scacco del pedone devo accertarmi che sono nella prima 
+            //casella diagonale
+            if
+            (
+                i==0 
+                && board[current_move]!=nullptr
+                && board[current_move]->is_pawn()
+            )
+            {
+                diagonal_attack+=diagonal[i];
+                v_check_attack.push_back(diagonal_attack);
+                return true;
+            }
+            //Se durante il percorso trovo la regina o l'alfiere, devo ottenere questo percorso
+            if
+            (      board[current_move]!=nullptr
+                && board[current_move]->is_bishop()
+                || board[current_move]
+                && board[current_move]->is_queen()
+            ) 
+            {
+                //Sono indeciso se ripartire da capo = costoso oppure ci deve essere un
+                //altro modo
+                for(int k =0; k<end_board_straight[i]; k++)
+                {
+                    diagonal_attack+=diagonal[k];
+                    v_check_attack.push_back(diagonal_attack);
+                }
+                return true;
+            }   
+        }
+    }
+    return false;
+
+ */
     return false;
 }

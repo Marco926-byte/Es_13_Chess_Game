@@ -2,7 +2,6 @@
 #include "../Handle_Fen_String.h"
 
 /*Getter:*/
-
 int Piece::get_row() const
 {
     return row;
@@ -67,7 +66,10 @@ bool Piece::is_king()
 {
     return type_piece==KING;
 }
-
+bool Piece::is_queen()
+{
+    return type_piece==QUEEN;
+}
 bool Piece::is_pawn()
 {
     return type_piece==PAWN;
@@ -89,7 +91,6 @@ bool Piece::is_knight()
 /*Fine Getter*/
 
 /*Setter:*/
-
 void Piece::set_row(int new_row)
 {
     this->row=new_row;
@@ -126,27 +127,14 @@ void Piece::set_legal_moves(std::vector<int> new_legal_moves)
 {
     this->legal_moves=new_legal_moves;
 }
-
-/*void Piece::set_map_path(int square_legal[i])
-{
-    //std::vector<int> initial_vector={};
-
-    map_path[square_legal[]]
-}*/
-
-
 /*Fine Setter*/
 
 /*Costruttore*/
-
 Piece::Piece(int pos_square,char c)
-
    :row(pos_square/8),
     coloum(pos_square%8),
     square(pos_square),
     name_piece(c)
-    
-    
 {
     //Controllo se è maiuscolo o no...
     if(isupper(c))
@@ -168,14 +156,9 @@ Piece::Piece(int pos_square,char c)
     {
         this->type_piece=mp_character[upper_c];
     }
-    /*else
-    {
-        wxLogMessage(wxT("ERRORE NEL COSTRUTTORE DI PIECE"));
     
-    }  */
     //Inizializzo moved a false pk non ho ancora mosso
     this->is_moved=false;   
-    
 }
 /*Fine Costruttore*/
 

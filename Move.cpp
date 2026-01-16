@@ -1,5 +1,10 @@
 #include "Move.h"
 Move::Move()
+:   from_square(0),
+    to_square(0),
+    character_captured(' '),
+    piece_status(nullptr),
+    piece_captured(nullptr)
 {
        
 }

@@ -5,7 +5,6 @@
 #include <wx/wx.h>
 #include <memory>
 #include <stack>
-//#include <wx/log.h>
 
 #include "Piece_factory/Piece.h"
 #include "Handle_Fen_String.h"
@@ -33,11 +32,9 @@ public:
         Handle_Chessboard* chess
     );
 
-    void handle_move(int from, int to);
+    bool handle_move(int from, int to);
     void update_moves_all_piece();
     void update_move_in_check();
-    
-    std::vector<int> get_path_to_king(Piece* king);
 };
 
 #endif //MOVEMENT_PIECE_H
