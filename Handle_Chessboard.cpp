@@ -86,74 +86,78 @@ Piece* Handle_Chessboard::find_king(Piece** board, Color color_to_find)
 bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color current_player_color)
 {
     Piece *ptr_king=find_king(board,current_player_color);
-
+    
     //Singolo spostamento dritto
     int single_straight[4]={-8,8,-1,1};
 
-    if(ptr_king==nullptr)
+    if(!ptr_king)
     {
         //Problema: ptr_king è nullptr
         return false;
     }
 
     //Spostamento dritto fino alla fine della scacchiera
-    int end_board_straight[4]=
+    int end_board_straight[4] =
     {
-        board[ptr_king->get_square()]->get_row(),
-        7-board[ptr_king->get_square()]->get_row(),
-        board[ptr_king->get_square()]->get_col(),
-        7-board[ptr_king->get_square()]->get_col()
+        ptr_king->get_row(),
+        7-ptr_king->get_row(),
+        ptr_king->get_col(),
+        7-ptr_king->get_col()
     };
 
-    for(auto i:single_straight)
+    for(int i =0; i<4; i++)
     {
-        int current_move = ptr_king->get_square();
-        int straight_attack = ptr_king->get_square();
+        int current_move = ptr_king->get_square();     //Resetto la mossa ipotetica
+        int straight_attack = ptr_king->get_square();  //Resetto straight attack
+                                                       //da modificare probabilmente
 
         for(int j=0; j<end_board_straight[i]; j++)
         {
             current_move+=single_straight[i];
-            
+
             //Non deve uscire dai numeri della scacchiera
             if(current_move<0 || current_move>64)
             {
-                //wxLogMessage(wxT("current move è uscito dal range del legale"));
+                //wxLogMessage(wxT("Oioia, sono uscito dalla scacchiera"));
                 break;
             }
 
             //Se durante il percorso trovo un mio stesso pezzo, esci
             if
             (
-                   board[current_move]!= nullptr 
+                   board[current_move]
                 && board[current_move]->get_color()==current_player_color
             )
             {
+                //wxLogMessage(wxT("Ho trovato un pezzo amico, esco dal ciclo"));               
                 break;
             }
 
             //Se durante il percorso trovo la regina o l'alfiere, devo ottenere questo percorso
             if
-            (      board[current_move]!=nullptr
+            (      board[current_move]
                 && board[current_move]->is_rock()
                 || board[current_move]
                 && board[current_move]->is_queen()
             ) 
             {
+                wxLogMessage(wxT("Ho trovato la regina o l'alfiere"));
+                
                 //Sono indeciso se ripartire da capo = costoso oppure ci deve essere un
                 //altro modo
                 for(int k =0; k<end_board_straight[i]; k++)
                 {
                     straight_attack+=single_straight[k];
+                    wxLogMessage(wxT("straight_attack dentro ciclo finale: %d"),straight_attack);
                     v_check_attack.push_back(straight_attack);
-
                 }
                 return true;
             }   
-        }
+        }       
     }
     return false;
 }
-
+/*
 bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color current_player_color)
 {
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
@@ -238,5 +242,3 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color curre
     return false;
 
  */
-    return false;
-}

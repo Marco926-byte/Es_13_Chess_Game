@@ -48,7 +48,6 @@ class Piece
 private:
 
     int row,coloum,square;
-    //static int array_size;
     char name_piece;
     bool is_moved;
 
@@ -63,7 +62,6 @@ private:
     //-8 sali alla cella superiore
     //+1 vo a destra
     //-1 vo a sinistra 
-
 public:
     /*------COSTRUTTORE-------------*/
     Piece(int pos, char c);

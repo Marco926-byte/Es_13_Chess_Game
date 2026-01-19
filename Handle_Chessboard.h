@@ -6,7 +6,6 @@
 
 #include "Piece_factory/King/King.h"
 #include "Handle_Fen_String.h"
-//#include "Draw_board.h"
 
 class Draw_board;
 

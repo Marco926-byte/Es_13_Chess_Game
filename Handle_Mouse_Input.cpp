@@ -99,31 +99,6 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         {
             wxLogMessage(wxT("Handle_check_on_king_straight funziona!!!"));
         }
-        /*if(handle_chessboard->handle_check_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
-        {
-            wxLogMessage(wxT("Handle_king diagonal funziona!!!"));
-        }
-        else
-            wxLogMessage(wxT("diagonal esce falso"));*/
-        /*if(handle_chessboard->handle_check_on_king(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
-        {
-            wxLogMessage(wxT("Scacco"));
-
-            Color king_color;
-            if(handle_chessboard->get_turn()==WHITE)
-            {
-                king_color = BLACK;
-            }
-            else
-                king_color = BLACK;
-
-            Piece* k=handle_chessboard->find_king(fen_smart.get()->get_piece(),king_color);
-            
-            handle_movement->get_path_to_king(k);
-            //FAI UN ALTRA FUNZIONE E AGGIORNA TUTTE LE MOSSE LEGALI
-        }*/
-
-        
 
         mouse_ptr->Refresh();
         

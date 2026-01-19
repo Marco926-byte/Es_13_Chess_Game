@@ -46,12 +46,16 @@ public:
 
     //Disegno dei quadratini
     void draw_squares(wxDC& dc, int row, int col, wxCoord square_size); 
+    
     //Disegno pezzi
     void draw_piece(wxDC& dc, int row, int col, wxCoord square_size);  
+    
     //Rappresentazione dei pezzi
     void render_piece();
+    
     //Disegno principale
     void on_paint(wxPaintEvent& evt);
+    
     //Gestione ridimensionamento finestra
     void OnSize(wxSizeEvent& event);
     

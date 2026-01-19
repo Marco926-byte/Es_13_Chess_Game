@@ -53,7 +53,6 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
     
     wxColor square_color;
 
-
     //Imposto il colore delle caselle...
     if((row+col)%2==0)
     {
@@ -85,7 +84,6 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
             }
         }
     } 
-
     dc.SetBrush(square_color);
 
     wxRect squareRect(x, y, square_size, square_size);    
@@ -144,7 +142,7 @@ void Draw_board::render_piece()
 void Draw_board::OnSize(wxSizeEvent& event)
 {
     Refresh();
-    //skip the event.
+    //Evento skippato.
     event.Skip();
 }
 

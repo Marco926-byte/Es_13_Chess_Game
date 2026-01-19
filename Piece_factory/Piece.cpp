@@ -142,7 +142,7 @@ Piece::Piece(int pos_square,char c)
     else
         this->color=BLACK;
 
-    c=toupper(c);
+    //c=toupper(c);
     
     //Inizializzo tutti gli attributi privati
     //serve per stringa FIN
