@@ -141,14 +141,14 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
                 && board[current_move]->is_queen()
             ) 
             {
-                wxLogMessage(wxT("Ho trovato la regina o l'alfiere"));
+                wxLogMessage(wxT("Ho trovato la regina o la torre"));
                 
                 //Sono indeciso se ripartire da capo = costoso oppure ci deve essere un
                 //altro modo
                 for(int k =0; k<end_board_straight[i]; k++)
                 {
                     straight_attack+=single_straight[k];
-                    wxLogMessage(wxT("straight_attack dentro ciclo finale: %d"),straight_attack);
+                    //wxLogMessage(wxT("straight_attack dentro ciclo finale: %d"),straight_attack);
                     v_check_attack.push_back(straight_attack);
                 }
                 return true;
@@ -157,11 +157,11 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
     }
     return false;
 }
-/*
+
 bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color current_player_color)
 {
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
-    /*int diagonal[4]{-9,-7,7,9};
+    int diagonal[4]{-9,-7,7,9};
 
     Piece *ptr_king=find_king(board,current_player_color);
 
@@ -174,27 +174,25 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color curre
     //posizione delle quattro diagonali della cella in totale
     int end_board_diagonal[4]
     {
-        /*std::min(this->row,this->coloum),
-        std::min(this->row,7-this->coloum),
-        std::min(7-this->row,this->coloum),
-        std::min(7-this->row,7-this->coloum),*/
-        
-    //};
+        std::min(ptr_king->get_row(),ptr_king->get_col()),
+        std::min(ptr_king->get_row(),7-ptr_king->get_col()),
+        std::min(7-ptr_king->get_row(),ptr_king->get_col()),
+        std::min(7-ptr_king->get_row(),7-ptr_king->get_col())        
+    };
 
     //parte la vista del re in diagonale:
-    /*for(auto i:diagonal)
+    for(int i=0; i<4; i++)//da correggere....
     {
         int current_move = ptr_king->get_square();
         int diagonal_attack = ptr_king->get_square();
 
-        for(int j=0; j<end_board_straight[i]; j++)
-        {
+        for(int j=0; j<end_board_diagonal[i]; j++)
+        {    
             current_move+=diagonal[i];
-            
+           
             //Non deve uscire dai numeri della scacchiera
             if(current_move<0 || current_move>64)
             {
-                //wxLogMessage(wxT("current move è uscito dal range del legale"));
                 break;
             }
 
@@ -228,9 +226,7 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color curre
                 && board[current_move]->is_queen()
             ) 
             {
-                //Sono indeciso se ripartire da capo = costoso oppure ci deve essere un
-                //altro modo
-                for(int k =0; k<end_board_straight[i]; k++)
+                for(int k =0; k<end_board_diagonal[i]; k++)
                 {
                     diagonal_attack+=diagonal[k];
                     v_check_attack.push_back(diagonal_attack);
@@ -240,5 +236,65 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color curre
         }
     }
     return false;
+}
 
- */
+bool Handle_Chessboard::handle_check_on_king_knight(Piece **board, Color current_player_color)
+{
+    //Le direzioni che può fare il cavallo:
+    int directions[8]={17,15,10,-6,6,-10,-15,-17};
+    
+    //Trovo il re del turno corrente....
+    Piece *ptr_king=find_king(board,current_player_color);
+    
+    if(!ptr_king)
+    {
+        //Problema, ptr_king è nullo
+        return false;
+    } 
+    
+    for(int i=0; i<8; i++)
+    {
+        std::cout<<"i = "<<i<<std::endl;
+        std::cout<<"direction[i] = "<<directions[i]<<std::endl;
+
+        int current_move = ptr_king->get_square();
+        std::cout<<"reset current_move nella casella del re: "<<current_move<<std::endl;
+
+        current_move +=directions[i];
+        std::cout<<"aggiungo alla mossa corrente la direzione, risultato: "<<current_move<<std::endl;
+        
+        if(current_move<0 || current_move>=64)
+        {
+            std::cout<<"current_move è uscito dal range legale"<<std::endl;
+            continue;
+        }
+            
+        if(!board[current_move])
+        {
+            std::cout<<"current_move è in una casella nullptr, teoricamente dovrei skippare e ritornare all'inizio"<<std::endl;
+            continue;
+        }
+        if
+        (  
+               board[current_move]->get_color()!=current_player_color
+            && board[current_move]->get_name_piece()=='n'
+            || board[current_move]->get_name_piece()=='N'  
+            && abs(ptr_king->get_col() - current_move %8)<3  
+        )
+        {
+            std::cout<<"-----IF VERO----"<<std::endl;
+            std::cout<<"Chi c'è nella casella?"<<std::endl;
+            std::cout<<board[current_move]->get_name_piece()<<std::endl;
+            return true;
+        }
+        else
+        {
+            std::cout<<"-----IF FALSO----"<<std::endl;
+            std::cout<<"Chi c'è nella casella?"<<std::endl;
+            std::cout<<board[current_move]->get_name_piece()<<std::endl;
+        }
+    }
+    std::cout<<"-------------------------------------------\n";
+    std::cout<<"non ho trovato un attacco nemico del cavallo"<<std::endl;
+    return false;
+}

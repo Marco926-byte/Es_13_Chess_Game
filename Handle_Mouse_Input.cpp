@@ -99,7 +99,14 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         {
             wxLogMessage(wxT("Handle_check_on_king_straight funziona!!!"));
         }
-
+        if(handle_chessboard->handle_check_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        {
+            wxLogMessage(wxT("Handle_check_on_king_diagonal funziona!!!"));
+        }
+        if(handle_chessboard->handle_check_on_king_knight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        {
+            wxLogMessage(wxT("Handle_check_on_king_knight funziona!!!!"));
+        }
         mouse_ptr->Refresh();
         
         reset_attributes();

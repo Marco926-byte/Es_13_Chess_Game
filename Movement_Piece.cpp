@@ -53,6 +53,7 @@ bool Movement_Piece::handle_move(int from, int to)
     {
         //Metto piece_captured=nullptr, per forza non mangia quindi è nullptr
         move.set_piece_captured(nullptr);
+        
         //il personaggio catturato sarà ovviamente vuoto:
         move.set_character_captured(' ');
     }
