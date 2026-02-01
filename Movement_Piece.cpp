@@ -10,7 +10,12 @@ Movement_Piece::Movement_Piece
     fen_shared(fen),
     handle_chess(chess)
 {  
-        
+
+}
+
+void Movement_Piece::set_attack_vector(std::vector<int> v_attack)
+{
+    attacked_square=v_attack;
 }
 
 bool Movement_Piece::handle_move(int from, int to)
@@ -82,6 +87,36 @@ void Movement_Piece::update_moves_all_piece()
         if(piece[i])
         {
             piece[i]->update_legal_moves(fen_shared);
+        }
+    }
+}
+void Movement_Piece::update_move_in_check(Color team_color,std::vector<int> v_attack)
+{
+    const auto& piece=fen_shared.get()->get_piece();
+    
+    for (int i=0; i<64; i++)
+    {
+        attacked_square.clear();
+        if
+        (
+            piece[i] 
+            && 
+            piece[i]->get_color()==team_color 
+            && 
+            !piece[i]->is_king()
+        )
+        {
+            for(int itr_normal_legal_move : piece[i]->get_legal_moves())
+            {
+                for(int itr_attack : v_attack)
+                {   
+                    if(itr_attack == itr_normal_legal_move)
+                    {
+                        attacked_square.push_back(itr_attack);
+                    }
+                }
+            }
+            piece[i]->set_legal_moves(attacked_square);
         }
     }
 }

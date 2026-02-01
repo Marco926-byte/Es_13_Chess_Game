@@ -27,12 +27,15 @@ public:
 
     std::vector<Piece*> get_piece_turn();
     std::vector<Piece*> get_no_piece_turn();
+    std::vector<int> get_v_check_attack();
 
     Piece* find_king(Piece** board, Color color_to_find);
 
     bool handle_check_on_king_straight(Piece **board, Color current_player_color);
     bool handle_check_on_king_diagonal(Piece **board, Color current_player_color);
     bool handle_check_on_king_knight(Piece **board, Color current_player_color);
+
+    void print_v_check_attack();
     //----------GETTER----------------
     Color get_turn();
     //----------FINE GETTER----------------

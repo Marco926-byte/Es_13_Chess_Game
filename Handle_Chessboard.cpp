@@ -65,6 +65,11 @@ std::vector<Piece*> Handle_Chessboard::get_no_piece_turn()
     return piece_no_turn;
 }
 
+std::vector<int> Handle_Chessboard::get_v_check_attack()
+{
+    return v_check_attack;
+}
+
 Piece* Handle_Chessboard::find_king(Piece** board, Color color_to_find)
 {
     for (int i = 0; i < 64; i++) 
@@ -76,7 +81,6 @@ Piece* Handle_Chessboard::find_king(Piece** board, Color color_to_find)
             board[i]->get_color() == color_to_find
         ) 
         {
-            //wxLogMessage(wxT("Ho trovato il re, è nella casella: [%d]"),board[i]->get_square());
             return board[i];
         }
     }
@@ -110,7 +114,6 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
         int current_move = ptr_king->get_square();     //Resetto la mossa ipotetica
         int straight_attack = ptr_king->get_square();  //Resetto straight attack
                                                        //da modificare probabilmente
-
         for(int j=0; j<end_board_straight[i]; j++)
         {
             current_move+=single_straight[i];
@@ -119,7 +122,7 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
             if(current_move<0 || current_move>64)
             {
                 //wxLogMessage(wxT("Oioia, sono uscito dalla scacchiera"));
-                break;
+                continue;
             }
 
             //Se durante il percorso trovo un mio stesso pezzo, esci
@@ -129,26 +132,33 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
                 && board[current_move]->get_color()==current_player_color
             )
             {
-                //wxLogMessage(wxT("Ho trovato un pezzo amico, esco dal ciclo"));               
                 break;
             }
 
+            
             //Se durante il percorso trovo la regina o l'alfiere, devo ottenere questo percorso
             if
-            (      board[current_move]
-                && board[current_move]->is_rock()
-                || board[current_move]
-                && board[current_move]->is_queen()
+            (   
+                board[current_move]
+                && 
+                board[current_move]->get_name_piece()=='r'
+                ||
+                board[current_move]
+                &&
+                board[current_move]->get_name_piece()=='R'
+                || 
+                board[current_move]
+                && 
+                board[current_move]->get_name_piece()=='q'
+                ||
+                board[current_move]
+                &&
+                board[current_move]->get_name_piece()=='Q'
             ) 
             {
-                wxLogMessage(wxT("Ho trovato la regina o la torre"));
-                
-                //Sono indeciso se ripartire da capo = costoso oppure ci deve essere un
-                //altro modo
-                for(int k =0; k<end_board_straight[i]; k++)
+                for(int k =0; k<=j; k++)
                 {
-                    straight_attack+=single_straight[k];
-                    //wxLogMessage(wxT("straight_attack dentro ciclo finale: %d"),straight_attack);
+                    straight_attack+=single_straight[i];
                     v_check_attack.push_back(straight_attack);
                 }
                 return true;
@@ -185,50 +195,50 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color curre
     {
         int current_move = ptr_king->get_square();
         int diagonal_attack = ptr_king->get_square();
-
+        
         for(int j=0; j<end_board_diagonal[i]; j++)
-        {    
+        {   
             current_move+=diagonal[i];
-           
+            
             //Non deve uscire dai numeri della scacchiera
             if(current_move<0 || current_move>64)
             {
-                break;
+                continue;
             }
 
             //Se durante il percorso trovo un mio stesso pezzo, esci
             if
             (
-                   board[current_move]!= nullptr 
-                && board[current_move]->get_color()==current_player_color
+                   board[current_move]
+                   && 
+                   board[current_move]->get_color()==current_player_color
             )
             {
                 break;
             }
-            //Per controllare lo scacco del pedone devo accertarmi che sono nella prima 
-            //casella diagonale
-            if
-            (
-                i==0 
-                && board[current_move]!=nullptr
-                && board[current_move]->is_pawn()
-            )
+            if(!board[current_move])
             {
-                diagonal_attack+=diagonal[i];
-                v_check_attack.push_back(diagonal_attack);
-                return true;
+                continue;
             }
             //Se durante il percorso trovo la regina o l'alfiere, devo ottenere questo percorso
             if
-            (      board[current_move]!=nullptr
-                && board[current_move]->is_bishop()
-                || board[current_move]
-                && board[current_move]->is_queen()
+            (   
+                board[current_move]->get_name_piece()=='B'
+                ||
+                board[current_move]->get_name_piece()=='b'
+                ||
+                board[current_move]->get_name_piece()=='Q'
+                ||
+                board[current_move]->get_name_piece()=='q'
+                ||
+                board[current_move]->get_name_piece()=='P'
+                ||
+                board[current_move]->get_name_piece()=='p'
             ) 
             {
-                for(int k =0; k<end_board_diagonal[i]; k++)
+                for(int k =0; k<=j; k++)
                 {
-                    diagonal_attack+=diagonal[k];
+                    diagonal_attack+=diagonal[i];
                     v_check_attack.push_back(diagonal_attack);
                 }
                 return true;
@@ -252,49 +262,58 @@ bool Handle_Chessboard::handle_check_on_king_knight(Piece **board, Color current
         return false;
     } 
     
+    //ciclo per ogni direzione del cavallo, voglio trovare il cavallo:
     for(int i=0; i<8; i++)
     {
-        std::cout<<"i = "<<i<<std::endl;
-        std::cout<<"direction[i] = "<<directions[i]<<std::endl;
-
+        //current_move si dovrà resettare ogni volta a inizio ciclo 
+        //per cambiare la direzione
         int current_move = ptr_king->get_square();
-        std::cout<<"reset current_move nella casella del re: "<<current_move<<std::endl;
-
-        current_move +=directions[i];
-        std::cout<<"aggiungo alla mossa corrente la direzione, risultato: "<<current_move<<std::endl;
         
+        //incremento la mossa con la direzione del ciclo
+        current_move +=directions[i];
+        
+        //Controlli:
         if(current_move<0 || current_move>=64)
         {
-            std::cout<<"current_move è uscito dal range legale"<<std::endl;
-            continue;
+           continue;
         }
             
+        //Controlli:
         if(!board[current_move])
         {
-            std::cout<<"current_move è in una casella nullptr, teoricamente dovrei skippare e ritornare all'inizio"<<std::endl;
             continue;
         }
+        //IF IMPORTANTE: quello che decide se trovo o no il cavallo:
         if
         (  
-               board[current_move]->get_color()!=current_player_color
-            && board[current_move]->get_name_piece()=='n'
-            || board[current_move]->get_name_piece()=='N'  
-            && abs(ptr_king->get_col() - current_move %8)<3  
+            (
+                board[current_move]->get_name_piece()=='N'
+                ||
+                board[current_move]->get_name_piece()=='n'
+            )
+            && 
+            (
+                abs(ptr_king->get_col() - current_move %8)<3  
+                &&
+                board[current_move]->get_color()!=current_player_color
+            )
         )
         {
-            std::cout<<"-----IF VERO----"<<std::endl;
-            std::cout<<"Chi c'è nella casella?"<<std::endl;
-            std::cout<<board[current_move]->get_name_piece()<<std::endl;
+            //voglio che la casella che attacca il re venga aggiunta al vettore attack
+            v_check_attack.push_back(board[current_move]->get_square());
             return true;
         }
-        else
-        {
-            std::cout<<"-----IF FALSO----"<<std::endl;
-            std::cout<<"Chi c'è nella casella?"<<std::endl;
-            std::cout<<board[current_move]->get_name_piece()<<std::endl;
-        }
     }
-    std::cout<<"-------------------------------------------\n";
-    std::cout<<"non ho trovato un attacco nemico del cavallo"<<std::endl;
     return false;
+}
+
+void Handle_Chessboard::print_v_check_attack()
+{
+    std::cout<<"---------------\n";
+    std::cout<<"Dentro v_check_attack: \n";
+
+    for(auto itr : v_check_attack)
+    {
+        std::cout<<itr<<std::endl;
+    }
 }

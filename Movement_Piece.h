@@ -19,6 +19,7 @@ private:
     int draw_counter;
 
     std::stack<Move*>stack;
+    std::vector<int> attacked_square;
 
     Draw_board* draw=nullptr;
     Handle_Chessboard* handle_chess=nullptr;
@@ -32,9 +33,11 @@ public:
         Handle_Chessboard* chess
     );
 
+    void set_attack_vector(std::vector<int> v_attack);
+
     bool handle_move(int from, int to);
     void update_moves_all_piece();
-    void update_move_in_check();
+    void update_move_in_check(Color team_turn,std::vector<int> v_attack);
 };
 
 #endif //MOVEMENT_PIECE_H
