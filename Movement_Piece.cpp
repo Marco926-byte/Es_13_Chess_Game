@@ -94,9 +94,13 @@ void Movement_Piece::update_move_in_check(Color team_color,std::vector<int> v_at
 {
     const auto& piece=fen_shared.get()->get_piece();
     
+    //Itero tutto
     for (int i=0; i<64; i++)
     {
+        //pulisco il vettore delle mosse per ogni pezzo
         attacked_square.clear();
+
+        //Controllo se il pezzo è giusto...
         if
         (
             piece[i] 
@@ -106,16 +110,20 @@ void Movement_Piece::update_move_in_check(Color team_color,std::vector<int> v_at
             !piece[i]->is_king()
         )
         {
+            //Itero tutte le mosse legali del pezzo:
             for(int itr_normal_legal_move : piece[i]->get_legal_moves())
             {
+                //Itero tutto il vettore dell'attacco:
                 for(int itr_attack : v_attack)
-                {   
+                {
+                    //Se un vettore di attacco contiene una mossa legale del pezzo allora inserisci:   
                     if(itr_attack == itr_normal_legal_move)
                     {
                         attacked_square.push_back(itr_attack);
                     }
                 }
             }
+            //Imposto le nuove mosse legali...
             piece[i]->set_legal_moves(attacked_square);
         }
     }

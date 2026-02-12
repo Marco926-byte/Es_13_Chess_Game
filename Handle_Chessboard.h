@@ -20,13 +20,14 @@ private:
     Draw_board* draw_class = nullptr;
 public:
     //Costruttore
-    Handle_Chessboard(Draw_board * board,std::shared_ptr<Handle_Fen_String>fen);
+    Handle_Chessboard(Draw_board *board, std::shared_ptr<Handle_Fen_String>fen);
     
     void change_turn();
     void set_turn(Color t);
 
-    std::vector<Piece*> get_piece_turn();
-    std::vector<Piece*> get_no_piece_turn();
+    std::vector<Piece*> get_piece_turn();       //Inutile
+    std::vector<Piece*> get_no_piece_turn();    //Inutile
+
     std::vector<int> get_v_check_attack();
 
     Piece* find_king(Piece** board, Color color_to_find);
@@ -35,7 +36,11 @@ public:
     bool handle_check_on_king_diagonal(Piece **board, Color current_player_color);
     bool handle_check_on_king_knight(Piece **board, Color current_player_color);
 
+    bool handle_pin_on_king_straight(Piece **board, Color current_player_color);
+    bool handle_pin_on_king_diagonal(Piece **board, Color current_player_color);
+
     void print_v_check_attack();
+    void clear_v_check_attack();
     //----------GETTER----------------
     Color get_turn();
     //----------FINE GETTER----------------

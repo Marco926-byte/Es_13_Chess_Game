@@ -99,25 +99,32 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         {
             wxLogMessage(wxT("Handle_check_on_king_straight funziona!!!"));
             handle_chessboard->print_v_check_attack();
-            //handle_movement->set_attack_vector(handle_chessboard->get_v_check_attack());
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
+        }
+        if(handle_chessboard->handle_pin_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        {
+            wxLogMessage(wxT("Handle_pin_on_king_straight funziona!!!"));
+        }
+        
+        if(handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        {
+            wxLogMessage(wxT("Handle_pin_on_king_diagonal funziona!!!"));
         }
         if(handle_chessboard->handle_check_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
         {
             wxLogMessage(wxT("Handle_check_on_king_diagonal funziona!!!"));
             handle_chessboard->print_v_check_attack();
-            //handle_movement->set_attack_vector(handle_chessboard->get_v_check_attack());
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
         }
         if(handle_chessboard->handle_check_on_king_knight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
         {
             wxLogMessage(wxT("Handle_check_on_king_knight funziona!!!!"));
             handle_chessboard->print_v_check_attack();
-            //handle_movement->set_attack_vector(handle_chessboard->get_v_check_attack());
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
         }
         mouse_ptr->Refresh();
         reset_attributes();
+        handle_chessboard->clear_v_check_attack();
     }
     else
         return;

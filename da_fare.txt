@@ -1,31 +1,8 @@
 DEVO:
-1. Gestire lo scacco 
+1. Gestire il pin
 2. Gestire l'arrocco
 3. Gestire la fine del gioco.
 
-ATTENZIONE: 
-Logica del map_path: ha la chiave che è la casella del pezzo e un vettore delle mosse 
-che può fare
-
-
-Logica scacco:
-Se:
-    nelle mosse legali dei pezzi c'è una casella con sopra il re del colore
-    opposto 
-Allora:
-    il giocatore del colore del re sotto scacco avrà solamente le mosse che 
-    porteranno il re al sicuro.
-Se:
-    c'è una mossa che blocca l'attacco 
-Allora: 
-    viene aggiunta alle mosse legali del pezzo.
-
-Logica arrocco:
-Se:
-    Il re non si è mosso e non c'è nessun pezzo tra il re e la torre e
-    la torre non si è mossa
-Allora:
-    Il re andrà di due caselle a sinistra e la torre andrà a due caselle a destra
 
 cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella per 
                                                         debuggare con Valgrind
