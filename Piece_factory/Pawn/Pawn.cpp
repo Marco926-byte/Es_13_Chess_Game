@@ -113,4 +113,12 @@ void Pawn::get_attack(Piece **board, std::vector<int> &attacked_squares)
         }
     }
 }
+
+void Pawn::handle_en_passant(int square)
+{
+    std::vector<int> v_legal_move = this->get_legal_moves();
+    v_legal_move.push_back(square);
+    this->set_legal_moves(v_legal_move);
+}
+
 /*-----------FINE FUNZIONI DEL PEDONE---------------*/

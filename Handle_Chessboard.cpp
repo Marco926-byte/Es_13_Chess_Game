@@ -230,12 +230,12 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color curre
             (   
                 j==0
                 &&
-                board[current_move]->get_name_piece()=='p'
-                ||
-                board[current_move]->get_name_piece()=='P'
+                board[current_move]->is_pawn()
             )
             {
                 std::cout<<"Il pedone mi sta attaccando il re...\n";
+                std::cout<<"Pedone che attacca: "<<board[current_move]->get_square()<<std::endl;
+
                 v_check_attack.push_back(board[current_move]->get_square());
                 return true;
             }
@@ -325,8 +325,10 @@ bool Handle_Chessboard::handle_check_on_king_knight(Piece **board, Color current
 
 bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current_player_color)
 {
+    //Inizializzo il puntatore al re del turno corrente
     Piece *ptr_king =find_king(board,current_player_color);
 
+    //Inizializzo il vettore dei pezzi amici a zero
     std::vector<Piece*> v_piece_friend={};
 
     //Singolo spostamento dritto
@@ -347,13 +349,13 @@ bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current
         7-ptr_king->get_col()
     };
 
-    //Pulisco il vettore amico...
-    v_piece_friend.clear();
-
-    for(int i =0; i<4; i++)
+    for(int i = 0; i < 4; i++)
     {
         int current_move = ptr_king->get_square();     //Resetto la mossa ipotetica
-             
+         
+        //Pulisco il vettore amico...
+        v_piece_friend.clear();
+        
         for(int j=0; j<end_board_straight[i]; j++)
         {
             current_move+=single_straight[i];
@@ -375,7 +377,7 @@ bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current
                 v_piece_friend.push_back(board[current_move]);
             }
 
-            //Se durante il percorso trovo la regina o l'alfiere, devo aggiornare le mosse
+            //Se durante il percorso trovo la regina o la torre, devo aggiornare le mosse
             //per il pezzo amico 
             if
             (   
@@ -396,14 +398,16 @@ bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current
                 {
                     //Okay ho il pezzo amico, ora devo simulare le mosse e registrare solamente le mosse
                     //che coprono il re, le altre le devo cancellare
-
                     for(auto itr : v_piece_friend)
-                    {
+                    {                   
                         for(int move : itr->get_legal_moves())
                         {
                             //Devo simulare le mosse....
                             int original_square = itr->get_square();
-                            Piece *original_piece = board[move];
+
+                            Piece *original_piece = board[move];    
+                                //original_piece serve perchè se io durante la simulazione trovo un pezzo
+                                //il pezzo per la strada non potrà essere nullptr sennò segfault :)
 
                             //Temporaneamente muovo il pezzo e simulo...
                             board[move]= itr;
@@ -418,16 +422,12 @@ bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current
                             //Reimposta la posizione originale....
                             board[original_square] = itr;
                             board[move]= original_piece;
+
                             itr->set_square(original_square);
                         }
                     }
                     return true;
-                }
-                else
-                {
-                    return false;
-                }
-                       
+                }      
             }   
         }       
     }
@@ -464,8 +464,9 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
     //parte la vista del re in diagonale:
     for(int i=0; i<4; i++)
     {
+
         int current_move = ptr_king->get_square();     //Resetto la mossa ipotetica
-        
+
         for(int j=0; j<end_board_diagonal[i]; j++)
         {   
             current_move+=diagonal[i];

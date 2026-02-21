@@ -97,31 +97,20 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         handle_movement->update_moves_all_piece();
         if(handle_chessboard->handle_check_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
         {
-            wxLogMessage(wxT("Handle_check_on_king_straight funziona!!!"));
-            handle_chessboard->print_v_check_attack();
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
-        }
-        if(handle_chessboard->handle_pin_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
-        {
-            wxLogMessage(wxT("Handle_pin_on_king_straight funziona!!!"));
-        }
-        
-        if(handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
-        {
-            wxLogMessage(wxT("Handle_pin_on_king_diagonal funziona!!!"));
         }
         if(handle_chessboard->handle_check_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
         {
-            wxLogMessage(wxT("Handle_check_on_king_diagonal funziona!!!"));
-            handle_chessboard->print_v_check_attack();
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
         }
         if(handle_chessboard->handle_check_on_king_knight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
         {
-            wxLogMessage(wxT("Handle_check_on_king_knight funziona!!!!"));
-            handle_chessboard->print_v_check_attack();
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
         }
+
+        handle_chessboard->handle_pin_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
+        handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
+        
         mouse_ptr->Refresh();
         reset_attributes();
         handle_chessboard->clear_v_check_attack();
@@ -139,6 +128,7 @@ void Handle_Mouse_Input::reset_attributes()
     from_square=-1;
     to_square=-1;
 }
+
 bool Handle_Mouse_Input::get_is_select_piece() const
 {
     return is_select_piece;
@@ -161,6 +151,5 @@ Piece* Handle_Mouse_Input::get_handle_piece() const
 
 Handle_Mouse_Input::~Handle_Mouse_Input()
 {
-
 
 }

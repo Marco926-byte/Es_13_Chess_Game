@@ -1,7 +1,7 @@
 DEVO:
-1. Gestire il pin
-2. Gestire l'arrocco
-3. Gestire la fine del gioco.
+2. Gestire l'enpassant del pedone
+3. Gestire arrocco
+4. Gestire la fine del gioco.
 
 
 cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella per 

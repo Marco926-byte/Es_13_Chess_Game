@@ -12,7 +12,7 @@ set(TEST_SOURCE_FILES main_test.cpp)
 add_executable(w_test 
     main_test.cpp
     Move_Test.cpp
-
+    Chessboard_Test.cpp
     ../Movement_Piece.cpp
     ../Handle_Fen_String.cpp 
     ../Move.cpp 

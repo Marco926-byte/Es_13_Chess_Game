@@ -2,7 +2,6 @@
 #Ignoro la cartella build per futuri commit in altri pc
 #preparazione al laboratorio di programmazione
 build
-
 .vscode
 .idea
 build_debug
