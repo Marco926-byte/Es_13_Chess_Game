@@ -74,6 +74,7 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
                 square_color=wxColor(50,50,50);
                 dc.SetPen(wxPen(wxColor(0,0,0),2));        
             }
+            
             for(int future_square: mouse_handler->get_handle_piece()->get_legal_moves())
             {
                 if(future_square==row*8+col)
@@ -81,7 +82,7 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
                     square_color=wxColor(4,8,200);
                     dc.SetPen(wxPen(wxColor(7,100,5),2));
                 }
-            }
+            }  
         }
     } 
     dc.SetBrush(square_color);

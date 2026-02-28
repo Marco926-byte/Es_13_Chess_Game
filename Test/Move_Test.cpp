@@ -10,6 +10,7 @@ class Move_Test: public ::testing::Test
 protected:
     std::shared_ptr<Handle_Fen_String> fen_string;
     std::unique_ptr<Movement_Piece> engine;
+    std::unique_ptr<Handle_Chessboard> chess_logic;
 public:
     void SetUp() override
     {
@@ -17,6 +18,8 @@ public:
         fen_string = std::make_shared<Handle_Fen_String>();
         std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
         fen_string.get()->set_board_fenstring(start_fen);
+
+        chess_logic = std::make_unique<Handle_Chessboard>(nullptr,fen_string);
 
         //Inizializzo il motore delle mosse:
         engine = std::make_unique<Movement_Piece>(nullptr,fen_string,nullptr);
@@ -229,5 +232,39 @@ TEST_F(Move_Test, Friendly_Attack)
 
     bool success = engine.get()->handle_move(from_attack,to_attack);
 
+    ASSERT_FALSE(success);
+}
+
+TEST_F(Move_Test, Is_Enpassant)
+{
+    std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
+    fen_string.get()->set_board_fenstring(fen_start); 
+ 
+    //chess_logic.get()->set_turn(BLACK);
+
+    engine.get()->update_moves_all_piece();
+
+    int from_piece_move = 9;
+    int to_piece_move = 25;
+
+    engine.get()->handle_move(from_piece_move,to_piece_move);
+
+
+    engine.get()->update_moves_all_piece();
+    //chess_logic.get()->set_turn(WHITE);
+    
+    bool success = engine.get()->is_enpassant();
+
+    ASSERT_TRUE(success);
+}
+
+TEST_F(Move_Test, Is_Not_Enpassant)
+{
+    std::string fen_start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3";
+    fen_string.get()->set_board_fenstring(fen_start); 
+ 
+    engine.get()->update_moves_all_piece();
+
+    bool success = engine.get()->is_enpassant();
     ASSERT_FALSE(success);
 }

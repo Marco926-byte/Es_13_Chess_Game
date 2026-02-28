@@ -30,8 +30,6 @@ public:
 
     void set_piece_status(Piece* p);
     void set_piece_captured(Piece *pc);
-
-    
 };
 
 

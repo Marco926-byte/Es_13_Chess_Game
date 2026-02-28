@@ -52,7 +52,7 @@ private:
     bool is_moved;
 
     Color color;
-    Character type_piece;
+    
 
     std::vector<int> legal_moves;
     std::map<int,std::vector<int>> map_path;          
@@ -62,6 +62,8 @@ private:
     //-8 sali alla cella superiore
     //+1 vo a destra
     //-1 vo a sinistra 
+protected:
+    Character type_piece;
 public:
     /*------COSTRUTTORE-------------*/
     Piece(int pos, char c);

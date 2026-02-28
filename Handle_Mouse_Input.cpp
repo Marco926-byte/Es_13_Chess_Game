@@ -42,7 +42,6 @@ void Handle_Mouse_Input::onMouseLeftDown(wxMouseEvent& event)
 void Handle_Mouse_Input::onMouseLeftUp(wxMouseEvent& event)
 {
     
-
 }
 
 void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col)
@@ -55,6 +54,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         {
             return;
         }
+      
         //Controllo se il click è su un pezzo della mia squadra:
         if(piece_ptr->get_color()==handle_chessboard->get_turn())
         {
@@ -80,8 +80,11 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
     }
     //Se clicco la 2° volta su una casella con personaggio diverso ma della stessa 
     //squadra: 
-    if(piece_ptr 
-        &&piece_ptr->get_color()==handle_chessboard->get_turn() )
+    if
+    (
+        piece_ptr 
+        &&
+        piece_ptr->get_color()==handle_chessboard->get_turn() )
     {
         select_piece=position_board;   
         handle_piece=piece_ptr;
@@ -95,6 +98,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         handle_movement->handle_move(from_square,position_board);
         handle_chessboard->change_turn();
         handle_movement->update_moves_all_piece();
+        
         if(handle_chessboard->handle_check_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
         {
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
@@ -112,8 +116,9 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
         
         mouse_ptr->Refresh();
+
         reset_attributes();
-        handle_chessboard->clear_v_check_attack();
+        handle_chessboard->clear_v_check_attack();        
     }
     else
         return;

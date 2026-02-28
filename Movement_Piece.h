@@ -18,7 +18,7 @@ class Movement_Piece
 private:
     int draw_counter;
 
-    std::stack<Move*>stack;
+    std::stack<Move>stack;
     std::vector<int> attacked_square;
 
     Draw_board* draw=nullptr;
@@ -38,6 +38,9 @@ public:
     bool handle_move(int from, int to);
     void update_moves_all_piece();
     void update_move_in_check(Color team_turn,std::vector<int> v_attack);
+
+    bool is_enpassant();
+    void print_all_move();
 };
 
 #endif //MOVEMENT_PIECE_H

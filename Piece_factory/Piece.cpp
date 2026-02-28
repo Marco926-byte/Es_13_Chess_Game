@@ -55,10 +55,8 @@ bool Piece::is_legal_move(int square) const
         if(square==this->legal_moves[move])
         {
             return true;
-        }
-        
-    }
-    
+        }   
+    }    
     return false;
 }
 
@@ -72,6 +70,7 @@ bool Piece::is_queen()
 }
 bool Piece::is_pawn()
 {
+    std::cout<<"enun vale: "<<(int)type_piece<<std::endl;
     return type_piece==PAWN;
 }
 
@@ -82,11 +81,11 @@ bool Piece::is_rock()
 
 bool Piece::is_bishop()
 {
-    return type_piece=BISHOP;
+    return type_piece==BISHOP;
 }
 bool Piece::is_knight()
 {
-    return type_piece=KNIGHT;
+    return type_piece==KNIGHT;
 }
 /*Fine Getter*/
 

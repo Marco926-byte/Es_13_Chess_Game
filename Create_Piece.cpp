@@ -11,7 +11,6 @@ Piece* Create_Piece::create_piece(char c, int square)
     //wxLogMessage("Entro in create_piece");
     switch (c)
     {
-
     //Caso Pedone:
     case 'p':
     case 'P':
@@ -53,8 +52,6 @@ Piece* Create_Piece::create_piece(char c, int square)
         //wxLogMessage("ritorno della donna");
         return new Queen(square,c);
     
-    
-
     default:
         //wxLogMessage("puntatore ritorna a nullptr");
         return nullptr; //Carattere sbagliato allora...
