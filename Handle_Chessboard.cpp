@@ -436,16 +436,30 @@ bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current
 
 bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current_player_color)
 {
+    std::cout<<"-----INIZIO-----\n";
+
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
     int diagonal[4]{-9,-7,7,9};
 
     Piece *ptr_king=find_king(board,current_player_color);
     
+    if(ptr_king)
+    {
+        std::cout<<"Il re è nella posizione: "<<ptr_king->get_square()<<std::endl;
+        if(ptr_king->get_color()==1)
+        {
+            std::cout<<"Il re è bianco\n";
+        }
+        else
+            std::cout<<"Il re è nero\n";
+    }
     std::vector<Piece*> v_piece_friend={};
     
 
     if(!ptr_king)
     {
+        std::cout<<"ptr_king è nullptr, esco\n";
+
         //Problema, ptr_king è nullo
         return false;
     }
@@ -464,21 +478,31 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
     //parte la vista del re in diagonale:
     for(int i=0; i<4; i++)
     {
+        std::cout<<"Inizio i: "<<i<<" ciclo for\n";
+        std::cout<<"end_board_diagonal["<<i<<"] = "<<end_board_diagonal[i]<<std::endl;
+        std::cout<<"diagonal["<<i<<"] = "<<diagonal[i]<<std::endl;
+
 
         int current_move = ptr_king->get_square();     //Resetto la mossa ipotetica
-
+        std::cout<<"Resetto current_move alla posizione del re\n\n";
+        
         for(int j=0; j<end_board_diagonal[i]; j++)
         {   
+            std::cout<<"Inizio j: "<<j<<" ciclo for\n";
             current_move+=diagonal[i];
             
+            std::cout<<"Incremento current_move con diagonal[i]: "<<current_move<<std::endl;
+
             //Non deve uscire dai numeri della scacchiera
             if(current_move<0 || current_move>64)
             {
+                std::cout<<"Sono uscito dalla scacchiera, continuo il ciclo\n";
                 continue;
             }
 
             if(!board[current_move])
             {
+                std::cout<<"la casella in current_move è nullptr, continuo il ciclo\n";
                 continue;
             }
 
@@ -490,6 +514,7 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
                 board[current_move]->get_color()==current_player_color
             )
             {
+                std::cout<<"Ho trovato il mio stesso pezzo, lo inserisco nel vettore amico\n";
                 v_piece_friend.push_back(board[current_move]);
             }
             
@@ -508,15 +533,21 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
                 board[current_move]->get_color()!=current_player_color
             )           
             {
+                std::cout<<"HO TROVATO L'ALFIERE O LA REGINA!!!\n";
                 if(v_piece_friend.size()==1)
                 {
+                    std::cout<<"Il vettore amico è grande 1\n";
                     //Okay ho il pezzo amico, ora devo simulare le mosse e registrare solamente le mosse
                     //che coprono il re, le altre le devo cancellare
 
                     for(auto itr : v_piece_friend)
                     {
+                        std::cout<<"nome pezzo dentro vettore amico itr: "<<itr->get_name_piece()<<std::endl;
+
                         for(int move : itr->get_legal_moves())
                         {
+                            std::cout<<"Le mosse legali del pezzo sono: "<<move<<std::endl;
+
                             //Devo simulare le mosse....
                             int original_square = itr->get_square();
                             Piece *original_piece = board[move];
@@ -528,6 +559,7 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
 
                             if(handle_check_on_king_diagonal(board,current_player_color))
                             {
+                                std::cout<<"Effettuo operazione eliminazione mossa legale pk PIN\n";
                                 itr->remove_legal_move(move);                                
                             }
 
@@ -548,7 +580,6 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
         }
     }
     return false;
-
 }
 
 void Handle_Chessboard::print_v_check_attack()

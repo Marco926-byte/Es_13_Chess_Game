@@ -388,6 +388,8 @@ TEST_F(Chessboard_Test, test_pin_diagonal_sx_under_black)
 
     engine.get()->update_moves_all_piece();
 
+    chess_logic.get()->set_turn(BLACK);
+
     bool success= chess_logic.get()->handle_pin_on_king_diagonal
     (
         fen_string.get()->get_piece(),
@@ -403,6 +405,8 @@ TEST_F(Chessboard_Test, test_pin_diagonal_sx_up_black)
     fen_string.get()->set_board_fenstring(fen_start);
 
     engine.get()->update_moves_all_piece();
+
+    chess_logic.get()->set_turn(BLACK);
 
     bool success= chess_logic.get()->handle_pin_on_king_diagonal
     (
@@ -420,6 +424,8 @@ TEST_F(Chessboard_Test, test_pin_diagonal_dx_up_black)
 
     engine.get()->update_moves_all_piece();
 
+    chess_logic.get()->set_turn(BLACK);
+
     bool success= chess_logic.get()->handle_pin_on_king_diagonal
     (
         fen_string.get()->get_piece(),
@@ -436,6 +442,8 @@ TEST_F(Chessboard_Test, test_pin_diagonal_dx_under_black)
 
     engine.get()->update_moves_all_piece();
 
+    chess_logic.get()->set_turn(BLACK);
+    
     bool success= chess_logic.get()->handle_pin_on_king_diagonal
     (
         fen_string.get()->get_piece(),

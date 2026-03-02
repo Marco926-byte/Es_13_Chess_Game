@@ -2,7 +2,6 @@
 #define MOVEMENT_PIECE_H
 
 #include <iostream>
-#include <wx/wx.h>
 #include <memory>
 #include <stack>
 
@@ -36,10 +35,13 @@ public:
     void set_attack_vector(std::vector<int> v_attack);
 
     bool handle_move(int from, int to);
+    bool handle_capture_enpassant();
+
     void update_moves_all_piece();
     void update_move_in_check(Color team_turn,std::vector<int> v_attack);
 
     bool is_enpassant();
+
     void print_all_move();
 };
 

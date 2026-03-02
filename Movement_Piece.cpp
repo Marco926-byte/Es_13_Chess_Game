@@ -81,6 +81,42 @@ bool Movement_Piece::handle_move(int from, int to)
     return true;
 }
 
+bool Movement_Piece::handle_capture_enpassant()
+{
+    // Ottieni l'ultima mossa:
+    Move last_move = stack.top();
+
+    // Se l'ultima mossa associata al pezzo non è un pedone, esci...
+    if (!last_move.get_piece_status()->is_pawn())
+    {
+        return false;
+    }
+
+    // Se l'ultima mossa non è una singola mossa diagonale, esci...
+    if 
+    (
+        abs(last_move.get_from_square() - last_move.get_to_square()) != 9 
+        &&
+        abs(last_move.get_from_square() - last_move.get_to_square()) != 7
+    ) 
+    {
+        return false;
+    }
+
+    // Se la casella diagonale è nullptr, elimina il pezzo
+    if (last_move.get_piece_captured() == nullptr) 
+    {
+        int color_offset = last_move.get_piece_status()->get_color() == WHITE ? 8 : -8;
+        last_move.set_piece_status(fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset]);
+        
+        delete fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset];
+        fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset]=nullptr;
+        
+        return true;
+    }
+    return false;
+}
+
 void Movement_Piece::update_moves_all_piece()
 {
     const auto& piece=fen_shared.get()->get_piece();
@@ -148,26 +184,21 @@ void Movement_Piece::print_all_move()
 bool Movement_Piece::is_enpassant()
 {
     Move last_move;
-    std::cout<<"INIZIO\n";
+
     if(stack.size()==0)
     {
-        std::cout<<"lo stack delle mosse è vuoto, returno false\n";
         return false;
     }
     else
     {
         //Ottengo l'ultima mossa fatta...
-        std::cout<<"lo stack delle mosse contiene qualcosa\n";
         last_move = stack.top();
     }
 
     if(!last_move.get_piece_status())
     {
-        std::cout<<"il pezzo associato all'ultima mossa è nullptr\n";
         return false;
     }
-    else
-        std::cout<<"il pezzo associato all'ultima mossa non è nullptr\n";
 
     //Se il pezzo non è un pedone...
     if
@@ -175,16 +206,12 @@ bool Movement_Piece::is_enpassant()
         !last_move.get_piece_status()->is_pawn() 
     )
     {
-        std::cout<<"L'ultima mossa non è stata fatta da un pedone, returno false\n";
         return false;
     }
-    else
-        std::cout<<"L'ultima mossa è stata fatta da un pedone\n";
 
     //Se l'ultima mossa non è un doppio salto del pedone...
     if(std::abs(last_move.get_to_square()-last_move.get_from_square())!=16)
     {
-        std::cout<<"L'ultima mossa non è un doppio salto del pedone, returno false\n";
         return false;
     }
 
@@ -193,40 +220,30 @@ bool Movement_Piece::is_enpassant()
 
     for(int i=0; i<2; i++)
     {
-        std::cout<<"i : "<<i<<std::endl;
-        std::cout<<"lato: side["<<i<<"] = "<<side[i]<<std::endl;
-        std::cout<<"Casella dell'ultima mossa: "<<last_move.get_to_square()<<std::endl;
-
         //Casella del pedone enpassant
         int square = side[i]+ last_move.get_to_square();
-        std::cout<<"square di controllo enpassant è: "<<square<<std::endl;
 
         //Se la casella non è sulla scacchiera, continua
         if (square < 0 || square > 63) 
         {
-            std::cout<<"square esce dalla scacchiera, riinizia il ciclo..."<<std::endl;
             continue;
         }
 
         //Se la casella affiaco del pedone è nullptr quindi vuota allora continua il ciclo
         if(!fen_shared.get()->get_piece()[square])
         {
-            std::cout<<"La casella accanto al pedone doppio salto è vuota!, riinizio il ciclo...\n";
             continue;
         }
 
         //L'altro pezzo deve essere di un altro colore
         if(fen_shared.get()->get_piece()[square]->get_color() == last_move.get_piece_status()->get_color())
         {
-            std::cout<<"L'altro pezzo è dello stesso team, riinizio il ciclo\n";
             continue;
         }
 
         // Se il pezzo accanto al pedone doppio salto non è un pedone allora continua il ciclo
         if (!fen_shared.get()->get_piece()[square]->is_pawn()) 
         {
-            std::cout<<"Il pezzo accanto al pedone doppio salto non è un pedone allora continua il ciclo\n";
-            std::cout<<"Chi è il pezzo che è accanto al pedone doppio salto? "<<fen_shared.get()->get_piece()[square]->get_name_piece()<<std::endl;
             continue;
         }
 
@@ -239,11 +256,6 @@ bool Movement_Piece::is_enpassant()
         
         //Parte la gestione dell'en_passant
         pawn->handle_en_passant(last_move.get_to_square() + color_offset);
-        
-        std::cout<<"Ho aggiunto la casella enpassant al pawn: \n";
-        std::cout<<pawn->get_name_piece()<<std::endl;
-        std::cout<<pawn->get_square()<<std::endl;
-        std::cout<<last_move.get_to_square() + color_offset<<std::endl;
         
         return true;
     }
