@@ -21,14 +21,14 @@ private:
 
     bool is_select_piece, check_king;
 
-    std::shared_ptr<Handle_Fen_String> fen_smart;
     
     Piece* handle_piece=nullptr; 
     Piece* piece_ptr=nullptr;
 
     Draw_board* mouse_ptr=nullptr; 
-    Handle_Chessboard* handle_chessboard=nullptr;
+    std::shared_ptr<Handle_Fen_String> fen_smart;
     Movement_Piece* handle_movement=nullptr;
+    Handle_Chessboard* handle_chessboard=nullptr;
     
 public:
     Handle_Mouse_Input

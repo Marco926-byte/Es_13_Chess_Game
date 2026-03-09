@@ -70,7 +70,6 @@ bool Piece::is_queen()
 }
 bool Piece::is_pawn()
 {
-    std::cout<<"enun vale: "<<(int)type_piece<<std::endl;
     return type_piece==PAWN;
 }
 
@@ -140,8 +139,6 @@ Piece::Piece(int pos_square,char c)
         this->color=WHITE;
     else
         this->color=BLACK;
-
-    //c=toupper(c);
     
     //Inizializzo tutti gli attributi privati
     //serve per stringa FIN
@@ -150,7 +147,9 @@ Piece::Piece(int pos_square,char c)
         {'P',PAWN},{'R',ROCK},{'B',BISHOP},
         {'N',KNIGHT},{'Q',QUEEN},{'K',KING}
     };
+
     char upper_c=toupper(c);
+
     if(mp_character.count(upper_c))
     {
         this->type_piece=mp_character[upper_c];
@@ -216,10 +215,8 @@ void Piece::diagonal_move(Piece** ptr,std::vector<int> &legal_moves)
                 this->color!=ptr[current_square_move]->get_color())
             {
                 break;
-            }
-            
+            }            
         }
-
     }
 }
 

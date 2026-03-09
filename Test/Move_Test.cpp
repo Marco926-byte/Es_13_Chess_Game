@@ -9,8 +9,8 @@ class Move_Test: public ::testing::Test
 {
 protected:
     std::shared_ptr<Handle_Fen_String> fen_string;
-    std::unique_ptr<Movement_Piece> engine;
     std::unique_ptr<Handle_Chessboard> chess_logic;
+    std::unique_ptr<Movement_Piece> engine;
 public:
     void SetUp() override
     {
@@ -19,10 +19,10 @@ public:
         std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
         fen_string.get()->set_board_fenstring(start_fen);
 
-        chess_logic = std::make_unique<Handle_Chessboard>(nullptr,fen_string);
+        chess_logic = std::make_unique<Handle_Chessboard>(nullptr,fen_string); 
 
         //Inizializzo il motore delle mosse:
-        engine = std::make_unique<Movement_Piece>(nullptr,fen_string,nullptr);
+        engine = std::make_unique<Movement_Piece>(nullptr,fen_string,chess_logic.get());
         engine.get()->update_moves_all_piece();
     }
 
@@ -251,7 +251,8 @@ TEST_F(Move_Test, Is_Enpassant)
 
 
     engine.get()->update_moves_all_piece();
-    //chess_logic.get()->set_turn(WHITE);
+   
+    chess_logic.get()->set_turn(WHITE);
     
     bool success = engine.get()->is_enpassant();
 
@@ -267,4 +268,74 @@ TEST_F(Move_Test, Is_Not_Enpassant)
 
     bool success = engine.get()->is_enpassant();
     ASSERT_FALSE(success);
+}
+
+TEST_F(Move_Test, handle_is_enpassant)
+{
+    std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
+    fen_string.get()->set_board_fenstring(fen_start); 
+ 
+    chess_logic.get()->set_turn(BLACK);
+
+    engine.get()->update_moves_all_piece();
+
+    int from_piece_move = 9;
+    int to_piece_move = 25;
+
+    engine.get()->handle_move(from_piece_move,to_piece_move);
+
+    engine.get()->update_moves_all_piece();
+   
+    int from_piece_move_enpassant = 24;
+    int to_piece_move_enpassant = 17;
+
+
+    chess_logic.get()->set_turn(WHITE);
+    
+    engine.get()->handle_move(from_piece_move_enpassant,to_piece_move_enpassant);
+    bool success = engine.get()->handle_capture_enpassant();
+
+    ASSERT_TRUE(success);   
+}
+
+TEST_F(Move_Test, not_handle_is_enpassant)
+{
+    std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
+    fen_string.get()->set_board_fenstring(fen_start); 
+ 
+    chess_logic.get()->set_turn(BLACK);
+
+    engine.get()->update_moves_all_piece();
+
+    int from_piece_move = 9;
+    int to_piece_move = 25;
+
+    engine.get()->handle_move(from_piece_move,to_piece_move);
+
+    engine.get()->update_moves_all_piece();
+   
+    int from_piece_move_enpassant = 24;
+    int to_piece_move_enpassant = 16;
+
+
+    chess_logic.get()->set_turn(WHITE);
+    
+    engine.get()->handle_move(from_piece_move_enpassant,to_piece_move_enpassant);
+    bool success = engine.get()->handle_capture_enpassant();
+
+    ASSERT_FALSE(success); 
+}
+
+TEST_F(Move_Test, is_castle_dx)
+{
+    std::string fen_start = "4K1R1/8/8/8/8/8/8/4k2r w KQkq - 0 3";
+    fen_string.get()->set_board_fenstring(fen_start); 
+ 
+    chess_logic.get()->set_turn(BLACK);
+
+    engine.get()->update_moves_all_piece();
+    
+
+    bool success = engine.get()->is_castling_dx();
+    ASSERT_TRUE(success);
 }

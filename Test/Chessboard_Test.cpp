@@ -24,7 +24,7 @@ public:
         chess_logic = std::make_unique<Handle_Chessboard>(nullptr,fen_string);
         
         //Inizializzo il motore delle mosse:
-        engine = std::make_unique<Movement_Piece>(nullptr,fen_string,nullptr);
+        engine = std::make_unique<Movement_Piece>(nullptr,fen_string,chess_logic.get());
         engine.get()->update_moves_all_piece();
     }
 

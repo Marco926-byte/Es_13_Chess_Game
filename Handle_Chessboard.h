@@ -14,10 +14,10 @@ class Handle_Chessboard
 private:
     Color turn;  
     
-    std::shared_ptr<Handle_Fen_String> handler_fen;
     std::vector<int> v_check_attack;
 
     Draw_board* draw_class = nullptr;
+    std::shared_ptr<Handle_Fen_String> handler_fen;
 public:
     //Costruttore
     Handle_Chessboard(Draw_board *board, std::shared_ptr<Handle_Fen_String>fen);
@@ -31,6 +31,7 @@ public:
     std::vector<int> get_v_check_attack();
 
     Piece* find_king(Piece** board, Color color_to_find);
+    
 
     bool handle_check_on_king_straight(Piece **board, Color current_player_color);
     bool handle_check_on_king_diagonal(Piece **board, Color current_player_color);

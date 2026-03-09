@@ -4,6 +4,7 @@
 #include "wx/wx.h"
 #include "Es13.h"
 #include "wx/image.h"
+#include <list>
 
 class MyApp: public wxApp
 {

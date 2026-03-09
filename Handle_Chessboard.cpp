@@ -9,8 +9,7 @@ Handle_Chessboard::Handle_Chessboard
     :draw_class(board),
     handler_fen(fen)
     {
-        turn=WHITE;
-        
+        turn=WHITE;        
     }
 
 Color Handle_Chessboard::get_turn()
@@ -126,7 +125,6 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
             //Non deve uscire dai numeri della scacchiera
             if(current_move<0 || current_move>64)
             {
-                //wxLogMessage(wxT("Oioia, sono uscito dalla scacchiera"));
                 continue;
             }
 

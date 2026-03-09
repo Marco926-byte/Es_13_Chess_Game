@@ -35,9 +35,8 @@ private:
     std::map<char,wxBitmap> chess_piece_bitmaps;
 
     std::shared_ptr<Handle_Fen_String> fen_shared;
-
-    Movement_Piece* game_movement=nullptr;
     Handle_Chessboard* chess_handler=nullptr;
+    Movement_Piece* game_movement=nullptr;
     Handle_Mouse_Input* mouse_handler=nullptr;
 
 public:

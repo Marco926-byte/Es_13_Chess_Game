@@ -53,7 +53,6 @@ private:
 
     Color color;
     
-
     std::vector<int> legal_moves;
     std::map<int,std::vector<int>> map_path;          
                                             
@@ -62,8 +61,10 @@ private:
     //-8 sali alla cella superiore
     //+1 vo a destra
     //-1 vo a sinistra 
+
 protected:
     Character type_piece;
+
 public:
     /*------COSTRUTTORE-------------*/
     Piece(int pos, char c);
@@ -107,10 +108,10 @@ public:
         bool is_bishop();
         bool is_queen();
         /*Fine: controllo se sono pezzi specifici*/
+
     /*-----------FINE GETTER-------------*/
 
     /*-----------SETTER------------------*/
-
         void set_row(int new_row);
         void set_col(int new_col);
         void set_square(int new_square);
@@ -118,12 +119,10 @@ public:
         void set_ismoved(bool new_moved);
         void set_color(Color new_color);
         void set_legal_moves(std::vector<int> new_legal_moves);
-        //void set_map_path(int square_legal[array_size]);    //devo impostare il vettore in map_path
         
     /*-----------FINE SETTER------------------*/
 
     /*-----------FUNZIONI-----------------*/
-
         /*Inizio: Gestione degli spostamenti:*/
         void diagonal_move  //DA FARE: PURAMENTE VIRTUALE (così pulisco il codice)
         (
@@ -160,7 +159,4 @@ public:
 
     virtual ~Piece()= default;
 };
-
-
-
 #endif //PIECE_H

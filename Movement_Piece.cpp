@@ -22,6 +22,7 @@ bool Movement_Piece::handle_move(int from, int to)
 {
     //Creo la nuova mossa:
     Move move;
+    
     move.set_from_square(from);
     move.set_to_square(to);
 
@@ -36,7 +37,7 @@ bool Movement_Piece::handle_move(int from, int to)
     }
 
     //Tutto okay, incremento il contatore del pareggio:
-    this->draw_counter++;
+    //this->draw_counter++;
 
     //Gestisco la cattura:
     if(piece[move.get_to_square()]!=nullptr)
@@ -51,7 +52,7 @@ bool Movement_Piece::handle_move(int from, int to)
         delete piece[move.get_to_square()];
         
         //riporto a zero il contatore del pareggio pk se mangio reset
-        this->draw_counter=0;
+        //this->draw_counter=0;
     }
     //Se non c'è nessun pezzo ad ostacolare la mossa legale allora:
     else
@@ -65,10 +66,6 @@ bool Movement_Piece::handle_move(int from, int to)
     piece[move.get_to_square()]=move.get_piece_status();
     piece[move.get_from_square()]=nullptr;
 
-    if(move.get_piece_status()->is_pawn())
-    {
-        this->draw_counter=0;
-    }
     move.get_piece_status()->set_square(move.get_to_square());
     move.get_piece_status()->set_ismoved(true); 
     
@@ -128,7 +125,9 @@ void Movement_Piece::update_moves_all_piece()
         }
     }
     is_enpassant();
+    is_castling_dx();
 }
+
 void Movement_Piece::update_move_in_check(Color team_color,std::vector<int> v_attack)
 {
     const auto& piece=fen_shared.get()->get_piece();
@@ -184,6 +183,8 @@ void Movement_Piece::print_all_move()
 bool Movement_Piece::is_enpassant()
 {
     Move last_move;
+
+    std::cout<<"ciao da is_enpassant()\n";
 
     if(stack.size()==0)
     {
@@ -258,6 +259,86 @@ bool Movement_Piece::is_enpassant()
         pawn->handle_en_passant(last_move.get_to_square() + color_offset);
         
         return true;
+    }
+    return false;
+}
+
+int Movement_Piece::get_king_position()
+{
+    Piece* king = handle_chess->find_king(fen_shared.get()->get_piece(),handle_chess->get_turn());
+
+    return king->get_square();
+}
+
+bool Movement_Piece::is_castling_dx()
+{
+    //Trovo il re sulla scacchiera con find_king
+    Piece *king = handle_chess->find_king(fen_shared.get()->get_piece(),handle_chess->get_turn());
+
+    //Se il re si è mosso esci
+    if(king->get_ismoved())
+    {
+        return false;
+    }
+
+    //Ottengo la posizione del re
+    int position_king = king->get_square();
+
+    //itero di 3, metto 1 perchè voglio vedere la casella successiva al re
+    for(int i = 1; i<4; i++)
+    {
+        //Controllo dei confini della scacchiera
+        if(position_king+i>=64 || position_king+i<0)
+        {
+            return false;
+        }
+        
+        //Controllo se sulla casella successiva c'è qualcosa
+        if(fen_shared.get()->get_piece()[position_king+i])
+        {
+            //Controllo se trovo la torre durante il ciclo:
+            if(fen_shared.get()->get_piece()[position_king+i]->is_rock())
+            {
+                //Trovo la torre, me la memorizzo in un puntatore creato sul momento
+                Piece* rock = fen_shared.get()->get_piece()[position_king+i];
+                
+                //Controllo se la torre si è mossa:
+                if(rock->get_ismoved())
+                {
+                    return false;
+                }
+                else
+                {
+                    //Controllo se nelle 2 caselle successive al re c'era qualcosa:
+                    if
+                    (
+                        !fen_shared.get()->get_piece()[position_king+1]
+                        &&
+                        !fen_shared.get()->get_piece()[position_king+2]
+                    )
+                    {
+                        
+                        king->add_legal_move(position_king+2);
+                        return true;
+                    }
+                    //In una delle due caselle successive alla casella del re c'era qualcosa
+                    //non aggiungo la mossa per arroccare, ma comunque arrocco possibile
+                    else
+                    {
+                        return true;
+                    }       
+                }                    
+            }
+            else
+            {
+                continue;
+            }                
+        }
+        //Non c'è niente sulla casella successiva 
+        else
+        {
+            continue;
+        }   
     }
     return false;
 }

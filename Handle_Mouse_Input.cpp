@@ -116,6 +116,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
         handle_movement->handle_capture_enpassant();
         
+
         mouse_ptr->Refresh();
 
         reset_attributes();

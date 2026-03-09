@@ -21,9 +21,8 @@ private:
     std::vector<int> attacked_square;
 
     Draw_board* draw=nullptr;
-    Handle_Chessboard* handle_chess=nullptr;
-
     std::shared_ptr<Handle_Fen_String> fen_shared;
+    Handle_Chessboard* handle_chess=nullptr;
 public:
     Movement_Piece
     (
@@ -41,6 +40,10 @@ public:
     void update_move_in_check(Color team_turn,std::vector<int> v_attack);
 
     bool is_enpassant();
+    bool is_castling_dx();
+    bool is_castling_sx();
+
+    int get_king_position();
 
     void print_all_move();
 };
