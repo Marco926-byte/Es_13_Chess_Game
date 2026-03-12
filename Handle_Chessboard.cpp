@@ -91,32 +91,27 @@ Piece* Handle_Chessboard::find_king(Piece** board, Color color_to_find)
     return nullptr;
 }
 
-bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color current_player_color)
+bool Handle_Chessboard::handle_check_on_king_straight(int position_king, Piece **board, Color current_player_color)
 {
-    Piece *ptr_king=find_king(board,current_player_color);
-    
     //Singolo spostamento dritto
     int single_straight[4]={-8,8,-1,1};
 
-    if(!ptr_king)
-    {
-        //Problema: ptr_king è nullptr
-        return false;
-    }
+    int row_for_check = position_king/8;
+    int col_for_check = position_king%8;
 
     //Spostamento dritto fino alla fine della scacchiera
     int end_board_straight[4] =
     {
-        ptr_king->get_row(),
-        7-ptr_king->get_row(),
-        ptr_king->get_col(),
-        7-ptr_king->get_col()
+        row_for_check,
+        7-row_for_check,
+        col_for_check,
+        7-col_for_check
     };
 
     for(int i =0; i<4; i++)
     {
-        int current_move = ptr_king->get_square();     //Resetto la mossa ipotetica
-        int straight_attack = ptr_king->get_square();  //Resetto straight attack
+        int current_move = position_king;     //Resetto la mossa ipotetica
+        int straight_attack = position_king;  //Resetto straight attack
                                                        //da modificare probabilmente
         for(int j=0; j<end_board_straight[i]; j++)
         {
@@ -171,33 +166,37 @@ bool Handle_Chessboard::handle_check_on_king_straight(Piece **board, Color curre
     return false;
 }
 
-bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color current_player_color)
+bool Handle_Chessboard::handle_check_on_king_diagonal(int position_king, Piece **board, Color current_player_color)
 {
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
     int diagonal[4]{-9,-7,7,9};
 
-    Piece *ptr_king=find_king(board,current_player_color);
+    /*Piece *ptr_king=find_king(board,current_player_color);
 
     if(!ptr_king)
     {
         //Problema, ptr_king è nullo
         return false;
-    }
+    }*/
+
+    int row_for_check = position_king/8;
+    int col_for_check = position_king%8;
+
 
     //posizione delle quattro diagonali della cella in totale
     int end_board_diagonal[4]
     {
-        std::min(ptr_king->get_row(),ptr_king->get_col()),
-        std::min(ptr_king->get_row(),7-ptr_king->get_col()),
-        std::min(7-ptr_king->get_row(),ptr_king->get_col()),
-        std::min(7-ptr_king->get_row(),7-ptr_king->get_col())        
+        std::min(row_for_check, col_for_check),
+        std::min(row_for_check,7-col_for_check),
+        std::min(7-row_for_check, col_for_check),
+        std::min(7-row_for_check,7-col_for_check)        
     };
 
     //parte la vista del re in diagonale:
     for(int i=0; i<4; i++)//da correggere....
     {
-        int current_move = ptr_king->get_square();
-        int diagonal_attack = ptr_king->get_square();
+        int current_move = position_king;
+        int diagonal_attack = position_king;
         
         for(int j=0; j<end_board_diagonal[i]; j++)
         {   
@@ -262,26 +261,20 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(Piece **board, Color curre
     return false;
 }
 
-bool Handle_Chessboard::handle_check_on_king_knight(Piece **board, Color current_player_color)
+bool Handle_Chessboard::handle_check_on_king_knight(int position_king, Piece **board, Color current_player_color)
 {
     //Le direzioni che può fare il cavallo:
     int directions[8]={17,15,10,-6,6,-10,-15,-17};
     
-    //Trovo il re del turno corrente....
-    Piece *ptr_king=find_king(board,current_player_color);
-    
-    if(!ptr_king)
-    {
-        //Problema, ptr_king è nullo
-        return false;
-    } 
-    
+    int row_for_check = position_king/8;
+    int col_for_check = position_king%8;
+
     //ciclo per ogni direzione del cavallo, voglio trovare il cavallo:
     for(int i=0; i<8; i++)
     {
         //current_move si dovrà resettare ogni volta a inizio ciclo 
         //per cambiare la direzione
-        int current_move = ptr_king->get_square();
+        int current_move = position_king;
         
         //incremento la mossa con la direzione del ciclo
         current_move +=directions[i];
@@ -307,7 +300,7 @@ bool Handle_Chessboard::handle_check_on_king_knight(Piece **board, Color current
             )
             && 
             (
-                abs(ptr_king->get_col() - current_move %8)<3  
+                abs(col_for_check - current_move %8)<3  
                 &&
                 board[current_move]->get_color()!=current_player_color
             )
@@ -412,7 +405,7 @@ bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current
                             board[original_square] = nullptr;
                             itr->set_square(move);
 
-                            if(handle_check_on_king_straight(board,current_player_color))
+                            if(handle_check_on_king_straight(move,board,current_player_color))
                             {
                                 itr->remove_legal_move(move);                                
                             }
@@ -434,30 +427,16 @@ bool Handle_Chessboard::handle_pin_on_king_straight(Piece **board, Color current
 
 bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current_player_color)
 {
-    std::cout<<"-----INIZIO-----\n";
-
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
     int diagonal[4]{-9,-7,7,9};
 
     Piece *ptr_king=find_king(board,current_player_color);
-    
-    if(ptr_king)
-    {
-        std::cout<<"Il re è nella posizione: "<<ptr_king->get_square()<<std::endl;
-        if(ptr_king->get_color()==1)
-        {
-            std::cout<<"Il re è bianco\n";
-        }
-        else
-            std::cout<<"Il re è nero\n";
-    }
+
     std::vector<Piece*> v_piece_friend={};
     
 
     if(!ptr_king)
     {
-        std::cout<<"ptr_king è nullptr, esco\n";
-
         //Problema, ptr_king è nullo
         return false;
     }
@@ -476,31 +455,20 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
     //parte la vista del re in diagonale:
     for(int i=0; i<4; i++)
     {
-        std::cout<<"Inizio i: "<<i<<" ciclo for\n";
-        std::cout<<"end_board_diagonal["<<i<<"] = "<<end_board_diagonal[i]<<std::endl;
-        std::cout<<"diagonal["<<i<<"] = "<<diagonal[i]<<std::endl;
-
-
         int current_move = ptr_king->get_square();     //Resetto la mossa ipotetica
-        std::cout<<"Resetto current_move alla posizione del re\n\n";
-        
+
         for(int j=0; j<end_board_diagonal[i]; j++)
         {   
-            std::cout<<"Inizio j: "<<j<<" ciclo for\n";
             current_move+=diagonal[i];
-            
-            std::cout<<"Incremento current_move con diagonal[i]: "<<current_move<<std::endl;
 
             //Non deve uscire dai numeri della scacchiera
             if(current_move<0 || current_move>64)
             {
-                std::cout<<"Sono uscito dalla scacchiera, continuo il ciclo\n";
                 continue;
             }
 
             if(!board[current_move])
             {
-                std::cout<<"la casella in current_move è nullptr, continuo il ciclo\n";
                 continue;
             }
 
@@ -512,7 +480,6 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
                 board[current_move]->get_color()==current_player_color
             )
             {
-                std::cout<<"Ho trovato il mio stesso pezzo, lo inserisco nel vettore amico\n";
                 v_piece_friend.push_back(board[current_move]);
             }
             
@@ -531,21 +498,15 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
                 board[current_move]->get_color()!=current_player_color
             )           
             {
-                std::cout<<"HO TROVATO L'ALFIERE O LA REGINA!!!\n";
                 if(v_piece_friend.size()==1)
                 {
-                    std::cout<<"Il vettore amico è grande 1\n";
                     //Okay ho il pezzo amico, ora devo simulare le mosse e registrare solamente le mosse
                     //che coprono il re, le altre le devo cancellare
 
                     for(auto itr : v_piece_friend)
                     {
-                        std::cout<<"nome pezzo dentro vettore amico itr: "<<itr->get_name_piece()<<std::endl;
-
                         for(int move : itr->get_legal_moves())
                         {
-                            std::cout<<"Le mosse legali del pezzo sono: "<<move<<std::endl;
-
                             //Devo simulare le mosse....
                             int original_square = itr->get_square();
                             Piece *original_piece = board[move];
@@ -555,9 +516,8 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
                             board[original_square] = nullptr;
                             itr->set_square(move);
 
-                            if(handle_check_on_king_diagonal(board,current_player_color))
+                            if(handle_check_on_king_diagonal(move,board,current_player_color))
                             {
-                                std::cout<<"Effettuo operazione eliminazione mossa legale pk PIN\n";
                                 itr->remove_legal_move(move);                                
                             }
 
@@ -572,8 +532,7 @@ bool Handle_Chessboard::handle_pin_on_king_diagonal(Piece **board, Color current
                 else
                 {
                     return false;
-                }
-                
+                }                
             }
         }
     }

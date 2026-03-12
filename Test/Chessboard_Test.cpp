@@ -43,9 +43,13 @@ TEST_F(Chessboard_Test, test_check_straight_under_rock_white)
     engine.get()->update_moves_all_piece();
 
     chess_logic.get()->set_turn(WHITE);
+    
+    Piece *king = chess_logic.get()->find_king(fen_string.get()->get_piece(),chess_logic.get()->get_turn());
+    int position_king = king->get_square();
 
     bool success= chess_logic.get()->handle_check_on_king_straight
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -62,13 +66,16 @@ TEST_F(Chessboard_Test, test_check_straight_under_rock_black)
     engine.get()->update_moves_all_piece();
 
     chess_logic.get()->set_turn(BLACK);
+    
+    Piece *king = chess_logic.get()->find_king(fen_string.get()->get_piece(),chess_logic.get()->get_turn());
+    int position_king = king->get_square();
 
     bool success= chess_logic.get()->handle_check_on_king_straight
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
-    
     ASSERT_TRUE(success);
 }
 
@@ -81,9 +88,13 @@ TEST_F(Chessboard_Test, test_not_check_straight_under_rock_black)
     engine.get()->update_moves_all_piece();
 
     chess_logic.get()->set_turn(BLACK);
+    
+    Piece *king = chess_logic.get()->find_king(fen_string.get()->get_piece(),chess_logic.get()->get_turn());
+    int position_king = king->get_square();
 
     bool success= chess_logic.get()->handle_check_on_king_straight
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -101,8 +112,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_false_white)
 
     chess_logic.get()->set_turn(WHITE);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -119,8 +133,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_sx_up_white)
 
     chess_logic.get()->set_turn(WHITE);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -137,8 +154,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_sx_up_black)
 
     chess_logic.get()->set_turn(BLACK);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -155,8 +175,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_sx_under_white)
 
     chess_logic.get()->set_turn(WHITE);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -173,8 +196,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_sx_under_black)
 
     chess_logic.get()->set_turn(WHITE);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -192,8 +218,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_dx_up_white)
 
     chess_logic.get()->set_turn(WHITE);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -209,9 +238,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_dx_up_black)
     engine.get()->update_moves_all_piece();
 
     chess_logic.get()->set_turn(BLACK);
+    int position_king = engine.get()->get_king_position();
 
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -228,8 +259,11 @@ TEST_F(Chessboard_Test, test_check_diagonal_bishop_dx_under_white)
 
     chess_logic.get()->set_turn(WHITE);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_diagonal
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
@@ -247,8 +281,11 @@ TEST_F(Chessboard_Test, test_check_knight_black)
 
     chess_logic.get()->set_turn(BLACK);
 
+    int position_king = engine.get()->get_king_position();
+
     bool success= chess_logic.get()->handle_check_on_king_knight
     (
+        position_king,
         fen_string.get()->get_piece(),
         chess_logic.get()->get_turn()
     );
