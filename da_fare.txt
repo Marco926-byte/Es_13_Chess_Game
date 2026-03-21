@@ -1,5 +1,4 @@
 DEVO:
-3. Gestire arrocco
 4. Gestire la fine del gioco.
 
 
@@ -9,11 +8,4 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella p
 valgrind --leak-check=full --track-origins=yes ./w
                                                         Fa partire il memcheck
 
-arrocco:
-1) devo trovare il re del turno
-2) se il re e la torre di destra non si sono mai mosse:
-    allora okay, l'arrocco si può fare
-    sennò:
-        niente arrocco
-3) da fare il find_king in movement_piece
 

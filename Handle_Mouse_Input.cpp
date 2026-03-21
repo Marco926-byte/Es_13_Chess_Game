@@ -1,4 +1,5 @@
 #include "Handle_Mouse_Input.h"
+#include "Es13.h"
 
 Handle_Mouse_Input::Handle_Mouse_Input
 (   
@@ -10,7 +11,8 @@ Handle_Mouse_Input::Handle_Mouse_Input
     :mouse_ptr(ptr),    
      fen_smart(fen),
      handle_movement(move),
-     handle_chessboard(chess)    
+     handle_chessboard(chess),
+     dialog_ref(static_cast<Es13&>(*wxTheApp->GetTopWindow()))  //Importante riferimento per ottenere es13
     {    
         is_select_piece=false;
         select_piece=-1;
@@ -124,6 +126,11 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         if(handle_movement->handle_castling_sx())
         {
             handle_movement->handle_castling_sx();
+        }
+        if(handle_movement->is_promotion_pawn())
+        {
+            //Todo: collegamento a Es13 per creare il dialogo di promozione 
+            dialog_ref.open_promotion_dialog();  
         }
         handle_chessboard->handle_pin_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
         handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn());

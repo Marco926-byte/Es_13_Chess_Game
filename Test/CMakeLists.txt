@@ -20,6 +20,7 @@ add_executable(w_test
     ../Create_Piece.cpp 
     ../Draw_board.cpp 
     ../Es13.cpp 
+    ../Draw_Promotion_Dialog.cpp
     ../Handle_Chessboard.cpp 
     ../Handle_Mouse_Input.cpp  
     ../Piece_factory/Piece.cpp 

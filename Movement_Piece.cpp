@@ -116,41 +116,56 @@ bool Movement_Piece::handle_capture_enpassant()
 
 bool Movement_Piece::handle_castling_dx()
 {
-    std::cout<<"$$$$$---entro in handle_castling_dx----$$$$\n";
+    std::cout<<"------------Entro in HANDLE_CASTLING_DX ------------\n";
     int position_rook=0;
+    
     // Ottieni l'ultima mossa:
     Move last_move = stack.top();
 
     // Se l'ultima mossa associata al pezzo non è il re, esci...
     if (!last_move.get_piece_status()->is_king())
     {
+        std::cout<<"Ultima mossa non è stata fatta dal re, ritorno false\n";
         return false;
     }
 
-    // Se l'ultima mossa non è un doppio salto in qualunque direzione, esci...
+    std::cout<<"last_move.get_from_square() ="<<last_move.get_from_square()<<std::endl;
+    std::cout<<"last_move.get_to_square() ="<<last_move.get_to_square()<<std::endl;
+    std::cout<<"to - from = "<<last_move.get_to_square()-last_move.get_from_square()<<std::endl;
+
+    // Se l'ultima mossa non è un doppio salto in avanti, esci...
     if 
     (
-        abs(last_move.get_from_square() - last_move.get_to_square()) != 2 
+        (last_move.get_to_square() - last_move.get_from_square()) != 2 
     ) 
     {
+        std::cout<<"L'ultima mossa non è un doppio spostamento a destra (2), ritorno false\n";
         return false;
     }
 
     if(last_move.get_piece_status()->get_color()==WHITE)
-    {
+    {    
         position_rook = 63;
     }
     else
     {
         position_rook = 7;
     }
+    std::cout<<"La posizione della torre: "<<position_rook<<std::endl;
 
     //Gestisci il movimento della torre!
     if(fen_shared.get()->get_piece()[position_rook])
     {
-        fen_shared.get()->get_piece()[position_rook-2]= fen_shared.get()->get_piece()[position_rook];
-        fen_shared.get()->get_piece()[position_rook]=nullptr;
+        std::cout<<"Nella posizione ["<<position_rook<<"] c'è: "<<fen_shared.get()->get_piece()[position_rook]->get_name_piece()<<std::endl;
+        std::cout<<"Nella posizione ["<<position_rook-1<<"] c'è "<<fen_shared.get()->get_piece()[position_rook-1]->get_name_piece()<<std::endl;
         
+        fen_shared.get()->get_piece()[position_rook-2] = fen_shared.get()->get_piece()[position_rook];
+        
+        std::cout<<"SCAMBIO EFFETTUATO tra position["<<position_rook<<"] e ["<<position_rook-2<<"]"<<std::endl;
+        std::cout<<"Nella posizione ["<<position_rook-1<<"] c'è "<<fen_shared.get()->get_piece()[position_rook-1]->get_name_piece()<<std::endl;
+
+        fen_shared.get()->get_piece()[position_rook]=nullptr;
+        std::cout<<"Adesso in position ["<<position_rook<<"] non c'è più niente\n";
         return true;        
     }
     else
@@ -161,10 +176,10 @@ bool Movement_Piece::handle_castling_dx()
 
 bool Movement_Piece::handle_castling_sx()
 {
-    std::cout<<"$$$$$---entro in handle_castling_dx----$$$$\n";
-    int position_rook=0;
     // Ottieni l'ultima mossa:
     Move last_move = stack.top();
+
+    int position_rook=0;
 
     // Se l'ultima mossa associata al pezzo non è il re, esci...
     if (!last_move.get_piece_status()->is_king())
@@ -175,7 +190,7 @@ bool Movement_Piece::handle_castling_sx()
     // Se l'ultima mossa non è un doppio salto in qualunque direzione, esci...
     if 
     (
-        abs(last_move.get_from_square() - last_move.get_to_square()) != 2 
+        (last_move.get_to_square() - last_move.get_from_square()) != -2 
     ) 
     {
         return false;
@@ -275,8 +290,6 @@ bool Movement_Piece::is_enpassant()
 {
     Move last_move;
 
-    std::cout<<"ciao da is_enpassant()\n";
-
     if(stack.size()==0)
     {
         return false;
@@ -363,43 +376,58 @@ int Movement_Piece::get_king_position()
 
 bool Movement_Piece::is_castling_dx()
 {
+    std::cout<<"------------------IS_CASTLING_DX inizia---------------\n";
     //Trovo il re sulla scacchiera con find_king
     Piece *king = handle_chess->find_king(fen_shared.get()->get_piece(),handle_chess->get_turn());
 
     //Se il re si è mosso esci
     if(king->get_ismoved())
     {
+        std::cout<<"Il re si è mosso, ritorno false\n";
         return false;
     }
 
     //Ottengo la posizione del re
     int position_king = king->get_square();
+    std::cout<<"La posizione del re è: "<<position_king<<std::endl;
 
+    std::cout<<"Entro nel ciclo for: \n";
+    
     //itero di 3, metto 1 perchè voglio vedere la casella successiva al re
     for(int i = 1; i<4; i++)
     {
+        std::cout<<"i: "<<i<<std::endl;
+        
         //Controllo dei confini della scacchiera
         if(position_king+i>=64 || position_king+i<0)
         {
+            std::cout<<"Sono uscito dal bordo, ritorno false\n";
             return false;
         }
         
         //Controllo se sulla casella successiva c'è qualcosa
         if(fen_shared.get()->get_piece()[position_king+i])
         {
+            std::cout<<"In: "<<position_king+i<<" c'è qualcosa\n";
+            std::cout<<"c'è: "<<fen_shared.get()->get_piece()[position_king+i]->get_name_piece()<<std::endl;
+        
             //Controllo se trovo la torre durante il ciclo:
             if(fen_shared.get()->get_piece()[position_king+i]->is_rock())
             {
+                std::cout<<"Il controllo conferma la presenza di una torre\n";
                 //Trovo la torre, me la memorizzo in un puntatore creato sul momento
                 Piece* rock = fen_shared.get()->get_piece()[position_king+i];
                 
                 //Controllo se la torre si è mossa:
                 if(rock->get_ismoved())
                 {
+                    std::cout<<"La torre selezionata, si è mossa, return false\n";
                     return false;
                 }
                 else
                 {
+                    std::cout<<"La torre selezionata non si è mossa\n";
+                    
                     //Controllo se nelle 2 caselle successive al re c'era qualcosa:
                     if
                     (
@@ -408,6 +436,9 @@ bool Movement_Piece::is_castling_dx()
                         !fen_shared.get()->get_piece()[position_king+2]
                     )
                     {
+                        std::cout<<"in"<<position_king+1<<" non c'era niente\n";
+                        std::cout<<"in"<<position_king+2<<" non c'era niente\n";
+
                         for(int i = 1; i<3; i++)
                         {
                             if
@@ -434,10 +465,12 @@ bool Movement_Piece::is_castling_dx()
                                 )
                             )
                             {
+                                std::cout<<"Nelle caselle dell'arrocco sono attaccate, non posso fare la mossa ma comunque potrei\n";
                                 return true;
                             }
 
                         }
+                        std::cout<<"Nessun attacco durante le caselle di arrocco, le aggiungo come mossa legale\n";
                         king->add_legal_move(position_king+2);
                         return true;
                     }
@@ -445,21 +478,25 @@ bool Movement_Piece::is_castling_dx()
                     //non aggiungo la mossa per arroccare, ma comunque arrocco possibile
                     else
                     {
+                        std::cout<<"Nelle caselle successive al re c'era qualcosa, non aggiungo caselle ma possibile arrocco teorico\n";
                         return true;
                     }       
                 }                    
             }
             else
             {
+                std::cout<<"Non ho trovato la torre, continuo la ricerca\n";
                 continue;
             }                
         }
         //Non c'è niente sulla casella successiva 
         else
         {
+            std::cout<<"Non c'è niente sulla casella successiva, continuo la ricerca\n";
             continue;
         }   
     }
+    std::cout<<"Non ho trovato niente, ritorno false\n";
     return false;
 }
 
@@ -564,5 +601,46 @@ bool Movement_Piece::is_castling_sx()
             continue;
         }   
     }
+    return false;
+}
+
+bool Movement_Piece::is_promotion_pawn()
+{
+    Move last_move;
+
+    if(stack.size()==0)
+    {
+        return false;
+    }
+    else
+    {
+        //Ottengo l'ultima mossa fatta...
+        last_move = stack.top();
+    }
+
+    if(!last_move.get_piece_status())
+    {
+        return false;
+    }
+
+    if(!last_move.get_piece_status()->is_pawn())
+    {
+        return false;
+    }
+
+    if
+    (
+        last_move.get_to_square()<=63
+        &&
+        last_move.get_to_square()>=56
+        ||
+        last_move.get_to_square()>=0
+        &&
+        last_move.get_to_square()<=7
+    )
+    {
+        return true;
+    }
+
     return false;
 }

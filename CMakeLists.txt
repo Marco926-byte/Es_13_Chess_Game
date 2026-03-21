@@ -23,6 +23,7 @@ set(GAME_SOURCE_FILES
     Create_Piece.cpp
     Handle_Mouse_Input.cpp
     Move.cpp
+    Draw_Promotion_Dialog.cpp
 )
 
 # 2. Crea una LIBRERIA STATICA con la logica del gioco

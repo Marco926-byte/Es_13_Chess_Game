@@ -45,6 +45,7 @@ public:
     bool is_enpassant();
     bool is_castling_dx();
     bool is_castling_sx();
+    bool is_promotion_pawn();
 
     int get_king_position();
 

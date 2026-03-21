@@ -3,12 +3,17 @@
 
 #include <memory>
 #include <vector>
+#include <wx/app.h>
 
 #include "Piece_factory/Piece.h"
 #include "Handle_Fen_String.h"
 #include "Handle_Chessboard.h"
 #include "Movement_Piece.h"
 #include "Draw_board.h"
+#include "Draw_Promotion_Dialog.h"
+
+
+class Es13;
 
 class Draw_board;   //class declaration perchè se faccio classico include mi entra nel
                     //famosissimo loop e scoppia tutto il programma
@@ -25,7 +30,9 @@ private:
     Piece* handle_piece=nullptr; 
     Piece* piece_ptr=nullptr;
 
-    Draw_board* mouse_ptr=nullptr; 
+    Draw_board* mouse_ptr=nullptr;
+    Es13& dialog_ref;
+    
     std::shared_ptr<Handle_Fen_String> fen_smart;
     Movement_Piece* handle_movement=nullptr;
     Handle_Chessboard* handle_chessboard=nullptr;
@@ -55,6 +62,8 @@ public:
     void reset_attributes();
     
     ~Handle_Mouse_Input();
+
+    ;
 };
 
 

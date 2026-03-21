@@ -13,6 +13,8 @@
 #include "Handle_Fen_String.h"
 #include "Handle_Chessboard.h"
 #include "Handle_Mouse_Input.h"
+#include "Es13.h"
+
 /*
     NOTE:
     Il mio programma crea le celle e inizia da 0,0.
@@ -33,8 +35,9 @@ private:
 
     //Mappa che serve a disegnare i pezzi
     std::map<char,wxBitmap> chess_piece_bitmaps;
-
     std::shared_ptr<Handle_Fen_String> fen_shared;
+    
+    //Es13 *es13= nullptr;
     Handle_Chessboard* chess_handler=nullptr;
     Movement_Piece* game_movement=nullptr;
     Handle_Mouse_Input* mouse_handler=nullptr;
@@ -54,7 +57,9 @@ public:
     
     //Disegno principale
     void on_paint(wxPaintEvent& evt);
-    
+
+    //void set_es13_ptr(Es13* ptr);
+
     //Gestione ridimensionamento finestra
     void OnSize(wxSizeEvent& event);
     

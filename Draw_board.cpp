@@ -21,6 +21,11 @@ Draw_board::Draw_board(wxFrame* parent)
     }
 
 
+/*void Draw_board::set_es13_ptr(Es13* ptr)
+{
+    es13=ptr;
+}*/
+
 void Draw_board::on_paint(wxPaintEvent& evt)
 {
     wxPaintDC dc(this);

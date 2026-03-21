@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////
+// C++ code generated with wxFormBuilder (version 4.2.1-52-g73f12a06)
+// http://www.wxformbuilder.org/
+//
+// PLEASE DO *NOT* EDIT THIS FILE!
+///////////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include <wx/artprov.h>
@@ -14,6 +21,7 @@
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
+#include <wx/dialog.h>
 #include <wx/panel.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -39,6 +47,35 @@ class MyFrame1 : public wxFrame
 		MyFrame1( wxWindow* parent, wxWindowID id = ID_FRAME, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxDEFAULT_FRAME_STYLE|wxMAXIMIZE|wxTAB_TRAVERSAL );
 
 		~MyFrame1();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class Promotion_dialog
+///////////////////////////////////////////////////////////////////////////////
+class Promotion_dialog : public wxDialog
+{
+	private:
+
+	protected:
+		enum
+		{
+			ID_PROMOTION_DIALOG = 6000,
+			ID_BTN_QUEEN,
+			ID_BISHOP,
+			ID_BTN_ROOK,
+		};
+
+		wxButton* BTN_QUEEN;
+		wxButton* BTN_BISHOP;
+		wxButton* BTN_ROOK;
+		wxButton* BTN_KNIGHT;
+
+	public:
+
+		Promotion_dialog( wxWindow* parent, wxWindowID id = ID_PROMOTION_DIALOG, const wxString& title = wxEmptyString, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( 350,350 ), long style = wxDEFAULT_DIALOG_STYLE );
+
+		~Promotion_dialog();
 
 };
 
