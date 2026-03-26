@@ -116,7 +116,6 @@ bool Movement_Piece::handle_capture_enpassant()
 
 bool Movement_Piece::handle_castling_dx()
 {
-    std::cout<<"------------Entro in HANDLE_CASTLING_DX ------------\n";
     int position_rook=0;
     
     // Ottieni l'ultima mossa:
@@ -125,13 +124,8 @@ bool Movement_Piece::handle_castling_dx()
     // Se l'ultima mossa associata al pezzo non è il re, esci...
     if (!last_move.get_piece_status()->is_king())
     {
-        std::cout<<"Ultima mossa non è stata fatta dal re, ritorno false\n";
         return false;
     }
-
-    std::cout<<"last_move.get_from_square() ="<<last_move.get_from_square()<<std::endl;
-    std::cout<<"last_move.get_to_square() ="<<last_move.get_to_square()<<std::endl;
-    std::cout<<"to - from = "<<last_move.get_to_square()-last_move.get_from_square()<<std::endl;
 
     // Se l'ultima mossa non è un doppio salto in avanti, esci...
     if 
@@ -139,7 +133,6 @@ bool Movement_Piece::handle_castling_dx()
         (last_move.get_to_square() - last_move.get_from_square()) != 2 
     ) 
     {
-        std::cout<<"L'ultima mossa non è un doppio spostamento a destra (2), ritorno false\n";
         return false;
     }
 
@@ -151,21 +144,13 @@ bool Movement_Piece::handle_castling_dx()
     {
         position_rook = 7;
     }
-    std::cout<<"La posizione della torre: "<<position_rook<<std::endl;
 
     //Gestisci il movimento della torre!
     if(fen_shared.get()->get_piece()[position_rook])
-    {
-        std::cout<<"Nella posizione ["<<position_rook<<"] c'è: "<<fen_shared.get()->get_piece()[position_rook]->get_name_piece()<<std::endl;
-        std::cout<<"Nella posizione ["<<position_rook-1<<"] c'è "<<fen_shared.get()->get_piece()[position_rook-1]->get_name_piece()<<std::endl;
-        
+    {        
         fen_shared.get()->get_piece()[position_rook-2] = fen_shared.get()->get_piece()[position_rook];
-        
-        std::cout<<"SCAMBIO EFFETTUATO tra position["<<position_rook<<"] e ["<<position_rook-2<<"]"<<std::endl;
-        std::cout<<"Nella posizione ["<<position_rook-1<<"] c'è "<<fen_shared.get()->get_piece()[position_rook-1]->get_name_piece()<<std::endl;
-
         fen_shared.get()->get_piece()[position_rook]=nullptr;
-        std::cout<<"Adesso in position ["<<position_rook<<"] non c'è più niente\n";
+
         return true;        
     }
     else
@@ -236,6 +221,8 @@ void Movement_Piece::update_moves_all_piece()
 
 void Movement_Piece::update_move_in_check(Color team_color,std::vector<int> v_attack)
 {
+    std::cout<<"Entro in update_move_in_check\n";
+    
     const auto& piece=fen_shared.get()->get_piece();
     
     //Itero tutto
@@ -250,10 +237,11 @@ void Movement_Piece::update_move_in_check(Color team_color,std::vector<int> v_at
             piece[i] 
             && 
             piece[i]->get_color()==team_color 
-            && 
+            &&
             !piece[i]->is_king()
         )
         {
+            
             //Itero tutte le mosse legali del pezzo:
             for(int itr_normal_legal_move : piece[i]->get_legal_moves())
             {
@@ -334,6 +322,12 @@ bool Movement_Piece::is_enpassant()
             continue;
         }
 
+        //Controllo se sono sulla stessa riga...
+        if(square/8 != last_move.get_to_square()/8)
+        {
+            continue;
+        }
+
         //Se la casella affiaco del pedone è nullptr quindi vuota allora continua il ciclo
         if(!fen_shared.get()->get_piece()[square])
         {
@@ -376,58 +370,43 @@ int Movement_Piece::get_king_position()
 
 bool Movement_Piece::is_castling_dx()
 {
-    std::cout<<"------------------IS_CASTLING_DX inizia---------------\n";
     //Trovo il re sulla scacchiera con find_king
     Piece *king = handle_chess->find_king(fen_shared.get()->get_piece(),handle_chess->get_turn());
 
     //Se il re si è mosso esci
     if(king->get_ismoved())
     {
-        std::cout<<"Il re si è mosso, ritorno false\n";
         return false;
     }
 
     //Ottengo la posizione del re
     int position_king = king->get_square();
-    std::cout<<"La posizione del re è: "<<position_king<<std::endl;
 
-    std::cout<<"Entro nel ciclo for: \n";
-    
     //itero di 3, metto 1 perchè voglio vedere la casella successiva al re
     for(int i = 1; i<4; i++)
-    {
-        std::cout<<"i: "<<i<<std::endl;
-        
+    {        
         //Controllo dei confini della scacchiera
         if(position_king+i>=64 || position_king+i<0)
         {
-            std::cout<<"Sono uscito dal bordo, ritorno false\n";
             return false;
         }
         
         //Controllo se sulla casella successiva c'è qualcosa
         if(fen_shared.get()->get_piece()[position_king+i])
-        {
-            std::cout<<"In: "<<position_king+i<<" c'è qualcosa\n";
-            std::cout<<"c'è: "<<fen_shared.get()->get_piece()[position_king+i]->get_name_piece()<<std::endl;
-        
+        {        
             //Controllo se trovo la torre durante il ciclo:
             if(fen_shared.get()->get_piece()[position_king+i]->is_rock())
             {
-                std::cout<<"Il controllo conferma la presenza di una torre\n";
                 //Trovo la torre, me la memorizzo in un puntatore creato sul momento
                 Piece* rock = fen_shared.get()->get_piece()[position_king+i];
                 
                 //Controllo se la torre si è mossa:
                 if(rock->get_ismoved())
                 {
-                    std::cout<<"La torre selezionata, si è mossa, return false\n";
                     return false;
                 }
                 else
-                {
-                    std::cout<<"La torre selezionata non si è mossa\n";
-                    
+                {                    
                     //Controllo se nelle 2 caselle successive al re c'era qualcosa:
                     if
                     (
@@ -436,9 +415,6 @@ bool Movement_Piece::is_castling_dx()
                         !fen_shared.get()->get_piece()[position_king+2]
                     )
                     {
-                        std::cout<<"in"<<position_king+1<<" non c'era niente\n";
-                        std::cout<<"in"<<position_king+2<<" non c'era niente\n";
-
                         for(int i = 1; i<3; i++)
                         {
                             if
@@ -465,12 +441,10 @@ bool Movement_Piece::is_castling_dx()
                                 )
                             )
                             {
-                                std::cout<<"Nelle caselle dell'arrocco sono attaccate, non posso fare la mossa ma comunque potrei\n";
                                 return true;
                             }
 
                         }
-                        std::cout<<"Nessun attacco durante le caselle di arrocco, le aggiungo come mossa legale\n";
                         king->add_legal_move(position_king+2);
                         return true;
                     }
@@ -478,25 +452,23 @@ bool Movement_Piece::is_castling_dx()
                     //non aggiungo la mossa per arroccare, ma comunque arrocco possibile
                     else
                     {
-                        std::cout<<"Nelle caselle successive al re c'era qualcosa, non aggiungo caselle ma possibile arrocco teorico\n";
                         return true;
                     }       
                 }                    
             }
+            //Non ho trovato la torre, continuo la ricerca
             else
             {
-                std::cout<<"Non ho trovato la torre, continuo la ricerca\n";
                 continue;
             }                
         }
         //Non c'è niente sulla casella successiva 
         else
         {
-            std::cout<<"Non c'è niente sulla casella successiva, continuo la ricerca\n";
             continue;
-        }   
+        } 
     }
-    std::cout<<"Non ho trovato niente, ritorno false\n";
+    //Non ho trovato niente, ritorno false
     return false;
 }
 
@@ -639,8 +611,78 @@ bool Movement_Piece::is_promotion_pawn()
         last_move.get_to_square()<=7
     )
     {
+        
         return true;
     }
 
     return false;
+}
+
+std::vector<int> Movement_Piece::get_attacked_square() const
+{
+    return attacked_square;
+}
+
+bool Movement_Piece::handle_promotion_pawn(char character_promotion)
+{
+    char promotion;
+
+    if(handle_chess->get_turn()==WHITE)
+    {
+        promotion= toupper(character_promotion);       
+    }
+    else
+    {
+        promotion = character_promotion;
+    }
+
+    Move last_move = stack.top();
+    
+    //Importante per aggiornare il pezzo...
+    fen_shared.get()->get_piece()[last_move.get_to_square()]=nullptr;
+    fen_shared.get()->get_piece()[last_move.get_to_square()] = fen_shared.get()->get_create_ptr()->create_piece(promotion,last_move.get_to_square());
+    fen_shared.get()->get_piece()[last_move.get_to_square()]->set_square(last_move.get_to_square());
+
+    Piece *king = handle_chess->find_king(fen_shared.get()->get_piece(),handle_chess->get_turn());
+    
+    int position_king = king->get_square();
+    
+    handle_chess->handle_check_on_king_diagonal
+    (
+        position_king,
+        fen_shared.get()->get_piece(),
+        handle_chess->get_turn()
+    );
+
+    handle_chess->handle_check_on_king_knight
+    (
+        position_king,
+        fen_shared.get()->get_piece(),
+        handle_chess->get_turn()
+    );
+
+    handle_chess->handle_check_on_king_straight
+    (
+        position_king,
+        fen_shared.get()->get_piece(),
+        handle_chess->get_turn()
+    );
+
+    handle_chess->handle_pin_on_king_straight
+    (
+        fen_shared.get()->get_piece(),
+        handle_chess->get_turn()
+    );
+
+    handle_chess->handle_pin_on_king_diagonal
+    (
+       fen_shared.get()->get_piece(),
+       handle_chess->get_turn() 
+    );
+
+    king->update_legal_moves(fen_shared);
+
+    update_moves_all_piece();
+    
+    return true;
 }

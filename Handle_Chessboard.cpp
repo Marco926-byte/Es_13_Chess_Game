@@ -171,17 +171,8 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(int position_king, Piece *
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
     int diagonal[4]{-9,-7,7,9};
 
-    /*Piece *ptr_king=find_king(board,current_player_color);
-
-    if(!ptr_king)
-    {
-        //Problema, ptr_king è nullo
-        return false;
-    }*/
-
     int row_for_check = position_king/8;
     int col_for_check = position_king%8;
-
 
     //posizione delle quattro diagonali della cella in totale
     int end_board_diagonal[4]
@@ -230,9 +221,6 @@ bool Handle_Chessboard::handle_check_on_king_diagonal(int position_king, Piece *
                 board[current_move]->is_pawn()
             )
             {
-                std::cout<<"Il pedone mi sta attaccando il re...\n";
-                std::cout<<"Pedone che attacca: "<<board[current_move]->get_square()<<std::endl;
-
                 v_check_attack.push_back(board[current_move]->get_square());
                 return true;
             }

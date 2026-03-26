@@ -21,6 +21,8 @@ private:
 public:
     Handle_Fen_String();
     
+    Create_Piece* get_create_ptr() const;   //TODO:
+
     //Funzione che serve all'inizio a far posizionare i pezzi
     void set_board_fenstring(std::string fen_string);
 

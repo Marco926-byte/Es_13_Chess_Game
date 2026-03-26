@@ -33,6 +33,8 @@ public:
 
     void set_attack_vector(std::vector<int> v_attack);
 
+    std::vector<int> get_attacked_square() const;
+
     bool handle_move(int from, int to);
     
     bool handle_capture_enpassant();
@@ -49,6 +51,7 @@ public:
 
     int get_king_position();
 
+    bool handle_promotion_pawn(char character_promotion);
     void print_all_move();
 };
 

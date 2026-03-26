@@ -119,7 +119,6 @@ public:
         void set_ismoved(bool new_moved);
         void set_color(Color new_color);
         void set_legal_moves(std::vector<int> new_legal_moves);
-        
     /*-----------FINE SETTER------------------*/
 
     /*-----------FUNZIONI-----------------*/

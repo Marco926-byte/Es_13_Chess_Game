@@ -40,13 +40,13 @@ Promotion_dialog::Promotion_dialog( wxWindow* parent, wxWindowID id, const wxStr
 	BTN_QUEEN = new wxButton( this, ID_BTN_QUEEN, _("REGINA"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( BTN_QUEEN, 0, wxALL|wxEXPAND, 5 );
 
-	BTN_BISHOP = new wxButton( this, ID_BISHOP, _("ALFIERE"), wxDefaultPosition, wxDefaultSize, 0 );
+	BTN_BISHOP = new wxButton( this, ID_BTN_BISHOP, _("ALFIERE"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( BTN_BISHOP, 0, wxALL|wxEXPAND, 5 );
 
 	BTN_ROOK = new wxButton( this, ID_BTN_ROOK, _("TORRE"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( BTN_ROOK, 0, wxALL|wxEXPAND, 5 );
 
-	BTN_KNIGHT = new wxButton( this, wxID_ANY, _("CAVALLO"), wxDefaultPosition, wxDefaultSize, 0 );
+	BTN_KNIGHT = new wxButton( this, ID_BTN_KNIGHT, _("CAVALLO"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( BTN_KNIGHT, 0, wxALL|wxEXPAND, 5 );
 
 

@@ -1,6 +1,7 @@
 DEVO:
 4. Gestire la fine del gioco.
 
+Ho problema con enpassant ai bordi, controlla bene.
 
 cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella per 
                                                         debuggare con Valgrind
@@ -9,3 +10,5 @@ valgrind --leak-check=full --track-origins=yes ./w
                                                         Fa partire il memcheck
 
 
+dialog_ref(static_cast<Es13&>(*wxTheApp->GetTopWindow()))  //Importante riferimento per ottenere es13
+                                                           //come ottenere la finestra più importante

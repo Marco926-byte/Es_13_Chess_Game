@@ -25,6 +25,7 @@ public:
 
     bool is_attack(Piece **board, std::vector<Piece *> &pieces, std::vector<Piece *> &pieces_attacking_king);
     void get_attack(Piece **board, std::vector<int> &attacked_squares) override;
+
     bool handle_king_move_check(Piece **board,int to_square,std::vector<Piece*> pieces_attacking_king);
 
 

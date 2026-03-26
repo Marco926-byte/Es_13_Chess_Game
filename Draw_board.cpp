@@ -2,8 +2,7 @@
 
 Draw_board::Draw_board(wxFrame* parent)
     :MyPanel1(parent,6000,wxPoint(200,100)),
-    //Inizializzazione dei puntatori:
-        
+    //Inizializzazione dei puntatori:        
         fen_shared(new Handle_Fen_String()),
         chess_handler(new Handle_Chessboard(this,fen_shared)),
         game_movement(new Movement_Piece(this,fen_shared,chess_handler)),
@@ -19,12 +18,6 @@ Draw_board::Draw_board(wxFrame* parent)
         this->Bind(wxEVT_LEFT_DOWN, &Handle_Mouse_Input::onMouseLeftDown, mouse_handler);
         this->Bind(wxEVT_LEFT_UP, &Handle_Mouse_Input::onMouseLeftUp, mouse_handler);
     }
-
-
-/*void Draw_board::set_es13_ptr(Es13* ptr)
-{
-    es13=ptr;
-}*/
 
 void Draw_board::on_paint(wxPaintEvent& evt)
 {

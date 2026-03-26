@@ -62,8 +62,9 @@ class Promotion_dialog : public wxDialog
 		{
 			ID_PROMOTION_DIALOG = 6000,
 			ID_BTN_QUEEN,
-			ID_BISHOP,
+			ID_BTN_BISHOP,
 			ID_BTN_ROOK,
+			ID_BTN_KNIGHT,
 		};
 
 		wxButton* BTN_QUEEN;
@@ -73,7 +74,7 @@ class Promotion_dialog : public wxDialog
 
 	public:
 
-		Promotion_dialog( wxWindow* parent, wxWindowID id = ID_PROMOTION_DIALOG, const wxString& title = wxEmptyString, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( 350,350 ), long style = wxDEFAULT_DIALOG_STYLE );
+		Promotion_dialog( wxWindow* parent, wxWindowID id = ID_PROMOTION_DIALOG, const wxString& title = wxEmptyString, const wxPoint& pos = wxPoint( -1,-1 ), const wxSize& size = wxSize( 350,350 ), long style = 0 );
 
 		~Promotion_dialog();
 

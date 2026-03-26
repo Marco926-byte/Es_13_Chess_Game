@@ -31,7 +31,6 @@ private:
     Piece* piece_ptr=nullptr;
 
     Draw_board* mouse_ptr=nullptr;
-    Es13& dialog_ref;
     
     std::shared_ptr<Handle_Fen_String> fen_smart;
     Movement_Piece* handle_movement=nullptr;
@@ -63,7 +62,7 @@ public:
     
     ~Handle_Mouse_Input();
 
-    ;
+    
 };
 
 

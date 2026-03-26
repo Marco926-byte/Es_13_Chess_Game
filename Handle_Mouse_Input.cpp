@@ -11,8 +11,7 @@ Handle_Mouse_Input::Handle_Mouse_Input
     :mouse_ptr(ptr),    
      fen_smart(fen),
      handle_movement(move),
-     handle_chessboard(chess),
-     dialog_ref(static_cast<Es13&>(*wxTheApp->GetTopWindow()))  //Importante riferimento per ottenere es13
+     handle_chessboard(chess)
     {    
         is_select_piece=false;
         select_piece=-1;
@@ -98,6 +97,26 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
     if(handle_piece->is_legal_move(position_board))
     {
         handle_movement->handle_move(from_square,position_board);
+
+        if(handle_movement->is_promotion_pawn())
+        {   
+            Draw_Promotion_Dialog promotion(nullptr);
+            
+            while (promotion.ShowModal() != wxID_OK)
+            {
+                //Finchè non sceglie il pezzo non andare avanti
+            }
+            
+            char promotion_char = promotion.get_character_choice();
+
+            handle_movement->handle_promotion_pawn(promotion_char);
+            /*handle_movement->update_move_in_check
+            (
+                handle_chessboard->get_turn(),
+                handle_movement->get_attacked_square()
+            );*/
+        }
+        
         handle_chessboard->change_turn();
         handle_movement->update_moves_all_piece();
         
@@ -119,27 +138,23 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
             wxLogMessage(wxT("SCACCO!"));
             handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
         }
-        if(handle_movement->handle_castling_dx())
-        {
-            handle_movement->handle_castling_dx();
-        }
-        if(handle_movement->handle_castling_sx())
-        {
-            handle_movement->handle_castling_sx();
-        }
-        if(handle_movement->is_promotion_pawn())
-        {
-            //Todo: collegamento a Es13 per creare il dialogo di promozione 
-            dialog_ref.open_promotion_dialog();  
-        }
+        
+        handle_movement->handle_castling_dx();
+        
+        handle_movement->handle_castling_sx();
+        
+        
         handle_chessboard->handle_pin_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
         handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
         handle_movement->handle_capture_enpassant();
         
+        //handle_chessboard->change_turn();
+        //handle_movement->update_moves_all_piece();
+
         mouse_ptr->Refresh();
 
         reset_attributes();
-        handle_chessboard->clear_v_check_attack();        
+        //handle_chessboard->clear_v_check_attack();        
     }
     else
         return;

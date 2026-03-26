@@ -59,6 +59,10 @@ void Handle_Fen_String::set_board_fenstring(std::string fen_string)
     this->fen_string=fen_string;
 }
 
+Create_Piece* Handle_Fen_String::get_create_ptr() const
+{
+    return create_ptr;
+}
 
 std::string Handle_Fen_String::generate_fen_string()
 {
@@ -110,10 +114,9 @@ std::string Handle_Fen_String::generate_fen_string()
         }
     }
 
+    //TODO: AGGIUNGERE ANCHE IL TURNO E TUTTE LE COSE SULLA STRINGA
     fen_string+= "w KQkq - 0 1";
     this->fen_string=fen_string;
-    //set_board_fenstring(fen_string);
-    //add_fen_to_map(fen_string);
 
     return fen_string;
 }
