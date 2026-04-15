@@ -1,5 +1,5 @@
 #include "Knight.h"
-#include "../../Handle_Fen_String.h"
+#include "../../Chess_Engine/FEN/Handle_Fen_String.h"
 
 Knight::Knight(int pos, char character)
     :Piece(pos,character)

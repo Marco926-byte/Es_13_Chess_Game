@@ -16,13 +16,23 @@ set(GAME_SOURCE_FILES
     Piece_factory/Queen/Queen.cpp
     Piece_factory/Rock/Rock.cpp 
     Piece_factory/Knight/Knight.cpp 
-    Piece_factory/King/King.cpp
-    Handle_Chessboard.cpp
-    Handle_Fen_String.cpp
-    Movement_Piece.cpp
-    Create_Piece.cpp
+    Piece_factory/King/King.cpp   
+    
     Handle_Mouse_Input.cpp
-    Move.cpp
+
+    Chess_Engine/PIN/Handle_Pin.cpp
+    Chess_Engine/CHESSBOARD_TURN/Handle_Chessboard.cpp
+    Chess_Engine/CREATE_PIECE/Create_Piece.cpp
+    Chess_Engine/MOVEMENT_PIECE/Movement_Piece.cpp
+    Chess_Engine/FEN/Handle_Fen_String.cpp
+    Chess_Engine/MOVE/Move.cpp
+    Chess_Engine/ENPASSANT/Handle_Enpassant.cpp
+    Chess_Engine/UPDATE_MOVES/Update_Moves.cpp
+    Chess_Engine/CASTLING/Castling.cpp
+    Chess_Engine/FIND_KING/Find_King.cpp
+    Chess_Engine/CHECK/Check.cpp
+    Chess_Engine/PROMOTION_PAWN/Promotion_Pawn.cpp
+    
     Draw_Promotion_Dialog.cpp
 )
 

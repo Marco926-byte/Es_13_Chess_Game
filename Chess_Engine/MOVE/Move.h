@@ -1,8 +1,7 @@
 #ifndef MOVE_H
 #define MOVE_H
 
-#include "Piece_factory/Piece.h"
-
+#include "../../Piece_factory/Piece.h"
 #include <wx/wx.h>
 
 class Move

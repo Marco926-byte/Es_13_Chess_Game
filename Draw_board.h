@@ -9,12 +9,18 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 
-#include "Movement_Piece.h"
-#include "Handle_Fen_String.h"
-#include "Handle_Chessboard.h"
-#include "Handle_Mouse_Input.h"
-#include "Es13.h"
+#include "Chess_Engine/MOVEMENT_PIECE/Movement_Piece.h"
+#include "Chess_Engine/FEN/Handle_Fen_String.h"
+#include "Chess_Engine/CHESSBOARD_TURN/Handle_Chessboard.h"
+#include "Chess_Engine/ENPASSANT/Handle_Enpassant.h"
+#include "Chess_Engine/UPDATE_MOVES/Update_Moves.h"
+#include "Chess_Engine/CASTLING/Castling.h"
+#include "Chess_Engine/FIND_KING/Find_King.h"
+#include "Chess_Engine/CHECK/Check.h"
+#include "Chess_Engine/PROMOTION_PAWN/Promotion_Pawn.h"
+#include "Chess_Engine/PIN/Handle_Pin.h"
 
+#include "Handle_Mouse_Input.h"
 /*
     NOTE:
     Il mio programma crea le celle e inizia da 0,0.
@@ -27,6 +33,8 @@
 
 class Handle_Mouse_Input;
 
+class Update_Moves;
+
 class Draw_board: public MyPanel1
 {
 private:
@@ -35,13 +43,21 @@ private:
 
     //Mappa che serve a disegnare i pezzi
     std::map<char,wxBitmap> chess_piece_bitmaps;
+
     std::shared_ptr<Handle_Fen_String> fen_shared;
     
-    //Es13 *es13= nullptr;
     Handle_Chessboard* chess_handler=nullptr;
     Movement_Piece* game_movement=nullptr;
-    Handle_Mouse_Input* mouse_handler=nullptr;
 
+    std::shared_ptr<Find_King> find_king_shared;
+    std::shared_ptr<Check> check_shared;
+    std::shared_ptr<Handle_Pin> pin_shared;
+    std::shared_ptr<Handle_Enpassant> enpassant_shared;
+    std::shared_ptr<Castling> castling_shared;
+    std::shared_ptr<Update_Moves> update_moves_shared;
+    std::shared_ptr<Promotion_Pawn> promotion_pawn_shared;
+    
+    Handle_Mouse_Input* mouse_handler=nullptr;
 public:
     //Costruttore principale
     Draw_board(wxFrame* parent);
@@ -57,9 +73,7 @@ public:
     
     //Disegno principale
     void on_paint(wxPaintEvent& evt);
-
-    //void set_es13_ptr(Es13* ptr);
-
+    
     //Gestione ridimensionamento finestra
     void OnSize(wxSizeEvent& event);
     

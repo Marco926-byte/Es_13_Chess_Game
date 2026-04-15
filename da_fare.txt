@@ -1,6 +1,9 @@
 DEVO:
 4. Gestire la fine del gioco.
 
+STO SISTEMANDO PER BENE IL PROGETTO, visto che funziona tutto.
+(Creazione della cartella engine)
+
 Ho problema con enpassant ai bordi, controlla bene.
 
 cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella per 

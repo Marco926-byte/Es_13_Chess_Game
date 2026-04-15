@@ -3,13 +3,13 @@
 
 #include <wx/wx.h>
 
-#include "Piece_factory/Piece.h"
-#include "Piece_factory/Pawn/Pawn.h"
-#include "Piece_factory/Bishop/Bishop.h"
-#include "Piece_factory/Queen/Queen.h"
-#include "Piece_factory/King/King.h"
-#include "Piece_factory/Knight/Knight.h"
-#include "Piece_factory/Rock/Rock.h"
+#include "../../Piece_factory/Piece.h"
+#include "../../Piece_factory/Pawn/Pawn.h"
+#include "../../Piece_factory/Bishop/Bishop.h"
+#include "../../Piece_factory/Queen/Queen.h"
+#include "../../Piece_factory/King/King.h"
+#include "../../Piece_factory/Knight/Knight.h"
+#include "../../Piece_factory/Rock/Rock.h"
 
 class Create_Piece
 {

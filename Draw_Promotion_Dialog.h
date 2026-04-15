@@ -2,7 +2,7 @@
 #define DRAW_PROMOTION_DIALOG_H
 
 #include "start/MyProjectBase.h"
-#include "Movement_Piece.h"
+#include "Chess_Engine/MOVEMENT_PIECE/Movement_Piece.h"
 
 #include <memory>
 

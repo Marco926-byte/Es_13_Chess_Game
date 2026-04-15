@@ -1,5 +1,5 @@
 #include "Queen.h"
-#include "../../Handle_Fen_String.h"
+#include "../../Chess_Engine/FEN/Handle_Fen_String.h"
 
 Queen::Queen(int position, char character)
     :Piece(position,character)

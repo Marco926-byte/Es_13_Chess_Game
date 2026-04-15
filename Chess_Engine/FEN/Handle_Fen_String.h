@@ -5,7 +5,8 @@
 #include <unordered_map>
 #include <wx/wx.h>
 
-#include "Create_Piece.h"
+#include "../CREATE_PIECE/Create_Piece.h"
+
 class Piece;
 
 class Handle_Fen_String

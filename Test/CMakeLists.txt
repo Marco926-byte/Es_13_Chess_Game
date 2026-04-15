@@ -14,14 +14,24 @@ add_executable(w_test
     Move_Test.cpp
     Chessboard_Test.cpp
     Castling_Tests.cpp
-    ../Movement_Piece.cpp
-    ../Handle_Fen_String.cpp 
-    ../Move.cpp 
-    ../Create_Piece.cpp 
+
+    ../Chess_Engine/MOVEMENT_PIECE/Movement_Piece.cpp
+    ../Chess_Engine/FEN/Handle_Fen_String.cpp 
+    ../Chess_Engine/MOVE/Move.cpp 
+    ../Chess_Engine/PIN/Handle_Pin.cpp
+    ../Chess_Engine/ENPASSANT/Handle_Enpassant.cpp
+    ../Chess_Engine/UPDATE_MOVES/Update_Moves.cpp
+    ../Chess_Engine/CASTLING/Castling.cpp
+    ../Chess_Engine/FIND_KING/Find_King.cpp
+    ../Chess_Engine/CHECK/Check.cpp
+    ../Chess_Engine/PROMOTION_PAWN/Promotion_Pawn.cpp
+    ../Chess_Engine/CREATE_PIECE/Create_Piece.cpp 
+    ../Chess_Engine/CHESSBOARD_TURN/Handle_Chessboard.cpp
+
     ../Draw_board.cpp 
     ../Es13.cpp 
     ../Draw_Promotion_Dialog.cpp
-    ../Handle_Chessboard.cpp 
+     
     ../Handle_Mouse_Input.cpp  
     ../Piece_factory/Piece.cpp 
     ../Piece_factory/Bishop/Bishop.cpp 

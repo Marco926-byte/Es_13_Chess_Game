@@ -6,12 +6,26 @@ Handle_Mouse_Input::Handle_Mouse_Input
     Draw_board* ptr,
     std::shared_ptr<Handle_Fen_String> fen,
     Movement_Piece* move,
-    Handle_Chessboard* chess
+    Handle_Chessboard* chess,
+    std::shared_ptr<Handle_Enpassant> enpassant,
+    std::shared_ptr<Update_Moves> update_moves,
+    std::shared_ptr<Castling> castling,
+    std::shared_ptr<Find_King> find_king,
+    std::shared_ptr<Check> check,
+    std::shared_ptr<Handle_Pin> pin,
+    std::shared_ptr<Promotion_Pawn> promotion_pawn
 )
     :mouse_ptr(ptr),    
      fen_smart(fen),
      handle_movement(move),
-     handle_chessboard(chess)
+     handle_chessboard(chess),
+     enpassant_shared(enpassant),
+     update_moves_shared(update_moves),
+     castling_shared(castling),
+     find_king_shared(find_king),
+     check_shared(check),
+     pin_shared(pin),
+     promotion_pawn_shared(promotion_pawn)
     {    
         is_select_piece=false;
         select_piece=-1;
@@ -85,7 +99,8 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
     (
         piece_ptr 
         &&
-        piece_ptr->get_color()==handle_chessboard->get_turn() )
+        piece_ptr->get_color()==handle_chessboard->get_turn() 
+    )
     {
         select_piece=position_board;   
         handle_piece=piece_ptr;
@@ -98,7 +113,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
     {
         handle_movement->handle_move(from_square,position_board);
 
-        if(handle_movement->is_promotion_pawn())
+        if(promotion_pawn_shared.get()->is_promotion_pawn())
         {   
             Draw_Promotion_Dialog promotion(nullptr);
             
@@ -109,52 +124,92 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
             
             char promotion_char = promotion.get_character_choice();
 
-            handle_movement->handle_promotion_pawn(promotion_char);
-            /*handle_movement->update_move_in_check
-            (
-                handle_chessboard->get_turn(),
-                handle_movement->get_attacked_square()
-            );*/
+            promotion_pawn_shared.get()->handle_promotion_pawn(promotion_char);
         }
         
         handle_chessboard->change_turn();
-        handle_movement->update_moves_all_piece();
+
+        update_moves_shared.get()->update_moves_all_piece();
         
-        Piece *king = handle_chessboard->find_king(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
+        Piece *king = find_king_shared.get()->find_king_current_turn
+        (
+            fen_smart.get()->get_piece(),
+            handle_chessboard->get_turn()
+        );
         int position_king = king->get_square();
         
-        if(handle_chessboard->handle_check_on_king_straight(position_king,fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        //Non funziona il non suicidio del re....
+        if
+        (
+            check_shared.get()->handle_check_on_king_straight
+            (
+                position_king,
+                fen_smart.get()->get_piece(),
+                handle_chessboard->get_turn()
+            )
+        )
         {
             wxLogMessage(wxT("SCACCO!"));
-            handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
+            update_moves_shared.get()->update_move_in_check
+            (
+                handle_chessboard->get_turn(),
+                check_shared.get()->get_v_check_attack()
+            );
         }
-        if(handle_chessboard->handle_check_on_king_diagonal(position_king,fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        if
+        (
+            check_shared.get()->handle_check_on_king_diagonal
+            (
+                position_king,
+                fen_smart.get()->get_piece(),
+                handle_chessboard->get_turn()
+            )
+        )
         {
             wxLogMessage(wxT("SCACCO!"));
-            handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
+            update_moves_shared.get()->update_move_in_check
+            (
+                handle_chessboard->get_turn(),
+                check_shared.get()->get_v_check_attack()
+            );
         }
-        if(handle_chessboard->handle_check_on_king_knight(position_king,fen_smart.get()->get_piece(),handle_chessboard->get_turn()))
+        if
+        (
+            check_shared.get()->handle_check_on_king_knight
+            (
+                position_king,
+                fen_smart.get()->get_piece(),
+                handle_chessboard->get_turn()
+            )
+        )
         {
             wxLogMessage(wxT("SCACCO!"));
-            handle_movement->update_move_in_check(handle_chessboard->get_turn(),handle_chessboard->get_v_check_attack());
+            update_moves_shared.get()->update_move_in_check
+            (
+                handle_chessboard->get_turn(),
+                check_shared.get()->get_v_check_attack()
+            );
         }
+
+        castling_shared.get()->handle_castling_dx();
+        castling_shared.get()->handle_castling_sx();
         
-        handle_movement->handle_castling_dx();
-        
-        handle_movement->handle_castling_sx();
-        
-        
-        handle_chessboard->handle_pin_on_king_straight(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
-        handle_chessboard->handle_pin_on_king_diagonal(fen_smart.get()->get_piece(),handle_chessboard->get_turn());
-        handle_movement->handle_capture_enpassant();
-        
-        //handle_chessboard->change_turn();
-        //handle_movement->update_moves_all_piece();
+        pin_shared.get()->handle_pin_on_king_straight
+        (
+            fen_smart.get()->get_piece(),
+            handle_chessboard->get_turn()
+        );
+        pin_shared.get()->handle_pin_on_king_diagonal
+        (
+            fen_smart.get()->get_piece(),
+            handle_chessboard->get_turn()
+        );
+
+        enpassant_shared.get()->handle_capture_enpassant();
 
         mouse_ptr->Refresh();
 
         reset_attributes();
-        //handle_chessboard->clear_v_check_attack();        
     }
     else
         return;

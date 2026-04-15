@@ -1,5 +1,5 @@
 #include "King.h"
-#include "../../Handle_Fen_String.h"
+#include "../../Chess_Engine/FEN/Handle_Fen_String.h"
 
 //Costruttore
 King::King(int position, char character)
@@ -17,8 +17,6 @@ bool King::get_is_check() const
 //Funzione virtuale
 void King::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
 {
-    std::cout<<"------ENTRO IN update_legal_moves DI KING ----------\n";
-
     std::vector<int> legal_moves_candidate={};
     std::vector<int> final_safe_moves={};
     
@@ -30,21 +28,16 @@ void King::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
     //Utilizzo la funzione handle_check_king per filtrare le vere mosse che può fare:
     for(int move : legal_moves_candidate)
     {
-        std::cout<<"mossa legale candidata del re: "<<move<<std::endl;
-
         std::vector<Piece*> attacking;
+     
         //Se handle_king_move_check non restituisce true allora in quella casella è 
         //tranquilla
         if(!handle_king_move_check(piece,move,attacking))
         {
-            std::cout<<"Aggiungo la mossa "
-            <<move
-            <<" possibile nel vettore delle mosse salve\n";
-            
             final_safe_moves.push_back(move);
         }
     }
-    std::cout<<"Imposto le mosse legali con l'insieme delle mosse salvate\n";
+    
     this->set_legal_moves(final_safe_moves);
 }
 

@@ -1,5 +1,5 @@
 #include "Rock.h"
-#include "../../Handle_Fen_String.h"
+#include "../../Chess_Engine/FEN/Handle_Fen_String.h"
 
 /*----Costruttore------*/
 Rock::Rock(int coordinate, char character)

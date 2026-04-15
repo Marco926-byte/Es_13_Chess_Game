@@ -1,5 +1,5 @@
 #include "Handle_Fen_String.h"
-#include "Piece_factory/Piece.h"
+#include "../../Piece_factory/Piece.h"
 
 Handle_Fen_String::Handle_Fen_String()
     :create_ptr(new Create_Piece())

@@ -3,15 +3,113 @@
 Draw_board::Draw_board(wxFrame* parent)
     :MyPanel1(parent,6000,wxPoint(200,100)),
     //Inizializzazione dei puntatori:        
-        fen_shared(new Handle_Fen_String()),
-        chess_handler(new Handle_Chessboard(this,fen_shared)),
-        game_movement(new Movement_Piece(this,fen_shared,chess_handler)),
-        mouse_handler(new Handle_Mouse_Input(this,fen_shared,game_movement,chess_handler))           
+        fen_shared
+        (
+            std::make_shared<Handle_Fen_String>
+            (
+                
+            )
+        ),
+        chess_handler
+        (
+            new Handle_Chessboard
+            (
+                fen_shared
+            )
+        ),
+        game_movement
+        (
+            new Movement_Piece
+            (
+                fen_shared
+            )
+        ),
+        find_king_shared
+        (
+            std::make_shared<Find_King>
+            (
+                
+            )
+        ),
+        check_shared
+        (
+            std::make_shared<Check>
+            (
+
+            )
+        ),
+        pin_shared
+        (
+            std::make_shared<Handle_Pin>
+            (
+                find_king_shared,
+                check_shared
+            )
+        ),
+        enpassant_shared
+        (
+            std::make_shared<Handle_Enpassant>
+            (
+                fen_shared,
+                game_movement
+            )
+        ),
+        castling_shared
+        (
+            std::make_shared<Castling>
+            (
+                fen_shared,
+                game_movement,
+                check_shared,
+                chess_handler,
+                find_king_shared
+            )
+        ),
+        update_moves_shared
+        (
+            std::make_shared<Update_Moves>
+            (
+                fen_shared,
+                enpassant_shared,
+                game_movement,
+                castling_shared
+            )
+        ),
+        promotion_pawn_shared
+        (
+            std::make_shared<Promotion_Pawn>
+            (
+                game_movement,
+                chess_handler,
+                fen_shared,
+                check_shared,
+                pin_shared,
+                find_king_shared
+            )
+        ),
+        mouse_handler
+        (
+            new Handle_Mouse_Input
+            (
+                this,
+                fen_shared,
+                game_movement,
+                chess_handler,
+                enpassant_shared,
+                update_moves_shared,
+                castling_shared,
+                find_king_shared,
+                check_shared,
+                pin_shared,
+                promotion_pawn_shared
+            )
+        )
+          
     {
         //Rappresentazione dei pezzi:
         render_piece();
 
-        game_movement->update_moves_all_piece();   
+        update_moves_shared.get()->update_moves_all_piece();   
         
         Bind(wxEVT_PAINT,&Draw_board::on_paint,this);
      
@@ -152,13 +250,13 @@ int Draw_board::get_square_size()
 }
 
 Draw_board::~Draw_board()
-{    
-    delete game_movement;
-    game_movement=nullptr;
+{  
+    //delete chess_handler;
+    //chess_handler=nullptr;    
 
-    delete chess_handler;
-    chess_handler=nullptr;
+    //delete game_movement;
+    //game_movement=nullptr;
 
-    delete mouse_handler;
-    mouse_handler=nullptr;
+    //delete mouse_handler;
+    //mouse_handler=nullptr;
 }

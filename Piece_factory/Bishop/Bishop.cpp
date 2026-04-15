@@ -1,5 +1,5 @@
 #include "Bishop.h"
-#include "../../Handle_Fen_String.h"
+#include "../../Chess_Engine/FEN/Handle_Fen_String.h"
 
 Bishop::Bishop(int position, char character)
     :Piece(position,character)
