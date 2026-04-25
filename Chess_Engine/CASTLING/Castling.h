@@ -13,9 +13,9 @@ class Castling
 {
 private:
     std::shared_ptr<Handle_Fen_String> fen_shared;    
-    Movement_Piece* movement_ptr;
+    Movement_Piece* movement_ptr =nullptr;
     std::shared_ptr<Check> check_shared;
-    std::shared_ptr<Handle_Chessboard> turn_chess_shared;
+    Handle_Chessboard* turn_chess_ptr = nullptr;
     std::shared_ptr<Find_King> find_king_shared;  
 public:
     Castling
@@ -27,11 +27,8 @@ public:
         std::shared_ptr<Find_King> find_king
     );
     
-    //TODO: Sistema Handle_Chessboard
-    //per queste funzioni
     bool is_castling_dx();
     bool is_castling_sx();
-    //queste
 
     bool handle_castling_dx();
     bool handle_castling_sx();

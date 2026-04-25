@@ -14,28 +14,24 @@ Draw_Promotion_Dialog::Draw_Promotion_Dialog(wxFrame* parent)
 
 void Draw_Promotion_Dialog::promotion_queen(wxCommandEvent& event)
 {
-    //TODO:
     character_choice = 'q';
     EndModal(wxID_OK);
 }
 
 void Draw_Promotion_Dialog::promotion_bishop(wxCommandEvent& event)
 {
-    //TODO:
     character_choice = 'b';
     EndModal(wxID_OK);
 }
 
 void Draw_Promotion_Dialog::promotion_knight(wxCommandEvent& event)
 {
-    //TODO:
     character_choice = 'k';
     EndModal(wxID_OK);
 }
 
 void Draw_Promotion_Dialog::promotion_rook(wxCommandEvent& event)
 {
-    //TODO:
     character_choice = 'r';
     EndModal(wxID_OK);
 }

@@ -11,7 +11,7 @@ Castling::Castling
     :fen_shared(fen),
      movement_ptr(movement),
      check_shared(check),
-     turn_chess_shared(turn_chess),
+     turn_chess_ptr(turn_chess),
      find_king_shared(find_king)
 {
     
@@ -21,7 +21,12 @@ bool Castling::is_castling_dx()
 {
     
     //Trovo il re sulla scacchiera con find_king
-    Piece *king = find_king_shared.get()->find_king_current_turn(fen_shared.get()->get_piece(),turn_chess_shared.get()->get_turn());
+    Piece *king = 
+    find_king_shared.get()->find_king_current_turn
+    (
+        fen_shared.get()->get_piece(),
+        turn_chess_ptr->get_turn()
+    );
     
     //Se il re si è mosso esci
     if(king->get_ismoved())
@@ -45,7 +50,11 @@ bool Castling::is_castling_dx()
         if(fen_shared.get()->get_piece()[position_king+i])
         {        
             //Controllo se trovo la torre durante il ciclo:
-            if(fen_shared.get()->get_piece()[position_king+i]->is_rock())
+            if
+            (
+                fen_shared.get()->get_piece()
+                [position_king+i]->is_rock()
+            )
             {
                 //Trovo la torre, me la memorizzo in un puntatore creato sul momento
                 Piece* rock = fen_shared.get()->get_piece()[position_king+i];
@@ -73,21 +82,21 @@ bool Castling::is_castling_dx()
                                 (
                                     king->get_square()+i,
                                     fen_shared.get()->get_piece(),
-                                    turn_chess_shared.get()->get_turn()
+                                    turn_chess_ptr->get_turn()
                                 )
                                 ||
                                 check_shared.get()->handle_check_on_king_knight
                                 (
                                     king->get_square()+i,
                                     fen_shared.get()->get_piece(),
-                                    turn_chess_shared.get()->get_turn()
+                                    turn_chess_ptr->get_turn()
                                 )
                                 ||
                                 check_shared.get()->handle_check_on_king_diagonal
                                 (
                                     king->get_square()+i,
                                     fen_shared.get()->get_piece(),
-                                    turn_chess_shared.get()->get_turn()
+                                    turn_chess_ptr->get_turn()
                                 )
                             )
                             {
@@ -131,7 +140,7 @@ bool Castling::is_castling_sx()
     Piece *king = find_king_shared.get()->find_king_current_turn
     (
         fen_shared.get()->get_piece(),
-        turn_chess_shared.get()->get_turn()
+        turn_chess_ptr->get_turn()
     );
 
     //Se il re si è mosso esci
@@ -186,21 +195,21 @@ bool Castling::is_castling_sx()
                                 (
                                     king->get_square()-i,
                                     fen_shared.get()->get_piece(),
-                                    turn_chess_shared.get()->get_turn()
+                                    turn_chess_ptr->get_turn()
                                 )
                                 ||
                                 check_shared.get()->handle_check_on_king_knight
                                 (
                                     king->get_square()-i,
                                     fen_shared.get()->get_piece(),
-                                    turn_chess_shared.get()->get_turn()
+                                    turn_chess_ptr->get_turn()
                                 )
                                 ||
                                 check_shared.get()->handle_check_on_king_diagonal
                                 (
                                     king->get_square()-i,
                                     fen_shared.get()->get_piece(),
-                                    turn_chess_shared.get()->get_turn()
+                                    turn_chess_ptr->get_turn()
                                 )
                             )
                             {
@@ -237,13 +246,22 @@ bool Castling::is_castling_sx()
 
 bool Castling::handle_castling_dx()
 {
+    if(movement_ptr->get_stack().size()==0)
+    {
+        std::cout<<"Stack pieno \n";
+        return false;
+    }
     int position_rook=0;
     
     // Ottieni l'ultima mossa:
     Move last_move = movement_ptr->get_stack().top();
 
+
     // Se l'ultima mossa associata al pezzo non è il re, esci...
-    if (!last_move.get_piece_status()->is_king())
+    if
+    (
+        last_move.get_type_piece()!=KING
+    )
     {
         return false;
     }
@@ -257,8 +275,8 @@ bool Castling::handle_castling_dx()
         return false;
     }
 
-    if(last_move.get_piece_status()->get_color()==WHITE)
-    {    
+    if(last_move.get_color_piece()==WHITE)
+    {
         position_rook = 63;
     }
     else
@@ -285,10 +303,16 @@ bool Castling::handle_castling_sx()
     // Ottieni l'ultima mossa:
     Move last_move = movement_ptr->get_stack().top();
 
+    if(movement_ptr->get_stack().size()==0)
+    {
+        return false;
+    }
+
     int position_rook=0;
 
     // Se l'ultima mossa associata al pezzo non è il re, esci...
-    if (!last_move.get_piece_status()->is_king())
+    //if (!last_move.get_piece_status()->is_king())
+    if(last_move.get_type_piece()!=KING)
     {
         return false;
     }
@@ -302,7 +326,7 @@ bool Castling::handle_castling_sx()
         return false;
     }
 
-    if(last_move.get_piece_status()->get_color()==WHITE)
+    if(last_move.get_color_piece()==WHITE)
     {
         position_rook = 56;
     }

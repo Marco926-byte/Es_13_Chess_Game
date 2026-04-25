@@ -29,22 +29,23 @@ bool Handle_Enpassant::is_enpassant()
         last_move = game_movement->get_stack().top();
     }
 
-    if(!last_move.get_piece_status())
-    {
-        return false;
-    }
-
     //Se il pezzo non è un pedone...
     if
     (
-        !last_move.get_piece_status()->is_pawn() 
+        last_move.get_type_piece()!=PAWN 
     )
     {
         return false;
     }
 
     //Se l'ultima mossa non è un doppio salto del pedone...
-    if(std::abs(last_move.get_to_square()-last_move.get_from_square())!=16)
+    if
+    (
+        std::abs
+        (
+            last_move.get_to_square()-last_move.get_from_square()
+        )!=16
+    )
     {
         return false;
     }
@@ -76,7 +77,11 @@ bool Handle_Enpassant::is_enpassant()
         }
 
         //L'altro pezzo deve essere di un altro colore
-        if(fen_shared.get()->get_piece()[square]->get_color() == last_move.get_piece_status()->get_color())
+        if
+        (
+            fen_shared.get()->get_piece()[square]->get_color() 
+            == last_move.get_color_piece()
+        )
         {
             continue;
         }
@@ -106,11 +111,16 @@ bool Handle_Enpassant::is_enpassant()
 
 bool Handle_Enpassant::handle_capture_enpassant()
 {
+    if(game_movement->get_stack().size()==0)
+    {
+        return false;
+    }
+
     // Ottieni l'ultima mossa:
     Move last_move = game_movement->get_stack().top();
 
     // Se l'ultima mossa associata al pezzo non è un pedone, esci...
-    if (!last_move.get_piece_status()->is_pawn())
+    if (last_move.get_type_piece()!=PAWN) 
     {
         return false;
     }
@@ -118,20 +128,26 @@ bool Handle_Enpassant::handle_capture_enpassant()
     // Se l'ultima mossa non è una singola mossa diagonale, esci...
     if 
     (
-        abs(last_move.get_from_square() - last_move.get_to_square()) != 9 
+        abs
+        (
+            last_move.get_from_square() - last_move.get_to_square()
+        ) != 9 
         &&
-        abs(last_move.get_from_square() - last_move.get_to_square()) != 7
+        abs
+        (
+            last_move.get_from_square() - last_move.get_to_square()
+        ) != 7
     ) 
     {
         return false;
     }
 
+    int color_offset = last_move.get_color_piece() == WHITE ? 8 : -8;
+
     // Se la casella diagonale è nullptr, elimina il pezzo
-    if (last_move.get_piece_captured() == nullptr) 
+    if(fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset])
     {
-        int color_offset = last_move.get_piece_status()->get_color() == WHITE ? 8 : -8;
-        last_move.set_piece_status(fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset]);
-        
+        std::cout<<"Elimino pezzo nella casella: "<<last_move.get_to_square()+color_offset<<std::endl;
         delete fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset];
         fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset]=nullptr;
         

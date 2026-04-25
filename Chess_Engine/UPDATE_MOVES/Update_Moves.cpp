@@ -28,9 +28,6 @@ void Update_Moves::update_moves_all_piece()
     enpassant_shared.get()->is_enpassant();
     castling_shared.get()->is_castling_dx();
     castling_shared.get()->is_castling_sx();
-    //is_enpassant();     //Todo fare collegamento con Handle_Enpassant
-    //is_castling_dx();
-    //is_castling_sx();
 }
 
 void Update_Moves::update_move_in_check(Color team_color,std::vector<int> v_attack)

@@ -58,6 +58,10 @@ private:
     std::shared_ptr<Promotion_Pawn> promotion_pawn_shared;
     
     Handle_Mouse_Input* mouse_handler=nullptr;
+
+    //Gestione ridimensionamento finestra
+    void OnSize(wxSizeEvent& event);
+    
 public:
     //Costruttore principale
     Draw_board(wxFrame* parent);
@@ -73,9 +77,6 @@ public:
     
     //Disegno principale
     void on_paint(wxPaintEvent& evt);
-    
-    //Gestione ridimensionamento finestra
-    void OnSize(wxSizeEvent& event);
     
     int get_square_size();
     

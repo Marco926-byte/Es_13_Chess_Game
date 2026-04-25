@@ -14,8 +14,8 @@
 class Promotion_Pawn
 {
 private:
-    std::shared_ptr<Movement_Piece> movement_shared;
-    std::shared_ptr<Handle_Chessboard> turn_chessboard_shared;
+    Movement_Piece* movement_ptr =nullptr;
+    Handle_Chessboard* turn_chessboard_ptr = nullptr;
     std::shared_ptr<Handle_Fen_String> fen_shared;
     std::shared_ptr<Check> check_shared;
     std::shared_ptr<Handle_Pin> pin_shared;

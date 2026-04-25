@@ -82,7 +82,8 @@ public:
 };
 
 // Test 1: Pedone Bianco E2 -> E4
-TEST_F(Move_Test, White_Pawn_Moves_Forward) {
+TEST_F(Move_Test, White_Pawn_Moves_Forward) 
+{
     int from = 52; // E2
     int to = 36;   // E4
 
@@ -101,9 +102,14 @@ TEST_F(Move_Test, White_Pawn_Moves_Forward) {
 
 TEST_F(Move_Test, Rook_Cannot_Jump) 
 {
+    std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
+    fen_string.get()->set_board_fenstring(start_fen);    
+
+    engine_update_moves.get()->update_moves_all_piece();
+
     int from_rook = 56; // A1 (Torre bianca)
     int to_jump = 40;   // A3 (Dietro il pedone A2)
-
+    
     // La torre è bloccata dal pedone in A2 (48)
     bool success = engine->handle_move(from_rook, to_jump);
 

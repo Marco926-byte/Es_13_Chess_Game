@@ -12,12 +12,13 @@ class Es13: public MyFrame1
 private:
     Draw_board* board=nullptr;
     Draw_Promotion_Dialog* dialog=nullptr;
+
+    void open_board(wxCommandEvent& event);
 public:
     /*Costruttore del form:*/
     Es13(wxWindow* parent);   
     /*---------------------*/
     
-    void open_board(wxCommandEvent& event);
     void open_promotion_dialog();
     
     ~Es13();

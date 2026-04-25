@@ -9,13 +9,15 @@
 class Handle_Enpassant
 {
 private:
-
     std::shared_ptr<Handle_Fen_String> fen_shared;
     
-    Movement_Piece* game_movement;
-
+    Movement_Piece* game_movement =nullptr;
 public:
-    Handle_Enpassant(std::shared_ptr<Handle_Fen_String> fen, Movement_Piece* movement);
+    Handle_Enpassant
+    (
+        std::shared_ptr<Handle_Fen_String> fen, 
+        Movement_Piece* movement
+    );
     
     bool is_enpassant();
     bool handle_capture_enpassant();

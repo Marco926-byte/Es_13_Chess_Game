@@ -1,10 +1,10 @@
 #include "Move.h"
 Move::Move()
 :   from_square(0),
-    to_square(0),
-    character_captured(' '),
-    piece_status(nullptr),
-    piece_captured(nullptr)
+    to_square(0)
+    //character_captured(' '),
+    //piece_status(nullptr)
+    //piece_captured(nullptr)
 {
        
 }
@@ -29,7 +29,27 @@ void Move::set_to_square(int to)
     to_square=to;
 }
 
-char Move::get_character_captured() const
+Color Move::get_color_piece() const
+{
+    return color_piece;
+}
+
+void Move::set_color_piece(Color piece_color)
+{
+    color_piece=piece_color;
+}
+
+Character Move::get_type_piece() const
+{
+    return type_piece;
+}
+
+void Move::set_type_piece(Character type)
+{
+    type_piece=type;
+}
+
+/*char Move::get_character_captured() const
 {
     return character_captured;
 }
@@ -38,24 +58,24 @@ void Move::set_character_captured(char new_char)
 {
     character_captured=new_char;
     
-}
+}*/
 
-Piece* Move::get_piece_status() const
+/*Piece* Move::get_piece_status() const
 {
     return piece_status;
-}
+}*/
 
-Piece* Move::get_piece_captured() const
+/*Piece* Move::get_piece_captured() const
 {
     return piece_captured;
-}
+}*/
 
-void Move::set_piece_status(Piece* p)
+/*void Move::set_piece_status(Piece* p)
 {
     piece_status=p;
-}
+}*/
 
-void Move::set_piece_captured(Piece *pc)
+/*void Move::set_piece_captured(Piece *pc)
 {
     piece_captured=pc;
-}
+}*/

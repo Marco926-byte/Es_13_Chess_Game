@@ -241,6 +241,7 @@ void Draw_board::OnSize(wxSizeEvent& event)
     Refresh();
     //Evento skippato.
     event.Skip();
+    
 }
 
 int Draw_board::get_square_size()
@@ -251,12 +252,20 @@ int Draw_board::get_square_size()
 
 Draw_board::~Draw_board()
 {  
-    //delete chess_handler;
-    //chess_handler=nullptr;    
+    if (mouse_handler) 
+    {
+        this->Unbind(wxEVT_LEFT_DOWN, &Handle_Mouse_Input::onMouseLeftDown, mouse_handler);
+        this->Unbind(wxEVT_LEFT_UP, &Handle_Mouse_Input::onMouseLeftUp, mouse_handler);
+    }
 
-    //delete game_movement;
-    //game_movement=nullptr;
+    Unbind(wxEVT_PAINT,&Draw_board::on_paint,this);
 
-    //delete mouse_handler;
-    //mouse_handler=nullptr;
+    delete mouse_handler; 
+    mouse_handler = nullptr; 
+     
+    delete game_movement; 
+    game_movement = nullptr; 
+
+    delete chess_handler; 
+    chess_handler = nullptr; 
 }

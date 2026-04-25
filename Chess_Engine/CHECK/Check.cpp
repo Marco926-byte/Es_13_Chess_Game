@@ -10,7 +10,12 @@ std::vector<int> Check::get_v_check_attack() const
     return v_check_attack;
 }
 
-bool Check::handle_check_on_king_diagonal(int position_king,Piece **board, Color current_player_color)
+bool Check::handle_check_on_king_diagonal
+(
+    int position_king,
+    Piece **board, 
+    Color current_player_color
+)
 {
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
     int diagonal[4]{-9,-7,7,9};
@@ -168,7 +173,6 @@ bool Check::handle_check_on_king_straight(int position_king,Piece **board, Color
         }       
     }
     return false;
-
 }
 
 bool Check::handle_check_on_king_knight(int position_king,Piece **board, Color current_player_color)

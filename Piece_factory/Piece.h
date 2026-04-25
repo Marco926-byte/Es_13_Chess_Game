@@ -15,8 +15,7 @@ class Handle_Fen_String;
     enum Color
     {
         WHITE=1,
-        BLACK=2,
-        ENDGAME=0
+        BLACK=2
     };
 
     //IDENTIFICARE IL TIPO DI PEZZO

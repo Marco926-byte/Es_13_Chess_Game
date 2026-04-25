@@ -14,16 +14,12 @@
 class Create_Piece
 {
 private:
-    King *white_king;   
-    King *black_king;   
+      
 public:
     Create_Piece();
+    
     //Crea il pezzo con la fen
     Piece* create_piece(char c, int square);
-
-    //Getter
-    King* get_white_king();
-    King* get_black_king();
 
     ~Create_Piece();
 };

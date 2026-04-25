@@ -4,31 +4,45 @@
 #include "../../Piece_factory/Piece.h"
 #include <wx/wx.h>
 
+//TODO: 
+//      Perfezionare questa classe togliendo i puntatori e usando 
+//      enum per identificare la mossa 
+
 class Move
 {
 private:
     int from_square, to_square;
 
-    char character_captured;
+    Color color_piece;
+    Character type_piece;
 
-    Piece* piece_status=nullptr;
-    Piece* piece_captured=nullptr;
+    //char character_captured;
+
+    //Piece* piece_status=nullptr;
+    //Piece* piece_captured=nullptr;
 public:
     Move();
 
     int get_from_square() const;
     void set_from_square(int from);
+    
     int get_to_square() const;
     void set_to_square(int to);
     
-    char get_character_captured() const;
-    void set_character_captured(char new_char);
+    Color get_color_piece() const;
+    void set_color_piece(Color piece_color);
 
-    Piece* get_piece_status() const;
-    Piece* get_piece_captured() const;
+    Character get_type_piece() const;
+    void set_type_piece(Character type);
 
-    void set_piece_status(Piece* p);
-    void set_piece_captured(Piece *pc);
+    //char get_character_captured() const;
+    //void set_character_captured(char new_char);
+
+    //Piece* get_piece_status() const;
+    //Piece* get_piece_captured() const;
+
+    //void set_piece_status(Piece* p);
+    //void set_piece_captured(Piece *pc);
 };
 
 
