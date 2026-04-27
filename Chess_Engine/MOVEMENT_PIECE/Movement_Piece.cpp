@@ -24,30 +24,13 @@ bool Movement_Piece::handle_move(int from, int to)
     {
         return false;
     }
-
-    std::cout<<"Ciao \n";
     
-
-    if(type_caracter->is_legal_move(to))
-    {
-        std::cout<<"La mossa è legale \n";
-        
-    }
-    else
-    {
-        std::cout<<"La mossa non è legale \n";
-        return false;
-    }
-    std::cout<<"from: "<<from<<" to: "<<to<<std::endl;
-
     //Creo la nuova mossa:
     Move move;
     
     //Imposto la mossa da.. a...
     move.set_from_square(from);
     move.set_to_square(to);
-
-    std::cout<<"Mossa da: "<<from<<" a: "<<to<<std::endl;
 
     const auto &piece = fen_shared.get()->get_piece();
 
@@ -61,9 +44,7 @@ bool Movement_Piece::handle_move(int from, int to)
 
     )
     {
-        std::cout<<"Il pezzo che si muove è: KING\n";
-        move.set_type_piece(KING);
-        
+        move.set_type_piece(KING);       
     }
 
     if
@@ -74,8 +55,6 @@ bool Movement_Piece::handle_move(int from, int to)
 
     )
     {
-        std::cout<<"Il pezzo che si muove è: BISHOP\n";
-
         move.set_type_piece(BISHOP);
     }
 
@@ -87,8 +66,6 @@ bool Movement_Piece::handle_move(int from, int to)
 
     )
     {
-        std::cout<<"Il pezzo che si muove è: ROCK\n";
-
         move.set_type_piece(ROCK);
     }
 
@@ -100,8 +77,6 @@ bool Movement_Piece::handle_move(int from, int to)
 
     )
     {
-        std::cout<<"Il pezzo che si muove è: QUEEN\n";
-
         move.set_type_piece(QUEEN);
     }
 
@@ -113,8 +88,6 @@ bool Movement_Piece::handle_move(int from, int to)
 
     )
     {
-        std::cout<<"Il pezzo che si muove è: KNIGHT\n";
-
         move.set_type_piece(KNIGHT);
     }
 
@@ -126,21 +99,17 @@ bool Movement_Piece::handle_move(int from, int to)
 
     )
     {
-        std::cout<<"Il pezzo che si muove è: PAWN\n";
-
         move.set_type_piece(PAWN);
     }
 
     //Gestisco la cattura:
     if(piece[move.get_to_square()]!=nullptr)
     {
-        std::cout<<"Sto attuando la cattura di: "<<piece[move.get_to_square()]->get_name_piece()<<"\n";
         //elimino il pezzo puntato dal carattere ucciso:
         delete piece[move.get_to_square()];
     }
 
     //Gestisco il movimento del pezzo:
-    std::cout<<"Muovo il pezzo da: "<<to<<" a: "<<from<<std::endl;
     piece[move.get_to_square()]=piece[move.get_from_square()];
     piece[move.get_from_square()]=nullptr;
 

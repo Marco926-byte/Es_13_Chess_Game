@@ -49,13 +49,11 @@ std::map<int,std::vector<int>> Piece::get_map_path() const
 
 bool Piece::is_legal_move(int square) const
 {
-    std::cout<<"Ti faccio vedere le mosse legali del pezzo: \n";
     for(std::size_t move=0; move!=this->legal_moves.size();move++)
     {
         std::cout<<square<<std::endl;
         if(square==this->legal_moves[move])
         {
-            std::cout<<"Ho trovato la mossa disponibile nelle mosse legali!\n";
             return true;
         }   
     }    
