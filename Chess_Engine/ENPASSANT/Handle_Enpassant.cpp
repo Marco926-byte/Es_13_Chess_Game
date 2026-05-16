@@ -102,11 +102,13 @@ bool Handle_Enpassant::is_enpassant()
         //Parte la gestione dell'en_passant
         pawn->handle_en_passant(last_move.get_to_square() + color_offset);
         
+        fen_shared.get()->set_is_enpassant(true);
+        fen_shared.get()->set_square_enpassant(last_move.get_to_square());
+        
         return true;
     }
     return false;
-    
-   return true;
+
 }
 
 bool Handle_Enpassant::handle_capture_enpassant()
@@ -141,13 +143,13 @@ bool Handle_Enpassant::handle_capture_enpassant()
     {
         return false;
     }
+    
 
     int color_offset = last_move.get_color_piece() == WHITE ? 8 : -8;
 
     // Se la casella diagonale è nullptr, elimina il pezzo
     if(fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset])
     {
-        std::cout<<"Elimino pezzo nella casella: "<<last_move.get_to_square()+color_offset<<std::endl;
         delete fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset];
         fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset]=nullptr;
         

@@ -30,7 +30,11 @@ void Update_Moves::update_moves_all_piece()
     castling_shared.get()->is_castling_sx();
 }
 
-void Update_Moves::update_move_in_check(Color team_color,std::vector<int> v_attack)
+void Update_Moves::update_move_in_check
+(
+    Color team_color,
+    std::vector<int> v_attack
+)
 {
     const auto& piece=fen_shared.get()->get_piece();
     
@@ -59,8 +63,7 @@ void Update_Moves::update_move_in_check(Color team_color,std::vector<int> v_atta
             {                
                 //Itero tutto il vettore dell'attacco:
                 for(int itr_attack : v_attack)
-                {
-                    std::cout<<itr_attack<<std::endl;
+                {                   
                     //Se un vettore di attacco contiene una mossa legale del pezzo allora inserisci:   
                     if(itr_attack == itr_normal_legal_move)
                     {

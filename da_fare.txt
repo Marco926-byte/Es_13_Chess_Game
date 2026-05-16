@@ -1,7 +1,7 @@
 DEVO:
 4. Gestire la fine del gioco.
 
-Problema in PIN, mi da problemi nell'aggiornare le mosse.
+fai test controllo scacco due re entrano in gioco a caso
 
 cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella per 
                                                         debuggare con Valgrind

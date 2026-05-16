@@ -16,8 +16,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 
-	btn_board = new wxButton( this, ID_BOARD, _("disegna scacchiera"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1->Add( btn_board, 0, wxALL, 5 );
+	LST_MOVE_STATE = new wxListBox( this, ID_LST_STATE, wxDefaultPosition, wxSize( 500,500 ), 0, NULL, 0 );
+	bSizer1->Add( LST_MOVE_STATE, 0, wxALL|wxALIGN_RIGHT, 5 );
 
 
 	this->SetSizer( bSizer1 );

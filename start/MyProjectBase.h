@@ -10,17 +10,18 @@
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
-#include <wx/button.h>
 #include <wx/string.h>
-#include <wx/bitmap.h>
-#include <wx/image.h>
-#include <wx/icon.h>
+#include <wx/listbox.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
+#include <wx/button.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/dialog.h>
 #include <wx/panel.h>
 
@@ -37,10 +38,10 @@ class MyFrame1 : public wxFrame
 		enum
 		{
 			ID_FRAME = 6000,
-			ID_BOARD,
+			ID_LST_STATE,
 		};
 
-		wxButton* btn_board;
+		wxListBox* LST_MOVE_STATE;
 
 	public:
 

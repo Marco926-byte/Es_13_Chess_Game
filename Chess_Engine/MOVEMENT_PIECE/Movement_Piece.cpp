@@ -20,11 +20,32 @@ bool Movement_Piece::handle_move(int from, int to)
 {
     Piece* type_caracter = fen_shared.get()->get_piece()[from];
     
+    bool to_is_good= false;
+    
     if(type_caracter->get_legal_moves().size()==0)
     {
         return false;
     }
     
+    for
+    (
+        int i=0;
+        i<fen_shared.get()->get_piece()[from]->get_legal_moves().size();
+        i++
+    )
+    {
+        if(to == fen_shared.get()->get_piece()[from]->get_legal_moves()[i])
+        {
+            to_is_good=true;
+            break;
+        }
+    }
+
+    if(!to_is_good)
+    {
+        return false;
+    }
+
     //Creo la nuova mossa:
     Move move;
     
@@ -118,9 +139,16 @@ bool Movement_Piece::handle_move(int from, int to)
     piece[move.get_to_square()]->set_square(move.get_to_square());
     piece[move.get_to_square()]->set_ismoved(true);
     
+    //Gestisco la mossa del nero per il discorso della fen 
+    if(move.get_color_piece()==BLACK)
+    {
+        fen_shared.get()->set_is_last_move_black(true);
+    }
+
     //RIGENERA LA NUOVA FEN_STRING:
     std::string new_fen = fen_shared.get()->generate_fen_string();
     fen_shared.get()->add_fen_to_map(new_fen);
+    fen_shared.get()->set_board_fenstring(new_fen);
 
     stack.push(move);
 

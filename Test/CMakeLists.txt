@@ -41,6 +41,9 @@ add_executable(w_test
     ../Piece_factory/Queen/Queen.cpp 
     ../Piece_factory/Rock/Rock.cpp
     ../start/MyProjectBase.cpp
+    
+    Check_Test.cpp
+    Perft.cpp
 )
 
 target_link_libraries(w_test PRIVATE GTest::gtest ${wxWidgets_LIBRARIES})

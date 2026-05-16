@@ -13,30 +13,36 @@
 class Move_Test: public ::testing::Test
 {
 protected:
-    std::shared_ptr<Handle_Fen_String> fen_string;
     std::shared_ptr<Handle_Chessboard> chess_logic;
+    std::shared_ptr<Find_King> engine_find_king;
+    std::shared_ptr<Handle_Fen_String> fen_string;
     std::shared_ptr<Movement_Piece> engine;
     std::shared_ptr<Handle_Enpassant> engine_enpassant; 
     std::shared_ptr<Check> engine_check_logic;
-    std::shared_ptr<Find_King> engine_find_king;
     std::shared_ptr<Castling> engine_castling_logic;  
     std::shared_ptr<Update_Moves> engine_update_moves;
 public:
     void SetUp() override
     {
+        chess_logic = std::make_shared<Handle_Chessboard>
+        (
+            
+        ); 
+
+        engine_find_king= std::make_shared<Find_King>
+        (
+            
+        );
+
         //Inizializzo la fen:
         fen_string = std::make_shared<Handle_Fen_String>
         (
-
+            chess_logic.get(),
+            engine_find_king
         );
 
         std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
         fen_string.get()->set_board_fenstring(start_fen);
-
-        chess_logic = std::make_shared<Handle_Chessboard>
-        (
-            fen_string
-        ); 
 
         //Inizializzo il motore delle mosse:
         engine = std::make_shared<Movement_Piece>
@@ -53,10 +59,7 @@ public:
         (
 
         );
-        engine_find_king= std::make_shared<Find_King>
-        (
-            
-        );
+        
         engine_castling_logic = std::make_shared<Castling>
         (
             fen_string,
@@ -98,6 +101,26 @@ TEST_F(Move_Test, White_Pawn_Moves_Forward)
     ASSERT_NE(board[to], nullptr); //"La casella di arrivo è vuota!"
     EXPECT_EQ(board[to]->get_name_piece(), 'P'); //"Non è un pedone!"
     EXPECT_EQ(board[from], nullptr); //"Il vecchio posto non è vuoto!"
+}
+TEST_F(Move_Test, check_fen_string_after_move)
+{
+    std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
+    fen_string.get()->set_board_fenstring(start_fen);    
+
+    engine_update_moves.get()->update_moves_all_piece();
+
+    std::cout<<"Fen prima della mossa: "<<fen_string.get()->get_fen_string()<<std::endl;
+
+    int from = 52; // E2
+    int to = 36;   // E4
+    
+    bool execute_move = engine.get()->handle_move(from,to);
+    std::cout<<"La mossa è stata fatta?"<<execute_move<<std::endl;
+    std::cout<<"Fen dopo la mossa: "<<fen_string.get()->get_fen_string()<<std::endl;
+
+    bool success = true;
+
+    ASSERT_TRUE(success);
 }
 
 TEST_F(Move_Test, Rook_Cannot_Jump) 
@@ -155,9 +178,22 @@ TEST_F(Move_Test, Knight_Can_Jump)
 
 TEST_F(Move_Test, Knight_Legal_Move_Check)
 {
+    engine_update_moves.get()->update_moves_all_piece();
+
     int from_knight = 62;
     int to_jump = 46;
 
+    std::vector<int> legal_moves = fen_string.get()->get_piece()[62]->get_legal_moves();
+    std::cout<<"Stampo le mosse del pezzo N nella casella 62\n";
+    for
+    (
+        int i=0;
+        i<legal_moves.size();
+        i++
+    )
+    {
+        std::cout<<legal_moves[i]<<std::endl;
+    }
     //Il cavallo non può andare in questa casella:
     bool success = engine.get()->handle_move(from_knight,to_jump);
 

@@ -15,12 +15,12 @@
 class Chessboard_Test: public ::testing::Test
 {
 protected:
-    std::shared_ptr<Handle_Fen_String> fen_string;
     std::shared_ptr<Handle_Chessboard> chess_logic;
+    std::shared_ptr<Find_King> engine_find_king;
+    std::shared_ptr<Handle_Fen_String> fen_string;
     std::shared_ptr<Movement_Piece> engine;
     std::shared_ptr<Handle_Enpassant> engine_enpassant;
     std::shared_ptr<Check> engine_check_logic;  
-    std::shared_ptr<Find_King> engine_find_king;    
     std::shared_ptr<Castling> engine_castling_logic; 
     std::shared_ptr<Handle_Pin> engine_pin;  
     std::shared_ptr<Update_Moves> engine_update_moves;
@@ -28,16 +28,28 @@ protected:
 public:
     void SetUp() override
     {
-        //Inizializzo la fen:
-        fen_string = std::make_shared<Handle_Fen_String>();
-        std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
-        fen_string.get()->set_board_fenstring(start_fen);
-
         //Inizializzo il motore della logica:
         chess_logic = std::make_shared<Handle_Chessboard>
         (
-            fen_string
+            
         );
+
+        engine_find_king= std::make_shared<Find_King>
+        (
+            
+        );
+
+        //Inizializzo la fen:
+        fen_string = std::make_shared<Handle_Fen_String>
+        (
+            chess_logic.get(),
+            engine_find_king
+        );
+        
+        std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
+        fen_string.get()->set_board_fenstring(start_fen);
+
+        
         
         //Inizializzo il motore delle mosse:
         engine = std::make_shared<Movement_Piece>
@@ -62,10 +74,7 @@ public:
             engine_check_logic
         );
 
-        engine_find_king= std::make_shared<Find_King>
-        (
-            
-        );
+        
         engine_castling_logic = std::make_shared<Castling>
         (
             fen_string,

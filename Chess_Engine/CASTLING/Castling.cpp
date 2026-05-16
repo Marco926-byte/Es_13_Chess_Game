@@ -100,17 +100,20 @@ bool Castling::is_castling_dx()
                                 )
                             )
                             {
+                                fen_shared.get()->set_short_castling(true);
                                 return true;
                             }
 
                         }
                         king->add_legal_move(position_king+2);
+                        fen_shared.get()->set_short_castling(true);
                         return true;
                     }
                     //In una delle due caselle successive alla casella del re c'era qualcosa
                     //non aggiungo la mossa per arroccare, ma comunque arrocco possibile
                     else
                     {
+                        fen_shared.get()->set_short_castling(true);
                         return true;
                     }       
                 }                    
@@ -213,17 +216,20 @@ bool Castling::is_castling_sx()
                                 )
                             )
                             {
+                                fen_shared.get()->set_long_castling(true);
                                 return true;
                             }
 
                         }
                         king->add_legal_move(position_king-2);
+                        fen_shared.get()->set_long_castling(true);
                         return true;
                     }
                     //In una delle due caselle successive alla casella del re c'era qualcosa
                     //non aggiungo la mossa per arroccare, ma comunque arrocco possibile
                     else
                     {
+                        fen_shared.get()->set_long_castling(true);
                         return true;
                     }       
                 }                    

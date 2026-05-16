@@ -105,8 +105,10 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         select_piece=position_board;   
         handle_piece=piece_ptr;
         from_square=handle_piece->get_square();
+    
         return;
     }
+    
     //Se clicco la 2° volta su una casella vuota o nemico ma è una mossa legale per il 
     //pezzo di partenza:
     if(handle_piece->is_legal_move(position_board))
@@ -149,7 +151,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
             )
         )
         {
-            wxLogMessage(wxT("SCACCO!"));
+            wxLogMessage(wxT("SCACCO STRAIGHT!"));
             update_moves_shared.get()->update_move_in_check
             (
                 handle_chessboard->get_turn(),
@@ -166,7 +168,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
             )
         )
         {
-            wxLogMessage(wxT("SCACCO!"));
+            wxLogMessage(wxT("SCACCO DIAGONAL!"));
             update_moves_shared.get()->update_move_in_check
             (
                 handle_chessboard->get_turn(),
@@ -183,7 +185,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
             )
         )
         {
-            wxLogMessage(wxT("SCACCO!"));
+            wxLogMessage(wxT("SCACCO KNIGHT!"));
             update_moves_shared.get()->update_move_in_check
             (
                 handle_chessboard->get_turn(),
@@ -206,7 +208,7 @@ void Handle_Mouse_Input::handle_select_square(int &clicked_row, int &clicked_col
         );
 
         enpassant_shared.get()->handle_capture_enpassant();
-
+        std::cout<<"FEN: "<<fen_smart.get()->get_fen_string()<<std::endl;
         mouse_ptr->Refresh();
 
         reset_attributes();

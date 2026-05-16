@@ -38,7 +38,6 @@ private:
     Piece* piece_ptr=nullptr;
 
     Draw_board* mouse_ptr=nullptr;
-    
     std::shared_ptr<Handle_Fen_String> fen_smart;
     Movement_Piece* handle_movement=nullptr;
     Handle_Chessboard* handle_chessboard=nullptr;

@@ -3,9 +3,8 @@
 //Costruttore:
 Handle_Chessboard::Handle_Chessboard
 (
-    std::shared_ptr<Handle_Fen_String>fen
+    
 )
-    :handler_fen(fen)
     {
         turn=WHITE;        
     }

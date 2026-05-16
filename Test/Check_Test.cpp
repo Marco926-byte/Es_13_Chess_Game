@@ -7,7 +7,7 @@
 #include "../Chess_Engine/UPDATE_MOVES/Update_Moves.h"
 #include "../Chess_Engine/ENPASSANT/Handle_Enpassant.h"
 
-class Castling_Tests: public ::testing::Test
+class Check_Test: public ::testing::Test
 {
 protected:
     std::unique_ptr<Handle_Chessboard> chess_logic;
@@ -21,10 +21,11 @@ protected:
 public:
     void SetUp() override
     {
+        //Inizializzo la logica dei turni
         chess_logic = std::make_unique<Handle_Chessboard>
         (
             
-        ); 
+        );
 
         engine_find_king= std::make_shared<Find_King>
         (
@@ -37,16 +38,13 @@ public:
             chess_logic.get(),
             engine_find_king
         );
-        
-        std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
-        fen_string.get()->set_board_fenstring(start_fen);
-
 
         //Inizializzo il motore delle mosse:
         engine = std::make_unique<Movement_Piece>
         (
             fen_string
         );
+        
         
         engine_enpassant = std::make_shared<Handle_Enpassant>
         (
@@ -75,93 +73,48 @@ public:
             engine.get(),
             engine_castling_logic
         );
-        engine_update_moves.get()->update_moves_all_piece();
     }
 
     void TearDown() override
     {
-        //Distruttore
+
     }
 };
 
-
-TEST_F(Castling_Tests, is_castling_dx_white_true)
+TEST_F(Check_Test, not_check_king_looking_forward)
 {
-    std::string fen_start = "4k3/8/8/8/8/8/8/4K2R w KQkq - 0 3";
+    std::cout<<"ciao da not check king\n";
+    std::string fen_start = "rnb1qbnr/ppp1pppp/2kp4/8/8/2KP4/RNB1QBNR w KQkq - 0 3";
     fen_string.get()->set_board_fenstring(fen_start); 
 
-    engine_update_moves.get()->update_moves_all_piece();
-
-   
-    chess_logic.get()->set_turn(WHITE);
-    
-    bool success = engine_castling_logic.get()->is_castling_dx();
-
-    ASSERT_TRUE(success);
-}
-
-
-
-TEST_F(Castling_Tests, is_castling_dx_black_true)
-{
-    std::string fen_start = "4k2r/8/8/8/8/8/8/4K3 w KQkq - 0 3";
-    fen_string.get()->set_board_fenstring(fen_start); 
-
-    engine_update_moves.get()->update_moves_all_piece();
-   
-    chess_logic.get()->set_turn(BLACK);
-    
-    bool success = engine_castling_logic.get()->is_castling_dx();
-
-    ASSERT_TRUE(success);
-}
-
-
-
-TEST_F(Castling_Tests, is_castling_dx_white_false_static)
-{
-    std::string fen_start = "4k3/8/8/8/8/8/8/4K1R1 w KQkq - 0 3";
-    fen_string.get()->set_board_fenstring(fen_start); 
-
-    engine_update_moves.get()->update_moves_all_piece();
+    std::cout<<"imposto la fen\n";
 
     chess_logic.get()->set_turn(WHITE);
-    
-    bool success = engine_castling_logic.get()->is_castling_dx();
 
-    ASSERT_TRUE(success);
-}
-
-
-
-TEST_F(Castling_Tests, is_castling_dx_black_false_static)
-{
-    std::string fen_start = "4k1r1/8/8/8/8/8/8/4K3 w KQkq - 0 3";
-    fen_string.get()->set_board_fenstring(fen_start); 
+    std::cout<<"imposto il turno\n";
 
     engine_update_moves.get()->update_moves_all_piece();
 
-   
-    chess_logic.get()->set_turn(BLACK);
+    std::cout<<"aggiorno le mosse\n";
+
+    Piece* king = engine_find_king.get()->find_king_current_turn
+    (
+        fen_string.get()->get_piece(),
+        chess_logic.get()->get_turn()
+    );
+
+    if(!king)
+    {
+        std::cout<<"ptr_king è nullptr\n";
+    }
+
+    bool success = engine_check_logic.get()->handle_check_on_king_straight
+    (
+        king->get_square(),
+        fen_string.get()->get_piece(),
+        chess_logic.get()->get_turn()
+    );
     
-    bool success = engine_castling_logic.get()->is_castling_dx();
-
-    ASSERT_TRUE(success);
-}
-
-TEST_F(Castling_Tests, is_castling_dx_white_false_after_move)
-{
-    std::string fen_start = "k7/8/8/8/7R/8/8/4K3 w KQkq - 0 3";
-    fen_string.get()->set_board_fenstring(fen_start); 
-
-    engine_update_moves.get()->update_moves_all_piece();
-    
-    chess_logic.get()->set_turn(WHITE);
-
-    engine.get()->handle_move(39,63);
-    
-    chess_logic.get()->set_turn(WHITE);
-    bool success = engine_castling_logic.get()->is_castling_dx();
-
     ASSERT_FALSE(success);
 }
+

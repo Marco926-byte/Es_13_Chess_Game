@@ -1,9 +1,14 @@
 #include "Handle_Fen_String.h"
 #include "../../Piece_factory/Piece.h"
 
-Handle_Fen_String::Handle_Fen_String()
-    :create_ptr(new Create_Piece())
-    
+Handle_Fen_String::Handle_Fen_String
+(
+    Handle_Chessboard* chess_turn,
+    std::shared_ptr<Find_King> find_king
+)
+    :create_ptr(new Create_Piece()),
+    chess_turn_ptr(chess_turn),
+    find_king_smart(find_king)
 {
     piece=new Piece*[64];
     for(int i=0; i<64; ++i)
@@ -21,6 +26,7 @@ void Handle_Fen_String::set_board_fenstring(std::string fen_string)
 {
     std::string board_fen_string=fen_string.substr(0,fen_string.find(" "));
 
+    //Cancello tutto
     for(int i=0; i<64; i++)
     {
         if(piece[i])
@@ -31,6 +37,7 @@ void Handle_Fen_String::set_board_fenstring(std::string fen_string)
     int row=0;
     int col=0;
 
+    //Analizzo la fen: 
     for(char set_board : board_fen_string)
     {
         if(set_board=='/')
@@ -54,7 +61,7 @@ void Handle_Fen_String::set_board_fenstring(std::string fen_string)
                 piece[row*8+col]->set_name_piece(set_board);
                 col++;                
             }
-        }        
+        }                               
     }
     this->fen_string=fen_string;
 }
@@ -74,6 +81,7 @@ std::string Handle_Fen_String::generate_fen_string()
     //Prima le righe:
     for(int row=0; row<8; row++)
     {
+        count_no_piece = 0;
         //Poi le colonne
         for(int col=0; col<8; col++)
         {
@@ -89,13 +97,12 @@ std::string Handle_Fen_String::generate_fen_string()
                 {
                     //Prima metto gli eventuali spazi vuoti
                     fen_string+= std::to_string(count_no_piece);
-                    
+
                     //Poi imposto il contatore a 0
                     count_no_piece=0;
                 }
                 
                 //E poi ovviamente inserisco il pezzo puntato.
-                //fen_string+=piece[row*8+col]->get_name_piece();
                 fen_string+=piece[row*8+col]->get_name_piece();
             }
         }
@@ -105,7 +112,6 @@ std::string Handle_Fen_String::generate_fen_string()
         if(count_no_piece>0)
         {
             fen_string+=std::to_string(count_no_piece);
-            //count_no_piece=0;
         }
         //Nella fen per dire che finisce la riga si usa '/'
         if(row<7)
@@ -114,8 +120,59 @@ std::string Handle_Fen_String::generate_fen_string()
         }
     }
 
-    //TODO: AGGIUNGERE ANCHE IL TURNO E TUTTE LE COSE SULLA STRINGA
-    fen_string+= "w KQkq - 0 1";
+    //QUI FORSE DA CAMBIARE, NON SO FORSE È SBAGLIATO
+    if(chess_turn_ptr->get_turn()==WHITE)
+    {
+        fen_string+=" b ";
+    }
+    else if(chess_turn_ptr->get_turn()==BLACK)
+    {
+        fen_string+=" w ";
+    }
+
+    Piece* king_white = find_king_smart.get()->find_king_current_turn(piece,WHITE);
+    if
+    (
+        king_white
+        &&
+        !king_white->get_ismoved()
+    )
+    {
+        fen_string+="KQ ";
+    }
+
+    Piece* king_black = find_king_smart.get()->find_king_current_turn(piece,BLACK);
+    if
+    (
+        king_black
+        &&
+        !king_black->get_ismoved()
+    )
+    {
+        fen_string+="kq ";
+    }
+
+    if(is_enpassant)
+    {
+        fen_string+=std::to_string(square_enpassant);
+    }
+    else
+    {
+        fen_string+=" - ";
+    }
+
+    //TODO: 
+    //Contatore delle mosse
+
+    fen_string+= " 0 ";
+
+    if(is_last_move_black)
+    {
+        count_move_black+=1;
+        is_last_move_black=false;
+    }
+
+    fen_string+=std::to_string(count_move_black);
     this->fen_string=fen_string;
 
     return fen_string;
@@ -127,7 +184,7 @@ void Handle_Fen_String::add_fen_to_map(std::string fen_string)
     this->occurences_position[fen_string]++;
 }
 
-std::string Handle_Fen_String::get_fen_string()
+std::string Handle_Fen_String::get_fen_string() const
 {
     return fen_string;
 }
@@ -137,11 +194,33 @@ Piece** Handle_Fen_String::get_piece()
     return piece;
 }
 
+void Handle_Fen_String::set_long_castling(bool long_castling)
+{
+    is_long_castling=long_castling;
+}
 
+void Handle_Fen_String::set_short_castling(bool short_castling)
+{
+    is_short_castling=short_castling;
+}
+
+void Handle_Fen_String::set_is_enpassant(bool enpassant)
+{
+    is_enpassant=enpassant;
+}
+
+void Handle_Fen_String::set_square_enpassant(int enpassant_square)
+{
+    square_enpassant=enpassant_square;
+}
+
+void Handle_Fen_String::set_is_last_move_black(bool last_black)
+{
+    is_last_move_black=last_black;
+}
 
 Handle_Fen_String::~Handle_Fen_String()
-{
-    
+{    
     delete create_ptr;
     create_ptr=nullptr;
 

@@ -3,27 +3,14 @@
 Draw_board::Draw_board(wxFrame* parent)
     :MyPanel1(parent,6000,wxPoint(200,100)),
     //Inizializzazione dei puntatori:        
-        fen_shared
-        (
-            std::make_shared<Handle_Fen_String>
-            (
-                
-            )
-        ),
         chess_handler
         (
             new Handle_Chessboard
             (
-                fen_shared
+                
             )
         ),
-        game_movement
-        (
-            new Movement_Piece
-            (
-                fen_shared
-            )
-        ),
+
         find_king_shared
         (
             std::make_shared<Find_King>
@@ -31,6 +18,24 @@ Draw_board::Draw_board(wxFrame* parent)
                 
             )
         ),
+
+        fen_shared
+        (
+            std::make_shared<Handle_Fen_String>
+            (
+                chess_handler,
+                find_king_shared
+            )
+        ),
+        
+        game_movement
+        (
+            new Movement_Piece
+            (
+                fen_shared
+            )
+        ),
+        
         check_shared
         (
             std::make_shared<Check>
@@ -38,6 +43,7 @@ Draw_board::Draw_board(wxFrame* parent)
 
             )
         ),
+
         pin_shared
         (
             std::make_shared<Handle_Pin>
@@ -46,6 +52,7 @@ Draw_board::Draw_board(wxFrame* parent)
                 check_shared
             )
         ),
+
         enpassant_shared
         (
             std::make_shared<Handle_Enpassant>
@@ -54,6 +61,7 @@ Draw_board::Draw_board(wxFrame* parent)
                 game_movement
             )
         ),
+
         castling_shared
         (
             std::make_shared<Castling>
@@ -65,6 +73,7 @@ Draw_board::Draw_board(wxFrame* parent)
                 find_king_shared
             )
         ),
+
         update_moves_shared
         (
             std::make_shared<Update_Moves>
@@ -75,6 +84,7 @@ Draw_board::Draw_board(wxFrame* parent)
                 castling_shared
             )
         ),
+
         promotion_pawn_shared
         (
             std::make_shared<Promotion_Pawn>
@@ -87,6 +97,7 @@ Draw_board::Draw_board(wxFrame* parent)
                 find_king_shared
             )
         ),
+        
         mouse_handler
         (
             new Handle_Mouse_Input
@@ -171,7 +182,11 @@ void Draw_board::draw_squares(wxDC& dc, int row, int col, wxCoord square_size)
                 dc.SetPen(wxPen(wxColor(0,0,0),2));        
             }
             
-            for(int future_square: mouse_handler->get_handle_piece()->get_legal_moves())
+            for
+            (
+                int future_square:
+                mouse_handler->get_handle_piece()->get_legal_moves()
+            )
             {
                 if(future_square==row*8+col)
                 {

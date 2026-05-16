@@ -44,19 +44,16 @@ private:
     //Mappa che serve a disegnare i pezzi
     std::map<char,wxBitmap> chess_piece_bitmaps;
 
-    std::shared_ptr<Handle_Fen_String> fen_shared;
-    
     Handle_Chessboard* chess_handler=nullptr;
-    Movement_Piece* game_movement=nullptr;
-
     std::shared_ptr<Find_King> find_king_shared;
+    std::shared_ptr<Handle_Fen_String> fen_shared;
+    Movement_Piece* game_movement=nullptr;
     std::shared_ptr<Check> check_shared;
     std::shared_ptr<Handle_Pin> pin_shared;
     std::shared_ptr<Handle_Enpassant> enpassant_shared;
     std::shared_ptr<Castling> castling_shared;
     std::shared_ptr<Update_Moves> update_moves_shared;
     std::shared_ptr<Promotion_Pawn> promotion_pawn_shared;
-    
     Handle_Mouse_Input* mouse_handler=nullptr;
 
     //Gestione ridimensionamento finestra

@@ -90,11 +90,14 @@ bool Check::handle_check_on_king_diagonal
                 for(int k =0; k<=j; k++)
                 {
                     diagonal_attack+=diagonal[i];
-                    std::cout<<"Metto in v_check_attack: "<<diagonal_attack<<std::endl;
                     v_check_attack.push_back(diagonal_attack);
                 }
                 return true;
-            }   
+            } 
+            else
+            {
+                break;
+            }  
         }
     }
     return false;
@@ -119,9 +122,10 @@ bool Check::handle_check_on_king_straight(int position_king,Piece **board, Color
 
     for(int i =0; i<4; i++)
     {
+
         int current_move = position_king;     //Resetto la mossa ipotetica
         int straight_attack = position_king;  //Resetto straight attack
-                                                       //da modificare probabilmente
+
         for(int j=0; j<end_board_straight[i]; j++)
         {
             current_move+=single_straight[i];
@@ -170,6 +174,10 @@ bool Check::handle_check_on_king_straight(int position_king,Piece **board, Color
                 }
                 return true;
             }   
+            else
+            {
+                continue;
+            }
         }       
     }
     return false;

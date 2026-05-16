@@ -6,6 +6,10 @@
 #include <wx/wx.h>
 
 #include "../CREATE_PIECE/Create_Piece.h"
+#include "../CHESSBOARD_TURN/Handle_Chessboard.h"
+#include "../FIND_KING/Find_King.h"
+
+class Castling;
 
 class Piece;
 
@@ -17,12 +21,28 @@ private:
     std::unordered_map<std::string, int> occurences_position;
 
     Create_Piece* create_ptr=nullptr;
-    Piece **piece;                   //Serve per controllare i pezzi
+    Handle_Chessboard* chess_turn_ptr=nullptr;
+    std::shared_ptr<Find_King> find_king_smart;
+
+    Piece **piece;                      //Serve per controllare i pezzi
                                         //tramite puntatore nella scacchiera
+
+    bool is_long_castling= false;
+    bool is_short_castling=false;
+    bool is_last_move_black = false;
+    bool is_enpassant = false;
+
+    int square_enpassant = 0;
+    int count_move_black = 0;
+
 public:
-    Handle_Fen_String();
+    Handle_Fen_String
+    (
+        Handle_Chessboard*chess_turn,
+        std::shared_ptr<Find_King> find_king
+    );
     
-    Create_Piece* get_create_ptr() const;   //TODO:
+    Create_Piece* get_create_ptr() const;  
 
     //Funzione che serve all'inizio a far posizionare i pezzi
     void set_board_fenstring(std::string fen_string);
@@ -34,11 +54,18 @@ public:
     void add_fen_to_map(std::string fen_string);
 
     //getter fen_string:
-    std::string get_fen_string();
+    std::string get_fen_string() const;
 
     Piece **get_piece();
     
     ~Handle_Fen_String();
+
+    void set_long_castling(bool long_castling);
+    void set_short_castling(bool long_castling);
+    void set_is_enpassant(bool enpassant);
+    void set_is_last_move_black(bool is_black);
+
+    void set_square_enpassant(int enpassant_square);
 };
 
 

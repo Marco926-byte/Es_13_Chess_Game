@@ -13,7 +13,6 @@ private:
     Draw_board* board=nullptr;
     Draw_Promotion_Dialog* dialog=nullptr;
 
-    void open_board(wxCommandEvent& event);
 public:
     /*Costruttore del form:*/
     Es13(wxWindow* parent);   
