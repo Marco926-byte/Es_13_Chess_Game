@@ -37,7 +37,6 @@ void Pawn::handle_movement(Piece** ptr, std::vector<int>& legal_moves)
 
     //Parto con il ciclo, serve per poter dire se nel quadrato è 
     //presente un pezzo, sennò aggiungi la posizione alle mosse possibili e legali
-
     for(int i=0; i<stop_index; i++)
     {
         int square= this->get_square() + directions[i] * color_team;
@@ -118,29 +117,9 @@ void Pawn::handle_en_passant(int square)
 {
     //Creo il vettore nuovo che copia shallow le mosse legali
     std::vector<int> v_legal_move = this->get_legal_moves();
-    
-    std::cout<<"Ho copiato le mosse legali in v_legal_move, ora te le faccio vedere\n";
-    std::cout<<"Il pezzo è: "<<this->get_name_piece()<<std::endl;
-    std::cout<<"Il pezzo è nella casella: "<<this->get_square()<<std::endl;
-    
-    for(auto i : v_legal_move)
-    {
-        std::cout<<"__________________________\n";
-        std::cout<<"|    "<<i<<"              |\n";
-        std::cout<<"__________________________\n";
-    }
 
     //Aggiungo un nuovo valore nel nuovo vettore
     v_legal_move.push_back(square);
-
-    std::cout<<"Aggiungo lo square dei parametri in v_legal_move\n";
-
-    for(auto i : v_legal_move)
-    {
-        std::cout<<"__________________________\n";
-        std::cout<<"|    "<<i<<"              |\n";
-        std::cout<<"__________________________\n";
-    }
 
     //Aggiungo alle mosse legali il nuovo vettore
     this->set_legal_moves(v_legal_move);

@@ -27,10 +27,13 @@ bool Castling::is_castling_dx()
         fen_shared.get()->get_piece(),
         turn_chess_ptr->get_turn()
     );
+
+    Piece* rock_piece = nullptr;
     
     //Se il re si è mosso esci
     if(king->get_ismoved())
     {
+        fen_shared.get()->set_short_castling(false);
         return false;
     }
 
@@ -39,7 +42,7 @@ bool Castling::is_castling_dx()
 
     //itero di 3, metto 1 perchè voglio vedere la casella successiva al re
     for(int i = 1; i<4; i++)
-    {        
+    {
         //Controllo dei confini della scacchiera
         if(position_king+i>=64 || position_king+i<0)
         {
@@ -48,12 +51,25 @@ bool Castling::is_castling_dx()
         
         //Controllo se sulla casella successiva c'è qualcosa
         if(fen_shared.get()->get_piece()[position_king+i])
-        {        
+        {
+            if((position_king+i)!=63 && king->get_color()==WHITE)
+            {
+                fen_shared.get()->set_short_castling(true);
+                return false;
+            }
+
+            if((position_king+i)!=7 && king->get_color()==BLACK)
+            {
+                fen_shared.get()->set_short_castling(true);
+                return false;
+            }
+
             //Controllo se trovo la torre durante il ciclo:
             if
             (
-                fen_shared.get()->get_piece()
-                [position_king+i]->is_rock()
+                fen_shared.get()->get_piece()[position_king+i]->is_rock()
+                &&
+                fen_shared.get()->get_piece()[position_king+i]->get_color()==king->get_color()
             )
             {
                 //Trovo la torre, me la memorizzo in un puntatore creato sul momento
@@ -65,7 +81,7 @@ bool Castling::is_castling_dx()
                     return false;
                 }
                 else
-                {                    
+                {   
                     //Controllo se nelle 2 caselle successive al re c'era qualcosa:
                     if
                     (
@@ -101,12 +117,12 @@ bool Castling::is_castling_dx()
                             )
                             {
                                 fen_shared.get()->set_short_castling(true);
-                                return true;
+                                return false;
                             }
-
                         }
                         king->add_legal_move(position_king+2);
                         fen_shared.get()->set_short_castling(true);
+                        
                         return true;
                     }
                     //In una delle due caselle successive alla casella del re c'era qualcosa
@@ -114,7 +130,7 @@ bool Castling::is_castling_dx()
                     else
                     {
                         fen_shared.get()->set_short_castling(true);
-                        return true;
+                        return false;
                     }       
                 }                    
             }
@@ -129,11 +145,9 @@ bool Castling::is_castling_dx()
         {
             continue;
         } 
-    }
+    }    
     //Non ho trovato niente, ritorno false
     return false;
-    
-   return false;
 }
 
 bool Castling::is_castling_sx()
@@ -254,7 +268,6 @@ bool Castling::handle_castling_dx()
 {
     if(movement_ptr->get_stack().size()==0)
     {
-        std::cout<<"Stack pieno \n";
         return false;
     }
     int position_rook=0;

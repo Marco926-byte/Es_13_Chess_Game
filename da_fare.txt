@@ -11,4 +11,29 @@ valgrind --leak-check=full --track-origins=yes ./w
 
 
 dialog_ref(static_cast<Es13&>(*wxTheApp->GetTopWindow()))  //Importante riferimento per ottenere es13
-                                                           //come ottenere la finestra più importante
+                                                            //come ottenere la finestra più importante
+--BIANCO--
+-) torre bianca non mossa in posizione di partenza ok
+    is_moved = false
+
+-) torre bianca mossa in posizione di partenza ok
+    is_moved = true
+
+-) torre bianca non mossa non in posizione di partenza ok
+    is_moved = true
+
+-) torre bianca mossa non in posizione di partenza ok
+    is_moved = true
+
+--NERO--
+-) torre nera non mossa in posizione di partenza
+    is_moved = false
+
+-) torre nera mossa in posizione di partenza
+    is_moved = true
+
+-) torre nera non mossa non in posizione di partenza
+    is_moved = true
+
+-) torre nera mossa non in posizione di partenza
+    is_moved = true

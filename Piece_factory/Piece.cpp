@@ -52,7 +52,6 @@ bool Piece::is_legal_move(int square) const
 {
     for(std::size_t move=0; move!=this->legal_moves.size();move++)
     {
-        std::cout<<square<<std::endl;
         if(square==this->legal_moves[move])
         {
             return true;
@@ -157,7 +156,7 @@ Piece::Piece(int pos_square,char c)
     }
     
     //Inizializzo moved a false pk non ho ancora mosso
-    this->is_moved=false;   
+    this->is_moved=false;  
 }
 /*Fine Costruttore*/
 

@@ -52,6 +52,8 @@ private:
 
     Color color;
     
+    int count_debug = 0;
+
     std::vector<int> legal_moves;
     std::map<int,std::vector<int>> map_path;          
                                             

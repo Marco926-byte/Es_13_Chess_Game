@@ -180,10 +180,15 @@ public:
 
                 if(moves.size()>0)
                 {
-                    m_piece_move[fen_string.get()->get_piece()[i]->get_square()]= moves;
+                    m_piece_move
+                    [
+                        fen_string.get()->get_piece()[i]->get_square()
+                    ]= moves;
                 }                                                                                       
             }
         }
+        //std::cout<<"La fen è: "<<fen_string.get()->get_fen_string()<<std::endl;
+
         int number_position = 0;
         Color next_turn;
         
@@ -219,12 +224,15 @@ public:
                 
                 if(depth==initial_depth)
                 {
-                    std::cout<<"Mossa da: "<<move.first<<" a: "<<i<<" : "<<all_moves_depth<<std::endl;
+                    std::cout<<"Mossa da: "<<move.first<<" a: "<<i<<std::endl;
+                    std::cout<<"MOSSE DISPONIBILI: "<<all_moves_depth<<std::endl;
+                    
+                    std::cout<<"-------------------------------------\n";                    
                 }
                 
                 //3) Ricorsione, accumulo i risultati:
                 number_position += all_moves_depth;
-
+                
 
                 //4) Cancella la mossa pk non ci sono più mosse da fare:
                 fen_string.get()->set_board_fenstring(fen_saved);
@@ -233,7 +241,12 @@ public:
                 engine_update_moves.get()->update_moves_all_piece();
             }
         }
-        std::cout<<"Numero totale di mosse: "<<number_position<<std::endl;
+        if(depth==initial_depth)
+        {
+            std::cout<<"Numero totale di mosse: "<<number_position<<std::endl;
+            std::cout<<"-----------------------------------------\n";
+        }
+        
         return number_position;
     }
 
@@ -352,20 +365,13 @@ TEST_F(Perft, Perft_test_deep_3)
     ASSERT_TRUE(success);
 }
 
-TEST_F(Perft, Perft_divide_deep_3)
-{
-    bool success = false;
-    int pertf = divide(3,3,WHITE);
-
-    ASSERT_FALSE(success);
-    
-}
 
 TEST_F(Perft, Perft_divide_debug_3)
 {
     std::string fen = "rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1";
     fen_string.get()->set_board_fenstring(fen);   
 
+    engine_update_moves.get()->update_moves_all_piece();
     bool success = false;
     int pertf = divide(2,2,BLACK);
 
@@ -377,7 +383,8 @@ TEST_F(Perft, Perft_divide_debug_3_error_pawn)
     //Problema pedone mosso in realtà non mosso...
     //Debug: in setfenstring inserisci un controllo e guarda se il pedone parte
     //dalla sua casella di partenza
-    std::string fen = "r1bqkbnr/pppppppp/2n5/8/8/P7/1PPPPPPP/RNBQKBNR w KQkq - 1 2";
+
+    std::string fen = "r1bqkbnr/pppppppp/2n5/8/8/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1";
     fen_string.get()->set_board_fenstring(fen);  
     
     bool success = false;

@@ -10,16 +10,29 @@ Handle_Fen_String::Handle_Fen_String
     chess_turn_ptr(chess_turn),
     find_king_smart(find_king)
 {
+    
     piece=new Piece*[64];
+    
     for(int i=0; i<64; ++i)
     {
         piece[i]=nullptr;
+        map_is_moved[i]=false;
     }
 
     fen_string="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";
 
     //Imposto la scacchiera alla fase iniziale
     set_board_fenstring(fen_string);
+}
+
+std::map<int,bool> Handle_Fen_String::map_get_is_moved() const
+{
+    return map_is_moved;
+}
+
+void Handle_Fen_String::set_is_moved(bool moved, int position_square)
+{
+    map_is_moved[position_square]=moved;
 }
 
 void Handle_Fen_String::set_board_fenstring(std::string fen_string)
@@ -64,6 +77,19 @@ void Handle_Fen_String::set_board_fenstring(std::string fen_string)
         }                               
     }
     this->fen_string=fen_string;
+    
+    std::cout<<"Inizio controllo della scacchiera!\n";
+    for(int i =0; i<64; i++)
+    {
+        if(piece [i] && map_is_moved[i]==true)
+        {
+            piece[i]->set_ismoved(true);
+        }
+        else if(piece[i])
+        {
+            piece[i]->set_ismoved(false);
+        }
+    }
 }
 
 Create_Piece* Handle_Fen_String::get_create_ptr() const

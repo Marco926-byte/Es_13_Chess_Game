@@ -87,12 +87,32 @@ public:
 
 TEST_F(Castling_Tests, is_castling_dx_white_true)
 {
-    std::string fen_start = "4k3/8/8/8/8/8/8/4K2R w KQkq - 0 3";
+    std::cout<<"--PARTE IS_CASTLING_DX_WHITE_TRUE--\n";
+    std::string fen_start = "4k3/8/8/8/8/8/8/4K2R w K - 0 3";
     fen_string.get()->set_board_fenstring(fen_start); 
 
+    std::cout<<"Fen inserita di partenza: "<<fen_string.get()->get_fen_string()<<std::endl;
+    
+    if(fen_string.get()->get_piece()[63]->get_ismoved())
+    {
+        std::cout<<"ATTENZIONE, LA TORRE IN 63 SI È MOSSA! \n";
+    }
+    else
+    {
+        std::cout<<"ATTENZIONE, LA TORRE IN 63 NON SI È MOSSA! \n";
+
+    }
+    if(fen_string.get()->get_piece()[60]->get_ismoved())
+    {
+        std::cout<<"ATTENZIONE! IMPOSTI A TRUE IL RE DURANTE IL SET_FEN DEL TEST!\n";
+    }
+    else
+    {
+        std::cout<<"ATTENZIONE! NON IMPOSTI GIÀ PRIMA A TRUE IL RE!\n";
+    }
     engine_update_moves.get()->update_moves_all_piece();
 
-   
+
     chess_logic.get()->set_turn(WHITE);
     
     bool success = engine_castling_logic.get()->is_castling_dx();
@@ -129,7 +149,7 @@ TEST_F(Castling_Tests, is_castling_dx_white_false_static)
     
     bool success = engine_castling_logic.get()->is_castling_dx();
 
-    ASSERT_TRUE(success);
+    ASSERT_FALSE(success);
 }
 
 
@@ -146,14 +166,18 @@ TEST_F(Castling_Tests, is_castling_dx_black_false_static)
     
     bool success = engine_castling_logic.get()->is_castling_dx();
 
-    ASSERT_TRUE(success);
+    ASSERT_FALSE(success);
 }
 
 TEST_F(Castling_Tests, is_castling_dx_white_false_after_move)
 {
-    std::string fen_start = "k7/8/8/8/7R/8/8/4K3 w KQkq - 0 3";
-    fen_string.get()->set_board_fenstring(fen_start); 
+    std::cout<<"-- PARTE IS_CASTLING_DX_WHITE --\n";
+    std::string fen_start = "k7/8/8/8/7R/8/8/4K3 w -- 0 3";
+    fen_string.get()->set_board_fenstring(fen_start);
 
+    std::cout<<"Ciao dal TEST\n";
+    std::cout<<"La fen impostata è: "<<fen_string.get()->get_fen_string()<<std::endl;
+    
     engine_update_moves.get()->update_moves_all_piece();
     
     chess_logic.get()->set_turn(WHITE);

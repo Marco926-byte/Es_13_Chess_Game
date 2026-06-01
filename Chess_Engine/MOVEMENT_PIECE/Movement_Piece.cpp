@@ -138,6 +138,8 @@ bool Movement_Piece::handle_move(int from, int to)
     //mosso
     piece[move.get_to_square()]->set_square(move.get_to_square());
     piece[move.get_to_square()]->set_ismoved(true);
+    fen_shared.get()->set_is_moved(true,move.get_to_square());
+    fen_shared.get()->set_is_moved(false,move.get_from_square());
     
     //Gestisco la mossa del nero per il discorso della fen 
     if(move.get_color_piece()==BLACK)
@@ -207,4 +209,3 @@ void Movement_Piece::print_all_move()
         std::cout<<"__________________________________\n";
     }
 }
-

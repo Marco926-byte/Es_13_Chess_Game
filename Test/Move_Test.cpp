@@ -202,6 +202,7 @@ TEST_F(Move_Test, Knight_Legal_Move_Check)
 
 TEST_F(Move_Test, Pawn_After_Double_Move_Forward)
 {
+    std::cout<<"CIAO DA TEST::PAWN_AFTER_DOUBLE_MOVE_FORWARD!\n";
     //Creo la situazione di gioco:
     std::string fen_start = "rnbqkbnr/1ppppppp/p7/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2";
     fen_string.get()->set_board_fenstring(fen_start); 
@@ -211,6 +212,10 @@ TEST_F(Move_Test, Pawn_After_Double_Move_Forward)
     int from_pawn = 36;
     int to_jump = 20;
 
+    if(fen_string.get()->get_piece()[36]->get_ismoved())
+    {
+        std::cout<<"il pedone si è mosso!\n";
+    }
     //Deve fallire...
     bool success = engine.get()->handle_move(from_pawn,to_jump);
 
@@ -328,24 +333,35 @@ TEST_F(Move_Test, Friendly_Attack)
 
 TEST_F(Move_Test, Is_Enpassant)
 {
+    std::cout<<"CIAO Test_isenpassant\n";
     std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
     fen_string.get()->set_board_fenstring(fen_start); 
  
-    //chess_logic.get()->set_turn(BLACK);
+    std::cout<<"riga 334 libera dal sigsev\n";
 
     engine_update_moves.get()->update_moves_all_piece();
+
+    std::cout<<"riga 338 libera dal sigsev\n";
 
     int from_piece_move = 9;
     int to_piece_move = 25;
 
     engine.get()->handle_move(from_piece_move,to_piece_move);
 
+    std::cout<<"riga 345 libera dal sigsev\n";
+
 
     engine_update_moves.get()->update_moves_all_piece();
    
+    std::cout<<"riga 350 libera dal sigsev\n";
+
     chess_logic.get()->set_turn(WHITE);
     
+    std::cout<<"riga 354 libera dal sigsev\n";
+
     bool success = engine_enpassant.get()->is_enpassant();
+
+    std::cout<<"riga 358 libera dal sigsev\n";
 
     ASSERT_TRUE(success);
 }
@@ -428,5 +444,5 @@ TEST_F(Move_Test, is_castle_dx)
     
 
     bool success = engine_castling_logic.get()->is_castling_dx();
-    ASSERT_TRUE(success);
+    ASSERT_FALSE(success);
 }

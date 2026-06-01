@@ -27,6 +27,8 @@ private:
     Piece **piece;                      //Serve per controllare i pezzi
                                         //tramite puntatore nella scacchiera
 
+    std::map<int,bool> map_is_moved;
+
     bool is_long_castling= false;
     bool is_short_castling=false;
     bool is_last_move_black = false;
@@ -43,20 +45,17 @@ public:
     );
     
     Create_Piece* get_create_ptr() const;  
+    Piece **get_piece();
+    std::map<int,bool> map_get_is_moved() const;
 
-    //Funzione che serve all'inizio a far posizionare i pezzi
-    void set_board_fenstring(std::string fen_string);
+    //getter fen_string:
+    std::string get_fen_string() const;
 
     //Serve per generare la fen per descrivere la posizione dei pezzi
     std::string generate_fen_string();
 
     //Aggiungi la fen alla mappa
     void add_fen_to_map(std::string fen_string);
-
-    //getter fen_string:
-    std::string get_fen_string() const;
-
-    Piece **get_piece();
     
     ~Handle_Fen_String();
 
@@ -64,8 +63,10 @@ public:
     void set_short_castling(bool long_castling);
     void set_is_enpassant(bool enpassant);
     void set_is_last_move_black(bool is_black);
-
+    //Funzione che serve all'inizio a far posizionare i pezzi
+    void set_board_fenstring(std::string fen_string);
     void set_square_enpassant(int enpassant_square);
+    void set_is_moved(bool is_moved, int position_square);
 };
 
 

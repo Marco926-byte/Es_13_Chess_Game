@@ -84,12 +84,6 @@ bool Promotion_Pawn::handle_promotion_pawn(char character_promotion)
                 last_move.get_to_square()
             );
             
-    //TODO: DEVI CHIAMARE LE MOSSE PER AGGIORNARE IL PEZZO CANCELLATO
-    /*last_move.set_piece_status
-    (
-        fen_shared.get()->get_piece()[last_move.get_to_square()]
-    );*/
-
     fen_shared.get()->get_piece()[last_move.get_to_square()]->set_square
     (
         last_move.get_to_square()
