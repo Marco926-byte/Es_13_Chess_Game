@@ -20,6 +20,7 @@ private:
     std::stack<Move>stack;
 
     std::shared_ptr<Handle_Fen_String> fen_shared;        
+    Piece* captured_piece = nullptr;
 public:
     Movement_Piece
     (
@@ -29,7 +30,8 @@ public:
     std::stack<Move> get_stack() const;
 
     bool handle_move(int from, int to);
-    
+    bool unmake_move(int from, int to);
+
     void print_all_move();
 
 };

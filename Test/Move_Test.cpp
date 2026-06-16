@@ -84,6 +84,34 @@ public:
     }
 };
 
+TEST_F(Move_Test, Check_not_double_move_pawn)
+{
+    fen_string.get()->set_board_fenstring("r1bqkbnr/pppppppp/n7/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1");
+    
+
+    chess_logic.get()->set_turn(WHITE);
+    
+    
+
+    engine_update_moves.get()->update_moves_all_piece();
+    
+    bool moved = fen_string.get()->get_piece()[40]->get_ismoved();
+    
+    if(moved)
+    {
+        std::cout<<"Il pezzo si è mosso\n";
+    }
+    else
+    {
+        //Il pezzo in 40 non si è mosso, provo a controllare la fen
+        //e il controllore
+        std::cout<<"Il pezzo non si è mosso\n";
+    }
+
+    bool success = engine.get()->handle_move(40,24);
+
+    ASSERT_FALSE(success);
+}
 // Test 1: Pedone Bianco E2 -> E4
 TEST_F(Move_Test, White_Pawn_Moves_Forward) 
 {
@@ -102,6 +130,7 @@ TEST_F(Move_Test, White_Pawn_Moves_Forward)
     EXPECT_EQ(board[to]->get_name_piece(), 'P'); //"Non è un pedone!"
     EXPECT_EQ(board[from], nullptr); //"Il vecchio posto non è vuoto!"
 }
+
 TEST_F(Move_Test, check_fen_string_after_move)
 {
     std::string start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR - w KQkq - 0 1";

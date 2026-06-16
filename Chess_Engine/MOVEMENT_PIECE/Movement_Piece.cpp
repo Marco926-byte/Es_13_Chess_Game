@@ -18,7 +18,7 @@ std::stack<Move> Movement_Piece::get_stack() const
 
 bool Movement_Piece::handle_move(int from, int to)
 {
-    Piece* type_caracter = fen_shared.get()->get_piece()[from];
+    Piece* type_caracter = fen_shared.get()->get_piece()[from]; 
     
     bool to_is_good= false;
     
@@ -42,7 +42,7 @@ bool Movement_Piece::handle_move(int from, int to)
     }
 
     if(!to_is_good)
-    {
+    {    
         return false;
     }
 
@@ -126,6 +126,8 @@ bool Movement_Piece::handle_move(int from, int to)
     //Gestisco la cattura:
     if(piece[move.get_to_square()]!=nullptr)
     {
+        captured_piece = piece[move.get_to_square()];
+
         //elimino il pezzo puntato dal carattere ucciso:
         delete piece[move.get_to_square()];
     }
@@ -150,11 +152,47 @@ bool Movement_Piece::handle_move(int from, int to)
     //RIGENERA LA NUOVA FEN_STRING:
     std::string new_fen = fen_shared.get()->generate_fen_string();
     fen_shared.get()->add_fen_to_map(new_fen);
-    fen_shared.get()->set_board_fenstring(new_fen);
+    //fen_shared.get()->set_board_fenstring(new_fen);
 
     stack.push(move);
 
     return true;
+}
+
+bool Movement_Piece::unmake_move(int from, int to)
+{
+    bool is_unmake_move = false;
+    const auto &piece = fen_shared.get()->get_piece();
+
+    //1) Cancella l'ultima mossa dallo stack
+    stack.pop();
+    
+    //2) Rigenera il pezzo eventualmente mangiato
+    if(captured_piece)
+    {
+        piece[to] = piece[from];
+        piece[from] = nullptr;
+
+        piece[from] = captured_piece;
+        captured_piece=nullptr;
+        
+        is_unmake_move = true;
+    }
+    else
+    {
+        piece[to] = piece[from];
+        piece[from] = nullptr;
+
+        is_unmake_move = true;
+    }    
+
+    //TODO: VERIFICA LA LOGICA CON UN BEL TEST
+    
+    //4) Cancella l'attributo is_moved = true al pezzo
+    //5) decrementa il numero per la fen del contatore per il nero
+    //6) genera la nuova fen
+
+    return is_unmake_move;
 }
 
 void Movement_Piece::print_all_move()

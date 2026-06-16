@@ -77,18 +77,10 @@ void Handle_Fen_String::set_board_fenstring(std::string fen_string)
         }                               
     }
     this->fen_string=fen_string;
-    
-    std::cout<<"Inizio controllo della scacchiera!\n";
+    //Inizio controllo della scacchiera!
     for(int i =0; i<64; i++)
     {
-        if(piece [i] && map_is_moved[i]==true)
-        {
-            piece[i]->set_ismoved(true);
-        }
-        else if(piece[i])
-        {
-            piece[i]->set_ismoved(false);
-        }
+        controll_piece(i);
     }
 }
 
@@ -203,7 +195,363 @@ std::string Handle_Fen_String::generate_fen_string()
 
     return fen_string;
 }
+void Handle_Fen_String::controll_piece(int i)
+{
+    /*---PEDONE INIZIO---*/
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_pawn()
+            &&
+            (
+                piece[i]->get_square()>55
+                ||
+                piece[i]->get_square()<48
+            )
+            &&
+            piece[i]->get_color()==WHITE
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+        
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_pawn()
+            &&
+            piece[i]->get_square()>=48
+            &&
+            piece[i]->get_square()<=55
+            &&
+            piece[i]->get_color()==WHITE
+        )
+        {
+            piece[i]->set_ismoved(false);
+        }
 
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_pawn()
+            &&
+            (
+                piece[i]->get_square()<8
+                ||
+                piece[i]->get_square()>15
+            )
+            &&
+            piece[i]->get_color()==BLACK
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_pawn()
+            &&
+            piece[i]->get_square()>=8
+            &&
+            piece[i]->get_square()<=15
+            &&
+            piece[i]->get_color()==BLACK
+        )
+        {
+            piece[i]->set_ismoved(false);
+        }
+        /*FINE PEDONE*/
+
+        /*INIZIO TORRE BIANCA*/
+        //Controllo se torre bianca, non nella posizione di partenza, non si è mossa
+        //Imposto is_moved = true
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            (piece[i]->get_square()!=63 && piece[i]->get_square()!=56)
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+
+        //Controllo se torre bianca nella posizione di partenza non si è mossa
+        //imposto is_moved a false
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            (piece[i]->get_square()==63 || piece[i]->get_square()==56)
+        )
+        {
+            piece[i]->set_ismoved(false);
+        }
+            
+        //Controllo se torre bianca, non nella posizione di partenza, si è mossa
+        //imposto is_moved = true
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            (piece[i]->get_square()!=63 && piece[i]->get_square()!=56)
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+        
+
+        //Controllo se torre bianca nella posizione di partenza si è mossa
+        //imposto is_moved a true
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            (piece[i]->get_square()==63 || piece[i]->get_square()==56)
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+        /*FINE TORRE BIANCA*/
+
+        /*TORRE NERA*/
+        //Controllo se torre bianca nella posizione di partenza non si è mossa
+        //imposto is_moved a false
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            (piece[i]->get_square()==0 || piece[i]->get_square()==7)
+        )
+        {
+            piece[i]->set_ismoved(false);
+        }
+        
+        //Controllo se torre bianca, non nella posizione di partenza, si è mossa
+        //imposto is_moved = true
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            (piece[i]->get_square()!=0 && piece[i]->get_square()!=7)
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+        //Controllo se torre bianca, non nella posizione di partenza, non si è mossa
+        //Imposto is_moved = true
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            (piece[i]->get_square()!=0 && piece[i]->get_square()!=7)
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+
+        //Controllo se torre bianca nella posizione di partenza si è mossa
+        //imposto is_moved a true
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_rock()
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            (piece[i]->get_square()==0 || piece[i]->get_square()==7)
+        )
+        {
+            
+            piece[i]->set_ismoved(true);
+        }
+        /*FINE TORRE NERA*/
+
+        /*---INIZIO RE BIANCO---*/
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()!=60
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()!=60
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+
+        if 
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()==60
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+
+        if 
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==WHITE
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()==60
+        )
+        {
+            piece[i]->set_ismoved(false);
+        }
+        /*---FINE RE BIANCO---*/
+
+        /*INIZIO RE NERO*/
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()!=4
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()!=4
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }    
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()==4
+        )
+        {
+            piece[i]->set_ismoved(true);
+        }    
+        if
+        (
+            piece[i]
+            &&
+            piece[i]->is_king()
+            &&
+            piece[i]->get_color()==BLACK
+            &&
+            !piece[i]->get_ismoved()
+            &&
+            piece[i]->get_square()==4
+        )
+        {
+            piece[i]->set_ismoved(false);
+        }
+        /*FINE RE NERO*/
+        
+        /*Controllo pezzo dopo la mossa*/
+        if(piece [i] && map_is_moved[i]==true)
+        {
+            piece[i]->set_ismoved(true);
+        }
+        
+}
 void Handle_Fen_String::add_fen_to_map(std::string fen_string)
 {
     //Conta quante volte è stata aggiunta la fen string
