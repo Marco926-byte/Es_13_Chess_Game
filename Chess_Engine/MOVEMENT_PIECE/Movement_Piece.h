@@ -20,7 +20,8 @@ private:
     std::stack<Move>stack;
 
     std::shared_ptr<Handle_Fen_String> fen_shared;        
-    Piece* captured_piece = nullptr;
+    char piece_capture= ' ';
+
 public:
     Movement_Piece
     (

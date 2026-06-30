@@ -195,9 +195,28 @@ std::string Handle_Fen_String::generate_fen_string()
 
     return fen_string;
 }
+Handle_Chessboard* Handle_Fen_String::get_turn_ptr() const
+{
+    return chess_turn_ptr;
+}
+Find_King* Handle_Fen_String::get_find_king_ptr() const
+{
+    return find_king_smart.get();
+}
+
+void Handle_Fen_String::decrease_count_move_black()
+{
+    count_move_black--;
+}
 void Handle_Fen_String::controll_piece(int i)
 {
-    /*---PEDONE INIZIO---*/
+    controll_piece_starter(i);
+    controll_piece_after_move(i);
+}
+
+void Handle_Fen_String::controll_piece_starter(int i)
+{
+        /*---PEDONE INIZIO---*/
         if
         (
             piece[i]
@@ -544,13 +563,15 @@ void Handle_Fen_String::controll_piece(int i)
             piece[i]->set_ismoved(false);
         }
         /*FINE RE NERO*/
-        
-        /*Controllo pezzo dopo la mossa*/
-        if(piece [i] && map_is_moved[i]==true)
-        {
-            piece[i]->set_ismoved(true);
-        }
-        
+}
+
+void Handle_Fen_String::controll_piece_after_move(int i)
+{
+    /*Controllo pezzo dopo la mossa*/
+    if(piece [i] && map_is_moved[i]==true)
+    {
+        piece[i]->set_ismoved(true);
+    }
 }
 void Handle_Fen_String::add_fen_to_map(std::string fen_string)
 {

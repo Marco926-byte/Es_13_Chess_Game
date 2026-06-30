@@ -29,10 +29,10 @@ void King::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
     for(int move : legal_moves_candidate)
     {
         std::vector<Piece*> attacking;
-     
+        
         //Se handle_king_move_check non restituisce true allora in quella casella è 
         //tranquilla
-        if(!handle_king_move_check(piece,move,attacking))
+        if(!handle_king_move_check(ptr_smart.get()->get_piece(),move,attacking))
         {
             final_safe_moves.push_back(move);
         }
@@ -45,8 +45,8 @@ void King::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
 //Funzione del movimento del re
 void King::handle_movement(Piece**board, std::vector<int> &legal_moves)
 {
+    //Perchè mette mossa a 23 e from a 15 se k è in 7? controlla questo codice.
     int direction[8]={-8,8,-1,1,-9,-7,7,9};
-    
     attacked_square_total={};
     
     for(int i=0; i<8; i++)
@@ -175,7 +175,7 @@ bool King::handle_king_move_check
 )
 {
     // 1. SALVATAGGIO STATO
-    int from_square = this->get_square();
+    int from_square = this->get_square();   
     Piece* captured_piece = board[to_square]; // Salva chi c'era lì (o nullptr)
 
     // 2. APPLICA LA MOSSA TEMPORANEA

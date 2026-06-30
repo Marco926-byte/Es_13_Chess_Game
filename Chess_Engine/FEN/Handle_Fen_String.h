@@ -48,12 +48,19 @@ public:
     std::string generate_fen_string();
     
     void controll_piece(int i);
+    void controll_piece_after_move(int i);
+    void controll_piece_starter(int i);
+
+    void decrease_count_move_black();
 
     //Aggiungi la fen alla mappa
     void add_fen_to_map(std::string fen_string);
     
     Create_Piece* get_create_ptr() const;  
     Piece **get_piece();
+    Handle_Chessboard* get_turn_ptr() const;
+    Find_King* get_find_king_ptr() const;
+    
     std::map<int,bool> map_get_is_moved() const;
     std::string get_fen_string() const;
 

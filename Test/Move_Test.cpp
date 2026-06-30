@@ -83,7 +83,78 @@ public:
         //Distruttore
     }
 };
+TEST_F(Move_Test, try_unmake_move)
+{
+    fen_string.get()->set_board_fenstring("r1bqkbnr/pppppppp/n7/8/8/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1");
+    chess_logic.get()->set_turn(WHITE);
+    engine_update_moves.get()->update_moves_all_piece();
 
+    std::cout<<"Fen prima mossa: "<<fen_string.get()->get_fen_string()<<std::endl;
+    bool execute_move = engine.get()->handle_move(62,47);
+    
+    if(execute_move)
+    {
+        std::cout<<"Mossa eseguita!"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"Mossa non eseguita!"<<std::endl;
+    }
+    std::cout<<"Fen dopo: "<<fen_string.get()->get_fen_string()<<std::endl;
+    
+    std::cout<<"CONTROLLO PER SDOPPIAMENTO PEZZO xhandle_move\n";  
+    if(fen_string.get()->get_piece()[47])
+    {
+        std::cout<<"nella casella 47 c'è: "<<fen_string.get()->get_piece()[47]->get_name_piece()<<std::endl;
+    }
+    else
+    {
+        std::cout<<"nella casella 47 non c'è nulla!\n";
+    }
+    if(fen_string.get()->get_piece()[62])
+    {
+        std::cout<<"nella casella 62 c'è: "<<fen_string.get()->get_piece()[62]->get_name_piece()<<std::endl;
+    }
+    else
+    {
+        std::cout<<"nella casella 62 non c'è nulla!\n";
+    }
+
+    std::cout<<"fine: CONTROLLO PER SDOPPIAMENTO PEZZO xhandle_move\n";
+    bool execute_unmake_move = engine.get()->unmake_move(47,62);
+    
+
+    if(execute_unmake_move)
+    {
+        std::cout<<"DisfaMossa eseguita!"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"DisfaMossa non eseguita!"<<std::endl;
+    }
+    
+    std::cout<<"Fen dopo la disfamossa: "<<fen_string.get()->get_fen_string()<<std::endl;
+    
+    std::cout<<"CONTROLLO PER SDOPPIAMENTO PEZZO xunmake_move\n";
+    if(fen_string.get()->get_piece()[47])
+    {
+        std::cout<<"nella casella 47 c'è: "<<fen_string.get()->get_piece()[47]->get_name_piece()<<std::endl;
+    }
+    else
+    {
+        std::cout<<"nella casella 47 non c'è nulla!\n";
+    }
+    if(fen_string.get()->get_piece()[62])
+    {
+        std::cout<<"nella casella 62 c'è: "<<fen_string.get()->get_piece()[62]->get_name_piece()<<std::endl;
+    }
+    else
+    {
+        std::cout<<"nella casella 62 non c'è nulla!\n";
+    }
+    std::cout<<"fine: CONTROLLO PER SDOPPIAMENTO PEZZO xunmake_move\n";
+    
+}
 TEST_F(Move_Test, Check_not_double_move_pawn)
 {
     fen_string.get()->set_board_fenstring("r1bqkbnr/pppppppp/n7/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1");

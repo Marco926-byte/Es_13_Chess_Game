@@ -17,7 +17,7 @@ Update_Moves::Update_Moves
 
 void Update_Moves::update_moves_all_piece()
 {
-    const auto& piece=fen_shared.get()->get_piece();
+    const auto& piece=fen_shared.get()->get_piece();   
     for(int i=0; i<64; ++i)
     {
         if(piece[i])

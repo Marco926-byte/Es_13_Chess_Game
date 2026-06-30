@@ -22,22 +22,25 @@ bool Movement_Piece::handle_move(int from, int to)
     
     bool to_is_good= false;
     
-    if(type_caracter->get_legal_moves().size()==0)
+    if(type_caracter && type_caracter->get_legal_moves().size()==0)
     {
         return false;
     }
     
-    for
-    (
-        int i=0;
-        i<fen_shared.get()->get_piece()[from]->get_legal_moves().size();
-        i++
-    )
+    if(fen_shared.get()->get_piece()[from])
     {
-        if(to == fen_shared.get()->get_piece()[from]->get_legal_moves()[i])
+        for
+        (
+            int i=0;
+            i<fen_shared.get()->get_piece()[from]->get_legal_moves().size();
+            i++
+        )
         {
-            to_is_good=true;
-            break;
+            if(to == fen_shared.get()->get_piece()[from]->get_legal_moves()[i])
+            {
+                to_is_good=true;
+                break;
+            }
         }
     }
 
@@ -126,11 +129,11 @@ bool Movement_Piece::handle_move(int from, int to)
     //Gestisco la cattura:
     if(piece[move.get_to_square()]!=nullptr)
     {
-        captured_piece = piece[move.get_to_square()];
-
+        piece_capture = piece[move.get_to_square()]->get_name_piece();
+    
         //elimino il pezzo puntato dal carattere ucciso:
         delete piece[move.get_to_square()];
-    }
+    }        
 
     //Gestisco il movimento del pezzo:
     piece[move.get_to_square()]=piece[move.get_from_square()];
@@ -152,7 +155,6 @@ bool Movement_Piece::handle_move(int from, int to)
     //RIGENERA LA NUOVA FEN_STRING:
     std::string new_fen = fen_shared.get()->generate_fen_string();
     fen_shared.get()->add_fen_to_map(new_fen);
-    //fen_shared.get()->set_board_fenstring(new_fen);
 
     stack.push(move);
 
@@ -165,17 +167,22 @@ bool Movement_Piece::unmake_move(int from, int to)
     const auto &piece = fen_shared.get()->get_piece();
 
     //1) Cancella l'ultima mossa dallo stack
-    stack.pop();
-    
-    //2) Rigenera il pezzo eventualmente mangiato
-    if(captured_piece)
+    if(!stack.empty())
     {
+        stack.pop();
+    }
+
+    //2) Rigenera il pezzo eventualmente mangiato
+    if(isalpha(piece_capture)) //isalpha = se lettera
+    {
+        
         piece[to] = piece[from];
         piece[from] = nullptr;
 
-        piece[from] = captured_piece;
-        captured_piece=nullptr;
+        //Problema: mi da errore, problema nel creare il pezzo bad alloc.
+        piece[from] = fen_shared.get()->get_create_ptr()->create_piece(piece_capture,from);
         
+        piece_capture = ' ';
         is_unmake_move = true;
     }
     else
@@ -183,15 +190,25 @@ bool Movement_Piece::unmake_move(int from, int to)
         piece[to] = piece[from];
         piece[from] = nullptr;
 
-        is_unmake_move = true;
+        is_unmake_move = true;   
+        piece_capture = ' ';
     }    
 
-    //TODO: VERIFICA LA LOGICA CON UN BEL TEST
+    //RIGENERA LA NUOVA FEN_STRING:
+    std::string new_fen = fen_shared.get()->generate_fen_string();
+    fen_shared.get()->add_fen_to_map(new_fen);
     
+    //DA RICONTROLLARE LA GESTIONE DEL TURNO
+    if(fen_shared.get()->get_turn_ptr()->get_turn()==WHITE)
+    {
+        fen_shared.get()->get_turn_ptr()->set_turn(BLACK);
+    }    
+    else
+    {
+        fen_shared.get()->decrease_count_move_black();
+        fen_shared.get()->get_turn_ptr()->set_turn(WHITE);
+    }
     //4) Cancella l'attributo is_moved = true al pezzo
-    //5) decrementa il numero per la fen del contatore per il nero
-    //6) genera la nuova fen
-
     return is_unmake_move;
 }
 

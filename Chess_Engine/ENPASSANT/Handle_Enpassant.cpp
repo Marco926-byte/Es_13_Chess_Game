@@ -19,7 +19,7 @@ bool Handle_Enpassant::is_enpassant()
 {
     Move last_move;
 
-    if(game_movement->get_stack().size()==0)
+    if(game_movement && game_movement->get_stack().empty())
     {
         return false;
     }
