@@ -21,6 +21,7 @@ bool Handle_Enpassant::is_enpassant()
 
     if(game_movement && game_movement->get_stack().empty())
     {
+        is_enpassant_value = false;
         return false;
     }
     else
@@ -35,6 +36,7 @@ bool Handle_Enpassant::is_enpassant()
         last_move.get_type_piece()!=PAWN 
     )
     {
+        is_enpassant_value = false;
         return false;
     }
 
@@ -47,6 +49,7 @@ bool Handle_Enpassant::is_enpassant()
         )!=16
     )
     {
+        is_enpassant_value = false;
         return false;
     }
 
@@ -105,6 +108,9 @@ bool Handle_Enpassant::is_enpassant()
         fen_shared.get()->set_is_enpassant(true);
         fen_shared.get()->set_square_enpassant(last_move.get_to_square());
         
+        //std::cout<<"Enpassant è true!\n";
+        is_enpassant_value = true;
+        //std::cout<<"fen: "<<fen_shared.get()->get_fen_string()<<std::endl;
         return true;
     }
     return false;
@@ -115,6 +121,10 @@ bool Handle_Enpassant::handle_capture_enpassant()
 {
     if(game_movement->get_stack().size()==0)
     {
+        /*if(debug_is_enpassant)
+        {
+            std::cout<<"stack ultima mossa = 0, esco false\n";
+        }*/
         return false;
     }
 
@@ -124,6 +134,7 @@ bool Handle_Enpassant::handle_capture_enpassant()
     // Se l'ultima mossa associata al pezzo non è un pedone, esci...
     if (last_move.get_type_piece()!=PAWN) 
     {
+        
         return false;
     }
 
@@ -144,6 +155,10 @@ bool Handle_Enpassant::handle_capture_enpassant()
         return false;
     }
     
+    if(!is_enpassant_value)
+    {
+        return false;
+    }
 
     int color_offset = last_move.get_color_piece() == WHITE ? 8 : -8;
 
@@ -152,10 +167,19 @@ bool Handle_Enpassant::handle_capture_enpassant()
     {
         delete fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset];
         fen_shared.get()->get_piece()[last_move.get_to_square()+color_offset]=nullptr;
-        
         return true;
     }
     return false;
+}
+
+bool Handle_Enpassant::get_is_enpassant() const
+{
+    return is_enpassant_value;
+}
+
+void Handle_Enpassant::set_is_enpassant(bool new_is_enpassant)
+{
+    is_enpassant_value = new_is_enpassant;
 }
 
 Handle_Enpassant::~Handle_Enpassant()

@@ -127,6 +127,7 @@ bool Handle_Pin::handle_pin_on_king_straight
                             )
                             {
                                 is_pin = true;
+                                std::cout<<"Pezzo pinnato da attacco dritto\n";
                                 itr->remove_legal_move(move);                                
                             }
 
@@ -252,6 +253,7 @@ bool Handle_Pin::handle_pin_on_king_diagonal
                             if(check_shared.get()->handle_check_on_king_diagonal(ptr_king->get_square(),board,current_player_color))
                             {
                                 is_pin = true;
+                                std::cout<<"Pezzo pinnato attacco diagonale\n";
                                 itr->remove_legal_move(move);                                
                             }
 

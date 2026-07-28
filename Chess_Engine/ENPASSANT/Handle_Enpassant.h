@@ -10,8 +10,10 @@ class Handle_Enpassant
 {
 private:
     std::shared_ptr<Handle_Fen_String> fen_shared;
-    
     Movement_Piece* game_movement =nullptr;
+
+    bool is_enpassant_value = false;
+    bool debug_is_enpassant = false;
 public:
     Handle_Enpassant
     (
@@ -20,6 +22,10 @@ public:
     );
     
     bool is_enpassant();
+
+    bool get_is_enpassant() const;
+    void set_is_enpassant(bool new_is_enpassant);
+
     bool handle_capture_enpassant();
 
     ~Handle_Enpassant();

@@ -94,15 +94,31 @@ std::string Handle_Fen_String::generate_fen_string()
     //Imposto la fen_string e il contatore nella posizione iniziale
     std::string fen_string="";
     int count_no_piece=0;
-
+    /*if(get_fen_string()== "1rbqkbnr/pppppppp/8/8/1P6/8/1PPPPPPP/RNBQKBNR w KQ kq 25 0 8255")
+    {
+        std::cout<<"DEBUG GENERATE_FEN_STRING: "<<get_fen_string()<<std::endl;  
+    }*/
     //Devo iterare tutto nelle caselle della scacchiera:
     //Prima le righe:
     for(int row=0; row<8; row++)
     {
+        /*if(get_fen_string()== "1rbqkbnr/pppppppp/8/8/1P6/8/1PPPPPPP/RNBQKBNR w KQ kq 25 0 8255")
+        {
+            std::cout<<"for row: DEBUG GENERATE_FEN_STRING: "<<get_fen_string()<<std::endl;
+            std::cout<<"fen: "<<fen_string<<std::endl;
+            std::cout<<"row: "<<row<<"\n"<<"--------------"<<std::endl;
+        }*/
         count_no_piece = 0;
         //Poi le colonne
         for(int col=0; col<8; col++)
         {
+            /*if(get_fen_string()== "1rbqkbnr/pppppppp/8/8/1P6/8/1PPPPPPP/RNBQKBNR w KQ kq 25 0 8255")
+            {
+                std::cout<<"for col: DEBUG GENERATE_FEN_STRING: "<<get_fen_string()<<std::endl;
+                std::cout<<"fen: "<<fen_string<<std::endl;
+                std::cout<<"col: "<<col<<"\n"<<"--------------"<<std::endl;
+            }*/
+            
             //Controllo se nella posizione tot c'è un pezzo:
             if(piece[row*8+col]==nullptr)
             {
@@ -110,6 +126,13 @@ std::string Handle_Fen_String::generate_fen_string()
             }
             else    //Se non c'è allora:
             {
+                /*if(get_fen_string()== "1rbqkbnr/pppppppp/8/8/1P6/8/1PPPPPPP/RNBQKBNR w KQ kq 25 0 8255")
+                {
+
+                    std::cout<<"Nella casella: 0 non c'è nulla, row: "<<row<<" col: "<<col<<"\n";
+                    std::cout<<"piece[row*8+col] c'è: "<<piece[row*8+col]->get_name_piece()<<std::endl;
+                }*/
+
                 //Controllo se il contatore è numerato
                 if(count_no_piece>0)
                 {
@@ -136,8 +159,13 @@ std::string Handle_Fen_String::generate_fen_string()
         {
             fen_string+='/';
         }
+        /*if(get_fen_string()== "1rbqkbnr/pppppppp/8/8/1P6/8/1PPPPPPP/RNBQKBNR w KQ kq 25 0 8255")
+        {
+            std::cout<<"FINE: DEBUG GENERATE_FEN_STRING: "<<get_fen_string()<<std::endl;
+            std::cout<<"fen: "<<fen_string<<std::endl;
+        }*/
     }
-
+    //CONTROLLA QUAAAAA PER ERRORE
     //QUI FORSE DA CAMBIARE, NON SO FORSE È SBAGLIATO
     if(chess_turn_ptr->get_turn()==WHITE)
     {
@@ -184,17 +212,23 @@ std::string Handle_Fen_String::generate_fen_string()
 
     fen_string+= " 0 ";
 
-    if(is_last_move_black)
+    /*if(is_last_move_black)
     {
         count_move_black+=1;
         is_last_move_black=false;
-    }
+    }*/
 
-    fen_string+=std::to_string(count_move_black);
+    //fen_string+=std::to_string(count_move_black);
     this->fen_string=fen_string;
 
     return fen_string;
 }
+
+bool Handle_Fen_String::get_is_enpassant() const
+{
+    return is_enpassant;
+}
+
 Handle_Chessboard* Handle_Fen_String::get_turn_ptr() const
 {
     return chess_turn_ptr;

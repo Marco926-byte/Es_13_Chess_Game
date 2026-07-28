@@ -92,6 +92,7 @@ bool Check::handle_check_on_king_diagonal
                     diagonal_attack+=diagonal[i];
                     v_check_attack.push_back(diagonal_attack);
                 }
+                std::cout<<"CHECK: Scacco in diagonale!\n";
                 return true;
             } 
             else
@@ -172,6 +173,7 @@ bool Check::handle_check_on_king_straight(int position_king,Piece **board, Color
                     straight_attack+=single_straight[i];
                     v_check_attack.push_back(straight_attack);
                 }
+                std::cout<<"CHECK: Scacco re dritto\n";
                 return true;
             }   
             else
@@ -230,6 +232,7 @@ bool Check::handle_check_on_king_knight(int position_king,Piece **board, Color c
         {
             //voglio che la casella che attacca il re venga aggiunta al vettore attack
             v_check_attack.push_back(board[current_move]->get_square());
+            std::cout<<"CHECK: Scacco col cavallo!\n";
             return true;
         }
     }

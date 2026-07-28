@@ -160,7 +160,8 @@ public:
         }
         return number_position;
     }      
-    
+
+    //Problema enpassant fen: r1bqkbnr/p1pp1ppp/2n5/Pp2p3/8/8/1PPPPPPP/RNBQKBNR w KQ kq  -  0
     int divide
     (
         int depth,
@@ -172,8 +173,8 @@ public:
         {
             return 1;
         }
-        
-        //engine_update_moves.get()->update_moves_all_piece();
+
+        engine_update_moves.get()->update_moves_all_piece();
         chess_logic.get()->set_turn(playing_color);
 
         std::map<int,std::vector<int>> m_piece_move;
@@ -209,57 +210,160 @@ public:
             int start_square_piece = move.first;
     
             for(auto i: move.second)
-            {            
+            {   
+
+                //std::cout<<"Controllo a caso: \n";
+                if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    !fen_string.get()->get_piece()[21]->get_ismoved()    
+                )
+                {
+                    std::cout<<"Inizio: Il pezzo in 21 non si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                }
+                else if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    fen_string.get()->get_piece()[21]->get_ismoved()
+                )
+                {
+                    std::cout<<"Inizio: Il pezzo in 21 si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                }
                 //Importante variabile per gestire se è mosso oppure no
                 bool is_moved;
+                bool is_enpassant_divide;
 
+                std::cout<<"depth: "<<depth<<std::endl;
+                
+                //TODO: GUARDA CHE MOSSE FA START E i  e cerca di guardare le variabili per se è mosso
+                /*if(fen_string.get()->get_fen_string()=="k7/8/5p2/6P1/2p5/3P4/8/7K b 29 0 ")
+                {
+                    std::cout<<"--------------Inizio debug--------------------\n";
+                    std::cout<<"FEN: k7/8/5p2/6P1/2p5/3P4/8/7K\n";
+                    if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        !fen_string.get()->get_piece()[30]->get_ismoved()    
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 non si è mosso!\n";    
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    else if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        fen_string.get()->get_piece()[30]->get_ismoved()
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 si è mosso!\n";
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    std::cout<<"------------------------------------------\n";
+
+                }*/
+                
                 if(chess_logic.get()->get_turn()==WHITE)
                 {
                     next_turn = BLACK;
                 }
                 else
-                {
-                    next_turn = WHITE;
+                {                
+                    next_turn = WHITE;                
                 }
                 
                 //Imposto il turno di gioco
                 chess_logic.get()->set_turn(playing_color);
 
-                /*if(depth == 3 && start_square_piece == 8 && i == 24)
-                {
-                    std::cout<<"fen: "<<fen_string.get()->get_fen_string()<<std::endl;
-                }*/
-
-                /*if(depth == 3)
-                {
-                    if(fen_string.get()->map_get_is_moved()[8])
-                    {
-                        std::cout<<"Il pezzo in 8 si è mosso!\n";
-                    }
-                    else
-                    {
-                        std::cout<<"Il pezzo in 8 non si è mosso!\n";
-                    }
-                }*/
                 if(fen_string.get()->get_piece()[start_square_piece])
                 {
                     is_moved = fen_string.get()->get_piece()[start_square_piece]->get_ismoved();
                 }
-                
-                //2) Faccio la mossa e cambio turno:
+
+                //Pensiero: enpassant dovrebbe essere valido solo per il pedone
+                //specifico quindi dovrò scrivere per forza un attributo enpassant
+                //per il pezzo dentro piece quasi sicuramente
+                is_enpassant_divide = engine_enpassant.get()->get_is_enpassant();
+
+                //TODO: CONTROLLA IS_MOVED E VEDI PERCHÈ IN 30 NON È MOSSO A UN CERTO PUNTO
+                //std::cout<<"prima make_move is_moved è: "<<is_moved<<std::endl;
+
+                /*if(fen_string.get()->get_fen_string()=="k7/8/5p2/6P1/2p5/3P4/8/7K b 29 0 ")
+                {
+                    //std::cout<<"CIAO DA FEN CON STRABISMO\n";
+                    std::cout<<"-----------------Ciao, prima del make_move------------------\n";
+                    std::cout<<"depth: "<<depth<<" is_moved: "<<is_moved<<std::endl;
+
+                    if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        !fen_string.get()->get_piece()[30]->get_ismoved()    
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 non si è mosso!\n";    
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    else if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        fen_string.get()->get_piece()[30]->get_ismoved()
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 si è mosso!\n";
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    std::cout<<"-----------------------------------------------\n";
+
+                }*/
+
                 bool execute_move = engine.get()->handle_move(start_square_piece,i);
+
+
+                if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    !fen_string.get()->get_piece()[21]->get_ismoved()    
+                )
+                {
+                    std::cout<<"Dopo make_move: Il pezzo in 21 non si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                }
+                else if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    fen_string.get()->get_piece()[21]->get_ismoved()
+                )
+                {
+                    std::cout<<"Dopo make_move: Il pezzo in 21 si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                }
+
+                char capture_piece = engine.get()->get_piece_capture();
                 
                 if(depth == 3 && !execute_move)
                 {
-                    std::cout<<(fen_string.get()->get_piece()[start_square_piece]->get_ismoved() ? "SI È MOSSO" : "NON SI È MOSSO")<<std::endl;
+                    if(fen_string.get()->get_piece()[start_square_piece])
+                        std::cout<<(fen_string.get()->get_piece()[start_square_piece]->get_ismoved() ? "SI È MOSSO" : "NON SI È MOSSO")<<std::endl;
+                    std::cout<<"depth = "<<depth<<std::endl;                   
                     std::cout<<"MOSSA NON FATTA!! da: "<<start_square_piece<<" a: "<<i<<std::endl;
                     std::cout<<"-----------------------------\n";
                     continue;
                 }
 
-                /*if(depth == 2 && !execute_move)
+                if(depth == 2 && !execute_move)
                 {
-                    std::cout<<(fen_string.get()->get_piece()[start_square_piece]->get_ismoved() ? "SI È MOSSO" : "NON SI È MOSSO")<<std::endl;
+                    if(fen_string.get()->get_piece()[start_square_piece])
+                        std::cout<<(fen_string.get()->get_piece()[start_square_piece]->get_ismoved() ? "SI È MOSSO" : "NON SI È MOSSO")<<std::endl;
+                    std::cout<<"depth = "<<depth<<std::endl;
                     std::cout<<"MOSSA NON FATTA!! da: "<<start_square_piece<<" a: "<<i<<std::endl;
                     std::cout<<"-----------------------------\n";
                     continue;
@@ -267,41 +371,159 @@ public:
 
                 if(depth == 1 && !execute_move)
                 {
-                    std::cout<<(fen_string.get()->get_piece()[start_square_piece]->get_ismoved() ? "SI È MOSSO" : "NON SI È MOSSO")<<std::endl;
+                    if(fen_string.get()->get_piece()[start_square_piece])
+                        std::cout<<(fen_string.get()->get_piece()[start_square_piece]->get_ismoved() ? "SI È MOSSO" : "NON SI È MOSSO")<<std::endl;
+                    std::cout<<"depth = "<<depth<<std::endl;
                     std::cout<<"MOSSA NON FATTA!! da: "<<start_square_piece<<" a: "<<i<<std::endl;
                     std::cout<<"-----------------------------\n";
                     continue;
-                }*/
-
-
+                }
 
                 if(depth == initial_depth+1)
                 {
                     std::cout<<start_square_piece<<" --> "<<i<<std::endl;
-                }
 
-    
+                }
+                
                 chess_logic.get()->set_turn(next_turn);
                 engine_update_moves.get()->update_moves_all_piece();
 
                 //3) Effettuo ricorsione 
                 number_position += divide(depth-1,initial_depth, next_turn);
-                                
-                //4) torno indietro
-                bool is_unmake_move = engine.get()->unmake_move(i,start_square_piece);
+                //fen problema risalita pezzo 21: k7/8/5P2/8/2p5/8/3P4/7K b 29 0 
+
+                engine.get()->set_piece_capture(capture_piece);
+                engine_enpassant.get()->set_is_enpassant(is_enpassant_divide);
+
+                if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    !fen_string.get()->get_piece()[21]->get_ismoved()    
+                )
+                {
+                    std::cout<<"Dopo risalita divide: Il pezzo in 21 non si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    std::cout<<"fen: "<<fen_string.get()->get_fen_string()<<std::endl;
+                }
+                else if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    fen_string.get()->get_piece()[21]->get_ismoved()
+                )
+                {
+                    std::cout<<"Dopo risalita divide: Il pezzo in 21 si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    std::cout<<"fen: "<<fen_string.get()->get_fen_string()<<std::endl;
+                }
                 
-                //Problema qua:-------------------------------------
+                //std::cout<<"dopo make_move e risalita divide, is_moved è: "<<is_moved<<std::endl;
+                //std::cout<<"depth: "<<depth<<std::endl;
+
+                /*if(fen_string.get()->get_fen_string()=="k7/8/5p2/6P1/2p5/3P4/8/7K b 29 0 ")
+                {
+                    std::cout<<"-------------Dopo make_move e risalita divide---------------"<<std::endl;
+                    std::cout<<"depth: "<<depth<<" is_moved: "<<is_moved<<std::endl;    
+                    if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        !fen_string.get()->get_piece()[30]->get_ismoved()    
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 non si è mosso!\n";    
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    else if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        fen_string.get()->get_piece()[30]->get_ismoved()
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 si è mosso!\n";
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    std::cout<<"-----------------------------------------------\n";
+                }*/
+
+                //4) torno indietro            
+                bool is_capture_case = engine.get()->unmake_move(i,start_square_piece);
+                
+                if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    !fen_string.get()->get_piece()[21]->get_ismoved()    
+                )
+                {
+                    std::cout<<"Dopo unmake_move: Il pezzo in 21 non si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    std::cout<<"fen: "<<fen_string.get()->get_fen_string()<<std::endl;
+                }
+                else if
+                (
+                    fen_string.get()->get_piece()[21]
+                    &&
+                    fen_string.get()->get_piece()[21]->get_ismoved()
+                )
+                {
+                    std::cout<<"Dopo unmake_move: Il pezzo in 21 si è mosso!\n";    
+                    std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    std::cout<<"fen: "<<fen_string.get()->get_fen_string()<<std::endl;
+                }
+
+                /*if(fen_string.get()->get_fen_string()=="k7/8/5p2/6P1/2p5/3P4/8/7K b 29 0 ")
+                {
+                    std::cout<<"--------------Dopo unmake_move-----------"<<std::endl;
+                    std::cout<<"depth: "<<depth<<" is_moved: "<<is_moved<<std::endl;    
+                    if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        !fen_string.get()->get_piece()[30]->get_ismoved()    
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 non si è mosso!\n";    
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    else if
+                    (
+                        fen_string.get()->get_piece()[30]
+                        &&
+                        fen_string.get()->get_piece()[30]->get_ismoved()
+                    )
+                    {
+                        std::cout<<"Il pezzo in 30 si è mosso!\n";
+                        std::cout<<"start_square: "<<start_square_piece<<" i: "<<i<<std::endl;
+                    }
+                    std::cout<<"--------------------------------------------\n";
+
+                }*/
+
                 if(fen_string.get()->get_piece()[start_square_piece])
                 {
                     fen_string.get()->get_piece()[start_square_piece]->set_ismoved(is_moved);
                     fen_string.get()->get_piece()[start_square_piece]->set_square(start_square_piece);
                 }
-                //--------------------------------------------------
 
-                fen_string.get()->get_piece()[i]=nullptr;
+                /*if
+                (
+                    fen_string.get()->get_piece()[30]
+                    &&
+                    !fen_string.get()->get_piece()[30]->get_ismoved()
+                )
+                {
+                    std::cout<<"ALT! il pezzo in positione : "<<start_square_piece<<" non si è mosso, problema\n";
+                }*/
                 
-                chess_logic.get()->set_turn(playing_color);
+                if(!is_capture_case)
+                {
+                    fen_string.get()->get_piece()[i]=nullptr;
+                }
 
+                chess_logic.get()->set_turn(playing_color);
                 engine_update_moves.get()->update_moves_all_piece();
             }
         }
@@ -310,7 +532,6 @@ public:
             std::cout<<"Numero totale di mosse: "<<number_position<<std::endl;
             std::cout<<"-----------------------------------------\n";
         }
-
         return number_position;
     }
 
@@ -432,6 +653,7 @@ TEST_F(Perft, Perft_test_deep_3)
 
 TEST_F(Perft, Perft_divide_debug_3)
 {
+    //PROBLEMA e7e5 problema conteggio depth 1 da depth 3
     std::string fen = "r1bqkbnr/pppppppp/2n5/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1";
     fen_string.get()->set_board_fenstring(fen);   
 
@@ -446,10 +668,29 @@ TEST_F(Perft, Perft_divide_debug_3)
     ASSERT_FALSE(success);
 }
 
+TEST_F(Perft, Divide_doubleknight)
+{
+    std::string fen = "3pkp2/3p1p2/2np1p2/3p1p2/3p1p2/3p1p2/3p1p2/3P1P1K w - - 0 1";
+    fen_string.get()->set_board_fenstring(fen);
+    engine_update_moves.get()->update_moves_all_piece();
+    
+    bool success = false;
+    int pertf = divide(3,2,BLACK);
+    
+    std::cout<<"---------------------------------\n";
+    std::cout<<"| Nodi trovati: "<<pertf<<"             |"<<std::endl;
+    std::cout<<"---------------------------------\n";
+    
+    ASSERT_FALSE(success);
+}
+
 
 TEST_F(Perft, Divide_handle_capture)
 {
-    std::string fen = "6pk/6pP/6p1/6P1/1p6/pP6/KP6/1P6 b - - 0 1";
+    //MOSSA da: a3(40) a: b2: (49)
+    //problema w perft 1 6pk/6p1/6pP/6P1/1p6/pP6/KP6/1P6 w - - 0 1
+    //stato base partenza: 6p1/6pk/6pP/6P1/1p6/pP6/KP6/1P6 b - - 0 1
+    std::string fen = "6p1/6pk/6pP/6P1/1p6/pP6/KP6/1P6 b - - 0 1";
     fen_string.get()->set_board_fenstring(fen);
     engine_update_moves.get()->update_moves_all_piece();
     
@@ -463,11 +704,9 @@ TEST_F(Perft, Divide_handle_capture)
     ASSERT_FALSE(success);
 }
 
-
-
 TEST_F(Perft, capire_divide)
 {
-    std::string fen = "r1bqkbnr/1ppppppp/2n5/p7/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1";
+    std::string fen = "r1bqkbnr/1ppppppp/2n5/p7/8/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1";
     fen_string.get()->set_board_fenstring(fen);   
 
     engine_update_moves.get()->update_moves_all_piece();
@@ -480,7 +719,7 @@ TEST_F(Perft, capire_divide)
 
 TEST_F(Perft, debug_pawn_is_moved)
 {
-    std::string fen = "1p4pk/1P4p1/1P4p1/1P4p1/1P4p1/1P4p1/1P1P2p1/KP4P1 b - - 0 1";
+    std::string fen = "1p4pk/1P4p1/1P4p1/1P4p1/1P4p1/1P4p1/1P1P2p1/KP4P1 w - - 0 1";
     fen_string.get()->set_board_fenstring(fen);
 
     engine_update_moves.get()->update_moves_all_piece();
@@ -488,6 +727,19 @@ TEST_F(Perft, debug_pawn_is_moved)
     std::cout<<"---------------------------------\n";
     std::cout<<"| Nodi trovati: "<<a<<"             |"<<std::endl;
     std::cout<<"---------------------------------\n";    
+}
+
+TEST_F(Perft, debug_enpassant)
+{
+    std::string fen = "k7/5p2/8/6P1/2p5/8/3P4/7K b - - 0 1";
+    fen_string.get()->set_board_fenstring(fen);
+
+    engine_update_moves.get()->update_moves_all_piece();
+    int a = divide(3,2,BLACK);
+
+    std::cout<<"---------------------------------\n";
+    std::cout<<"| Nodi trovati: "<<a<<"             |"<<std::endl;
+    std::cout<<"---------------------------------\n";        
 }
 
 TEST_F(Perft, Perft_divide_debug_3_error_pawn)

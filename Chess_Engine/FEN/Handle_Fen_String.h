@@ -60,7 +60,8 @@ public:
     Piece **get_piece();
     Handle_Chessboard* get_turn_ptr() const;
     Find_King* get_find_king_ptr() const;
-    
+    bool get_is_enpassant() const;
+
     std::map<int,bool> map_get_is_moved() const;
     std::string get_fen_string() const;
 

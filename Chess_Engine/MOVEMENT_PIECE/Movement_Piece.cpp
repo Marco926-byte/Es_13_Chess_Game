@@ -16,8 +16,20 @@ std::stack<Move> Movement_Piece::get_stack() const
     return stack;
 }
 
+char Movement_Piece::get_piece_capture() const
+{
+    return piece_capture;
+}
+
+void Movement_Piece::set_piece_capture(char capture)
+{
+    piece_capture = capture;
+}
+
 bool Movement_Piece::handle_move(int from, int to)
 {
+    //from == 40 && to == 32
+    /*--- INIZIO CONTROLLO PSEUDOMOSSA -----*/
     Piece* type_caracter = fen_shared.get()->get_piece()[from]; 
     
     bool to_is_good= false;
@@ -48,6 +60,7 @@ bool Movement_Piece::handle_move(int from, int to)
     {    
         return false;
     }
+    /*---- FINE CONTROLLO PSEUDOMOSSA MOSSA ----*/
 
     //Creo la nuova mossa:
     Move move;
@@ -60,12 +73,12 @@ bool Movement_Piece::handle_move(int from, int to)
 
     //Imposto il colore per la mossa del pezzo:
     move.set_color_piece(piece[from]->get_color());
+
     if
     (
         piece[from]->get_name_piece()=='K'
         ||
         piece[from]->get_name_piece()=='k'
-
     )
     {
         move.set_type_piece(KING);       
@@ -130,11 +143,15 @@ bool Movement_Piece::handle_move(int from, int to)
     if(piece[move.get_to_square()]!=nullptr)
     {
         piece_capture = piece[move.get_to_square()]->get_name_piece();
-    
+
         //elimino il pezzo puntato dal carattere ucciso:
         delete piece[move.get_to_square()];
     }        
-
+    else
+    {
+        piece_capture = ' ';
+    }
+    
     //Gestisco il movimento del pezzo:
     piece[move.get_to_square()]=piece[move.get_from_square()];
     piece[move.get_from_square()]=nullptr;
@@ -145,7 +162,7 @@ bool Movement_Piece::handle_move(int from, int to)
     piece[move.get_to_square()]->set_ismoved(true);
     fen_shared.get()->set_is_moved(true,move.get_to_square());
     fen_shared.get()->set_is_moved(false,move.get_from_square());
-    
+        
     //Gestisco la mossa del nero per il discorso della fen 
     if(move.get_color_piece()==BLACK)
     {
@@ -156,14 +173,31 @@ bool Movement_Piece::handle_move(int from, int to)
     std::string new_fen = fen_shared.get()->generate_fen_string();
     fen_shared.get()->add_fen_to_map(new_fen);
 
+
     stack.push(move);
+
+    /*if(from == 40 && to == 32)
+    {
+        std::cout<<"fen dopo la mossa: "<<fen_shared.get()->get_fen_string()<<std::endl;
+    }*/
 
     return true;
 }
 
 bool Movement_Piece::unmake_move(int from, int to)
 {
-    bool is_unmake_move = false;
+    //TODO: 
+    //Problema 21 viene registrato mosso poi a caso cambia e diventa non mosso
+    //Controlla il perchè succede
+    //Guarda la stampa prima di agire
+    
+    if(fen_shared.get()->get_fen_string()== "k7/8/5P2/8/2p5/8/3P4/7K b 29 0 ")
+    {
+        std::cout<<"--------INIZIO UNMAKE_MOVE DEBUG-----------\n";
+    }
+    int debug_vibes = 0;
+
+    bool is_capture_case = false;
     const auto &piece = fen_shared.get()->get_piece();
 
     //1) Cancella l'ultima mossa dallo stack
@@ -175,29 +209,47 @@ bool Movement_Piece::unmake_move(int from, int to)
     //2) Rigenera il pezzo eventualmente mangiato
     if(isalpha(piece_capture)) //isalpha = se lettera
     {
-        
+        if(fen_shared.get()->get_fen_string()== "k7/8/5P2/8/2p5/8/3P4/7K b 29 0 ")
+        {
+            std::cout<<"Unmake_move: entro nel caso kill\n";
+            debug_vibes = 69;          
+        }   
         piece[to] = piece[from];
         piece[from] = nullptr;
 
-        //Problema: mi da errore, problema nel creare il pezzo bad alloc.
         piece[from] = fen_shared.get()->get_create_ptr()->create_piece(piece_capture,from);
+
+        //Aggiunta...
+        piece[to]->set_square(to);
+        piece[from]->set_square(from);
+
+        //RIGENERA LA NUOVA FEN_STRING:
+        std::string new_fen = fen_shared.get()->generate_fen_string();
+        //Ricorda: new fen del debug già ce l'hai, guarda la fine unmake_debug
         
+        
+        fen_shared.get()->add_fen_to_map(new_fen);
+
         piece_capture = ' ';
-        is_unmake_move = true;
+        is_capture_case = true;
+        
     }
     else
     {
         piece[to] = piece[from];
         piece[from] = nullptr;
+        
+        //Aggiunta....
+        piece[to]->set_square(to);
 
-        is_unmake_move = true;   
-        piece_capture = ' ';
+        //RIGENERA LA NUOVA FEN_STRING:
+        std::string new_fen = fen_shared.get()->generate_fen_string();
+        fen_shared.get()->add_fen_to_map(new_fen);
+
+        is_capture_case = false;   
+        piece_capture = ' ';    
     }    
 
-    //RIGENERA LA NUOVA FEN_STRING:
-    std::string new_fen = fen_shared.get()->generate_fen_string();
-    fen_shared.get()->add_fen_to_map(new_fen);
-    
     //DA RICONTROLLARE LA GESTIONE DEL TURNO
     if(fen_shared.get()->get_turn_ptr()->get_turn()==WHITE)
     {
@@ -208,8 +260,19 @@ bool Movement_Piece::unmake_move(int from, int to)
         fen_shared.get()->decrease_count_move_black();
         fen_shared.get()->get_turn_ptr()->set_turn(WHITE);
     }
+
+    //k7/8/5p2/6P1/2p5/8/3P4/7K w 29 0
+    if
+    (
+        fen_shared.get()->get_fen_string()== "k7/8/5p2/6P1/2p5/8/3P4/7K w 29 0 "
+        &&
+        debug_vibes == 69
+    )
+    {
+        std::cout<<"--------------FINE UNMAKE_MOVE DEBUG------------------\n";
+    }
     //4) Cancella l'attributo is_moved = true al pezzo
-    return is_unmake_move;
+    return is_capture_case;
 }
 
 void Movement_Piece::print_all_move()

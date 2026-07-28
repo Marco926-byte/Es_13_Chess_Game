@@ -29,6 +29,9 @@ public:
     );
 
     std::stack<Move> get_stack() const;
+    char get_piece_capture() const;
+
+    void set_piece_capture(char capture);
 
     bool handle_move(int from, int to);
     bool unmake_move(int from, int to);
