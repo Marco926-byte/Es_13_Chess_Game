@@ -16,12 +16,14 @@ class Movement_Piece
 {
 private:
     int draw_counter;   //Todo:
-
+    
+    char piece_capture= ' ';
+    bool is_moved_piece_to = false;
+    bool is_moved_piece_from = false;
+    
     std::stack<Move>stack;
 
     std::shared_ptr<Handle_Fen_String> fen_shared;        
-    char piece_capture= ' ';
-
 public:
     Movement_Piece
     (
