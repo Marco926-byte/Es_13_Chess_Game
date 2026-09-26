@@ -10,6 +10,7 @@ Pawn::Pawn(int pos, char character)
 /*---------FUNZIONE VIRTUALE------------------*/
 void Pawn::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
 {
+    //std::cout<<"Pawn: Ciao da inizio update_legal_moves\n";
     std::vector<int> legal_moves={};
 
     Piece** piece = ptr_smart.get()->get_piece();
@@ -18,12 +19,14 @@ void Pawn::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
     this->handle_offensive(piece,legal_moves);
     
     set_legal_moves(legal_moves);
+    //std::cout<<"Pawn: Ciao da fine update_legal_moves\n";
 }
 /*---------FINE FUNZIONE VIRTUALE-------------*/
 
 /*---------FUNZIONI DEL PEDONE-----------------*/
 void Pawn::handle_movement(Piece** ptr, std::vector<int>& legal_moves)
 {
+    //std::cout<<"PAWN: Ciao da inizio handle_movement\n";
     //Ovviamente il pedone si può muovere di una casella avanti 
     int directions[2]{8,16};
 
@@ -51,10 +54,12 @@ void Pawn::handle_movement(Piece** ptr, std::vector<int>& legal_moves)
                 break;
         }
     }
+    //std::cout<<"Pawn: Ciao da fine handle_movement\n";
 }
 
 void Pawn::handle_offensive(Piece**ptr, std::vector<int>& legal_moves)
 {
+    //std::cout<<"Pawn: Ciao da inizio handle_offensive\n";
     //le due direzioni di attacco
     int directions[2]{7,9};
     
@@ -64,9 +69,6 @@ void Pawn::handle_offensive(Piece**ptr, std::vector<int>& legal_moves)
     //Ciclo le due direzioni d'attacco:
     for(int i=0; i<2; i++)
     {
-
-        //this->get_map_path()[directions[i]]={};
-        
         //Inizializzo square come la casella d'attacco
         int square= this->get_square()+directions[i]*color_team;
 
@@ -79,16 +81,14 @@ void Pawn::handle_offensive(Piece**ptr, std::vector<int>& legal_moves)
             }
         }
     }
-
+    //std::cout<<"Pawn: Ciao da fine handle_offensive\n";
 }
 
 void Pawn::get_attack(Piece **board, std::vector<int> &attacked_squares)
 {
-    // 1. Determina la direzione in base al colore
-    // Se Bianco va su (-8), se Nero va giù (+8)
+    //std::cout<<"Pawn: Ciao da inizio get_attack\n";
     int direction = (this->get_color() == WHITE) ? -8 : 8; 
 
-    // 2. Le due diagonali di attacco (Sinistra e Destra)
     int attack_offsets[] = {direction - 1, direction + 1};
 
     for(int offset : attack_offsets)
@@ -111,10 +111,13 @@ void Pawn::get_attack(Piece **board, std::vector<int> &attacked_squares)
             attacked_squares.push_back(target);
         }
     }
+    //std::cout<<"Pawn: Ciao da fine get_attack\n";
 }
 
 void Pawn::handle_en_passant(int square)
 {
+    //std::cout<<"PAWN: ciao da inizio handle_enpassant\n";
+    
     //Creo il vettore nuovo che copia shallow le mosse legali
     std::vector<int> v_legal_move = this->get_legal_moves();
 
@@ -123,5 +126,7 @@ void Pawn::handle_en_passant(int square)
 
     //Aggiungo alle mosse legali il nuovo vettore
     this->set_legal_moves(v_legal_move);
+    
+    //std::cout<<"PAWN: ciao da fine handle_enpassant\n";
 }
 /*-----------FINE FUNZIONI DEL PEDONE---------------*/

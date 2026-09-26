@@ -435,33 +435,27 @@ TEST_F(Move_Test, Is_Enpassant)
 {
     std::cout<<"CIAO Test_isenpassant\n";
     std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
+
+    std::cout<<"ciao dal test, entro in set_board_fenstring()\n";
     fen_string.get()->set_board_fenstring(fen_start); 
- 
-    std::cout<<"riga 334 libera dal sigsev\n";
-
+    
+    std::cout<<"ciao dal test, entro in update_all_piece 1)\n";
     engine_update_moves.get()->update_moves_all_piece();
-
-    std::cout<<"riga 338 libera dal sigsev\n";
 
     int from_piece_move = 9;
     int to_piece_move = 25;
 
+    std::cout<<"ciao dal test, entro in handle_move. Mossa 9->25\n";
     engine.get()->handle_move(from_piece_move,to_piece_move);
 
-    std::cout<<"riga 345 libera dal sigsev\n";
-
-
+    std::cout<<"ciao dal test, entro in update_all_piece 2)\n";
     engine_update_moves.get()->update_moves_all_piece();
-   
-    std::cout<<"riga 350 libera dal sigsev\n";
 
+    std::cout<<"ciao dal test, entro in set_turn(white)\n";
     chess_logic.get()->set_turn(WHITE);
-    
-    std::cout<<"riga 354 libera dal sigsev\n";
 
+    std::cout<<"ciao dal test, associo bool success all'esito dell'is_enpassant\n";
     bool success = engine_enpassant.get()->is_enpassant();
-
-    std::cout<<"riga 358 libera dal sigsev\n";
 
     ASSERT_TRUE(success);
 }

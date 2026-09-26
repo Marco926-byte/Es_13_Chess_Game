@@ -161,6 +161,7 @@ public:
         return number_position;
     }      
 
+    //ATTENZIONE MOSSA 13->29 DEPTH 2
     int divide
     (
         int depth,
@@ -214,6 +215,33 @@ public:
                 bool is_moved;
                 bool is_enpassant_divide;
 
+                if(start_square_piece == 34 && i == 42 && depth == 3)
+                {
+                    //std::cout<<"Ciao da divide, resetto num_debug"<<std::endl;
+                    engine.get()->set_num_debug(0);
+                }
+                if(start_square_piece == 13 && i == 29 && depth == 3)
+                {
+                    std::cout<<"---Inizio debug problema in questo ramo depth == 3.....\n";
+                    std::cout<<"fen: "<<fen_string.get()->get_fen_string()<<std::endl;
+                    engine.get()->set_num_debug(69);
+                    std::cout<<"num_debug == "<<engine.get()->get_num_debug()<<std::endl;
+                }
+
+                if
+                (
+                    (
+                        depth == 2
+                        ||
+                        depth == 1 
+                    )
+                    && 
+                    engine.get()->get_num_debug() == 69
+                )
+                {
+                    std::cout<<"[depth: "<<depth<<"-> MOSSA->(da: "<<start_square_piece<<" a: "<<i<<")]";
+                }
+
                 if(chess_logic.get()->get_turn()==WHITE)
                 {
                     next_turn = BLACK;
@@ -231,10 +259,23 @@ public:
                     is_moved = fen_string.get()->get_piece()[start_square_piece]->get_ismoved();
                 }
 
+                //Eseguo la mossa
                 bool execute_move = engine.get()->handle_move(start_square_piece,i);
 
-                char capture_piece = engine.get()->get_piece_capture();
-
+                if
+                (
+                    (
+                        depth == 2
+                        ||
+                        depth == 1 
+                    )
+                    && 
+                    engine.get()->get_num_debug() == 69
+                )
+                {
+                    std::cout<<" FEN: "<<fen_string.get()->get_fen_string()<<"\n";
+                }
+                
                 if(!execute_move)
                 {
                     if(fen_string.get()->get_piece()[start_square_piece])
@@ -245,13 +286,17 @@ public:
                     std::cout<<"-----------------------------\n";
                     continue;
                 }
+
+                //Registro il pezzo eventualmente catturato 
+                char capture_piece = engine.get()->get_piece_capture();
                 
+                //Stampo mossa depth 2 futura
                 if(depth == initial_depth+1)
                 {
                     std::cout<<start_square_piece<<" --> "<<i<<std::endl;
-
                 }
                 
+                //Cambio turno e aggiorno le mosse legali per tutti i pezzi
                 chess_logic.get()->set_turn(next_turn);
                 engine_update_moves.get()->update_moves_all_piece();
 

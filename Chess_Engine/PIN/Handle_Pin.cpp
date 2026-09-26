@@ -17,6 +17,7 @@ bool Handle_Pin::handle_pin_on_king_straight
     Color current_player_color
 )
 {
+    //std::cout<<"ciao da handle_pin_on_king_straight\n";
     bool is_pin = false;
 
     //Inizializzo il puntatore al re del turno corrente
@@ -127,7 +128,7 @@ bool Handle_Pin::handle_pin_on_king_straight
                             )
                             {
                                 is_pin = true;
-                                std::cout<<"Pezzo pinnato da attacco dritto\n";
+                                //std::cout<<"Pezzo pinnato da attacco dritto\n";
                                 itr->remove_legal_move(move);                                
                             }
 
@@ -159,6 +160,7 @@ bool Handle_Pin::handle_pin_on_king_diagonal
     Color current_player_color
 )
 {
+    //std::cout<<"ciao da handle_pin_on_king_diagonal\n";
     bool is_pin = false;
 
     //posizioni delle quattro diagonali della cella avanzato di 1 insomma   
@@ -253,7 +255,7 @@ bool Handle_Pin::handle_pin_on_king_diagonal
                             if(check_shared.get()->handle_check_on_king_diagonal(ptr_king->get_square(),board,current_player_color))
                             {
                                 is_pin = true;
-                                std::cout<<"Pezzo pinnato attacco diagonale\n";
+                                //std::cout<<"Pezzo pinnato attacco diagonale\n";
                                 itr->remove_legal_move(move);                                
                             }
 

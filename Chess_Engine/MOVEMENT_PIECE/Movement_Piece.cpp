@@ -11,6 +11,16 @@ Movement_Piece::Movement_Piece
 
 }
 
+void Movement_Piece::set_num_debug(int num)
+{
+    num_debug = num;
+}
+
+int Movement_Piece::get_num_debug() const
+{
+    return num_debug;
+}
+
 std::stack<Move> Movement_Piece::get_stack() const
 {
     return stack;
@@ -29,6 +39,7 @@ void Movement_Piece::set_piece_capture(char capture)
 bool Movement_Piece::handle_move(int from, int to)
 {
     /*--- INIZIO CONTROLLO PSEUDOMOSSA -----*/
+    //std::cout<<"ciao da handle_move\n";
     Piece* type_caracter = fen_shared.get()->get_piece()[from]; 
     
     bool to_is_good= false;
@@ -138,6 +149,13 @@ bool Movement_Piece::handle_move(int from, int to)
         move.set_type_piece(PAWN);
     }
 
+    int debug_move = 0;
+    if(from == 13 && to == 29 && fen_shared.get()->get_fen_string() == "k7/5p2/8/6P1/2p5/8/3P4/7K b 35 0 ")
+    {
+        std::cout<<"Ciao da dentro handle_move!\n";
+        debug_move = 69;
+    }
+
     //Gestisco la cattura:
     if(piece[move.get_to_square()]!=nullptr)
     {
@@ -178,6 +196,11 @@ bool Movement_Piece::handle_move(int from, int to)
     fen_shared.get()->add_fen_to_map(new_fen);
 
     stack.push(move);
+
+    if(debug_move == 69)
+    {
+        std::cout<<"Stampo fen fine mossa: "<<fen_shared.get()->get_fen_string()<<std::endl;
+    }
 
     return true;
 }

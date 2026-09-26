@@ -25,8 +25,11 @@ void Update_Moves::update_moves_all_piece()
             piece[i]->update_legal_moves(fen_shared);
         }
     }
+    //std::cout<<"Ciao da update_moves_all_piece, entro in is_enpassant\n";
     enpassant_shared.get()->is_enpassant();
+    //std::cout<<"Ciao da update_moves_all_piece, entro in is_castling_dx\n";
     castling_shared.get()->is_castling_dx();
+    //std::cout<<"Ciao da update_moves_all_piece, entro in is_castling_sx\n";
     castling_shared.get()->is_castling_sx();
 }
 
@@ -36,6 +39,7 @@ void Update_Moves::update_move_in_check
     std::vector<int> v_attack
 )
 {
+    //std::cout<<"ciao da update_move_in_check\n";
     const auto& piece=fen_shared.get()->get_piece();
     
     //Itero tutto

@@ -21,6 +21,8 @@ private:
     bool is_moved_piece_to = false;
     bool is_moved_piece_from = false;
     
+    int num_debug; //TODO: da togliere per favore ti prego non serve a nulla
+
     std::stack<Move>stack;
 
     std::shared_ptr<Handle_Fen_String> fen_shared;        
@@ -40,6 +42,8 @@ public:
 
     void print_all_move();
 
+    int get_num_debug() const;
+    void set_num_debug(int num);
 };
 
 #endif //MOVEMENT_PIECE_H

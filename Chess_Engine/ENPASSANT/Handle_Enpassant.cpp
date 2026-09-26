@@ -17,10 +17,14 @@ Handle_Enpassant::Handle_Enpassant
 
 bool Handle_Enpassant::is_enpassant()
 {
+    //TODO: debug mossa 30->21, non killa quando fa enpassant
+
+    //std::cout<<"ciao da is_enpassant\n";
     Move last_move;
 
     if(game_movement && game_movement->get_stack().empty())
     {
+        //std::cout<<"Nessuna mossa registrata, ritorno false\n",
         is_enpassant_value = false;
         return false;
     }
@@ -53,29 +57,34 @@ bool Handle_Enpassant::is_enpassant()
         return false;
     }
 
+    
     //alzo di due ma devo controllare i lati a sx e dx
     int side[2]={1,-1};
 
     for(int i=0; i<2; i++)
     {
+        //std::cout<<"i: "<<i<<std::endl;
         //Casella del pedone enpassant
         int square = side[i]+ last_move.get_to_square();
 
         //Se la casella non è sulla scacchiera, continua
         if (square < 0 || square > 63) 
         {
+            //std::cout<<"La casella non è sulla scacchiera, continua\n";
             continue;
         }
 
         //Controllo se sono sulla stessa riga...
         if(square/8 != last_move.get_to_square()/8)
         {
+            //std::cout<<"La casella non è sulla stessa riga, continua\n";
             continue;
         }
 
         //Se la casella affiaco del pedone è nullptr quindi vuota allora continua il ciclo
         if(!fen_shared.get()->get_piece()[square])
         {
+            //std::cout<<"La casella affiaco del pedone è nullptr, continua\n";
             continue;
         }
 
@@ -86,12 +95,14 @@ bool Handle_Enpassant::is_enpassant()
             == last_move.get_color_piece()
         )
         {
+            //std::cout<<"L'altro pezzo deve è dello stesso colore, continua\n";
             continue;
         }
 
         // Se il pezzo accanto al pedone doppio salto non è un pedone allora continua il ciclo
         if (!fen_shared.get()->get_piece()[square]->is_pawn()) 
         {
+            //std::cout<<"il pezzo accanto al pedone doppio salto non è un pedone, continua\n";
             continue;
         }
 
@@ -108,23 +119,20 @@ bool Handle_Enpassant::is_enpassant()
         fen_shared.get()->set_is_enpassant(true);
         fen_shared.get()->set_square_enpassant(last_move.get_to_square());
         
-        //std::cout<<"Enpassant è true!\n";
         is_enpassant_value = true;
-        //std::cout<<"fen: "<<fen_shared.get()->get_fen_string()<<std::endl;
+        //std::cout<<"In: "<<square<<" i: "<<i<<" is_enpassant è true\n";
+        
         return true;
     }
+    //std::cout<<"is_enpassant: cado nel return false\n";
     return false;
-
 }
 
 bool Handle_Enpassant::handle_capture_enpassant()
 {
+    //std::cout<<"ciao da handle_capture_enpassant\n";
     if(game_movement->get_stack().size()==0)
     {
-        /*if(debug_is_enpassant)
-        {
-            std::cout<<"stack ultima mossa = 0, esco false\n";
-        }*/
         return false;
     }
 

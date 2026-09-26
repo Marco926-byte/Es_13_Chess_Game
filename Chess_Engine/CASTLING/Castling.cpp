@@ -19,7 +19,7 @@ Castling::Castling
 
 bool Castling::is_castling_dx()
 {
-    
+    //std::cout<<"ciao da is_castling_dx\n";   
     //Trovo il re sulla scacchiera con find_king
     Piece *king = 
     find_king_shared.get()->find_king_current_turn
@@ -28,6 +28,7 @@ bool Castling::is_castling_dx()
         turn_chess_ptr->get_turn()
     );
 
+    //std::cout<<"dopo find_king is_castling_dx\n";
     Piece* rock_piece = nullptr;
     
     //Se il re si è mosso esci
@@ -46,6 +47,7 @@ bool Castling::is_castling_dx()
         //Controllo dei confini della scacchiera
         if(position_king+i>=64 || position_king+i<0)
         {
+            //std::cout<<"is_castling_dx: chiudo per controllo confini\n";
             return false;
         }
         
@@ -55,12 +57,14 @@ bool Castling::is_castling_dx()
             if((position_king+i)!=63 && king->get_color()==WHITE)
             {
                 fen_shared.get()->set_short_castling(true);
+                //std::cout<<"is_castling_dx: chiudo per possibilità di arroccare da destra\n";
                 return false;
             }
 
             if((position_king+i)!=7 && king->get_color()==BLACK)
             {
                 fen_shared.get()->set_short_castling(true);
+                //std::cout<<"is_castling_dx: 1\n";
                 return false;
             }
 
@@ -78,6 +82,8 @@ bool Castling::is_castling_dx()
                 //Controllo se la torre si è mossa:
                 if(rock->get_ismoved())
                 {
+                    //std::cout<<"is_castling_dx: 2\n";
+
                     return false;
                 }
                 else
@@ -117,12 +123,13 @@ bool Castling::is_castling_dx()
                             )
                             {
                                 fen_shared.get()->set_short_castling(true);
+                                //std::cout<<"is_castling_dx: 3\n";
                                 return false;
                             }
                         }
                         king->add_legal_move(position_king+2);
                         fen_shared.get()->set_short_castling(true);
-                        
+                        //std::cout<<"is_castling_dx: 4\n";
                         return true;
                     }
                     //In una delle due caselle successive alla casella del re c'era qualcosa
@@ -130,6 +137,7 @@ bool Castling::is_castling_dx()
                     else
                     {
                         fen_shared.get()->set_short_castling(true);
+                        //std::cout<<"is_castling_dx: 5\n";
                         return false;
                     }       
                 }                    
@@ -137,16 +145,19 @@ bool Castling::is_castling_dx()
             //Non ho trovato la torre, continuo la ricerca
             else
             {
+                //std::cout<<"is_castling_dx: 6\n";
                 continue;
             }                
         }
         //Non c'è niente sulla casella successiva 
         else
         {
+            //std::cout<<"is_castling_dx: 7\n";
             continue;
         } 
     }    
     //Non ho trovato niente, ritorno false
+    //std::cout<<"ciao da fine is_castling_dx\n";
     return false;
 }
 
@@ -160,9 +171,11 @@ bool Castling::is_castling_sx()
         turn_chess_ptr->get_turn()
     );
 
+    //std::cout<<"is_castling_sx: dopo ricerca re\n";
     //Se il re si è mosso esci
     if(king->get_ismoved())
     {
+        //std::cout<<"is_castling_sx: 1\n";
         return false;
     }
 
@@ -175,6 +188,7 @@ bool Castling::is_castling_sx()
         //Controllo dei confini della scacchiera
         if(position_king-i>=64 || position_king-i<0)
         {
+            //std::cout<<"is_castling_sx: 2\n";
             return false;
         }
         
@@ -190,6 +204,7 @@ bool Castling::is_castling_sx()
                 //Controllo se la torre si è mossa:
                 if(rock->get_ismoved())
                 {
+                    //std::cout<<"is_castling_sx: 3\n";
                     return false;
                 }
                 else
@@ -231,12 +246,14 @@ bool Castling::is_castling_sx()
                             )
                             {
                                 fen_shared.get()->set_long_castling(true);
+                                //std::cout<<"is_castling_sx: 4\n";
                                 return true;
                             }
 
                         }
                         king->add_legal_move(position_king-2);
                         fen_shared.get()->set_long_castling(true);
+                        //std::cout<<"is_castling_sx: 5\n";
                         return true;
                     }
                     //In una delle due caselle successive alla casella del re c'era qualcosa
@@ -244,24 +261,26 @@ bool Castling::is_castling_sx()
                     else
                     {
                         fen_shared.get()->set_long_castling(true);
+                        //std::cout<<"is_castling_sx: 6\n";
                         return true;
                     }       
                 }                    
             }
             else
             {
+                //std::cout<<"is_castling_sx: 7\n";
                 continue;
             }                
         }
         //Non c'è niente sulla casella successiva 
         else
         {
+            //std::cout<<"is_castling_sx: 8\n";
             continue;
         }   
     }
+    //std::cout<<"is_castling_sx: 9\n";
     return false;
-    
-   return false;
 }
 
 bool Castling::handle_castling_dx()
