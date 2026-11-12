@@ -14,6 +14,16 @@ bool King::get_is_check() const
     return is_check;
 }
 
+bool King::get_is_pawn_enpassant() const
+{
+    return false;
+}
+
+void King::set_is_pawn_enpassant(bool enpassant)
+{
+    enpassant = false;
+}
+
 //Funzione virtuale
 void King::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
 {

@@ -14,6 +14,8 @@ private:
 
     bool is_enpassant_value = false;
     bool debug_is_enpassant = false;
+
+    int debug_int = 0;
 public:
     Handle_Enpassant
     (
@@ -23,9 +25,14 @@ public:
     
     bool is_enpassant();
 
-    bool get_is_enpassant() const;
-    void set_is_enpassant(bool new_is_enpassant);
+    void set_all_piece_team_is_not_enpassant(); 
 
+    bool get_is_enpassant() const;
+    int get_debug_int() const;
+
+    void set_is_enpassant(bool new_is_enpassant);
+    void set_debug_int(int debug);
+    
     bool handle_capture_enpassant();
 
     ~Handle_Enpassant();

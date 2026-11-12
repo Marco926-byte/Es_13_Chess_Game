@@ -8,6 +8,15 @@ Rock::Rock(int coordinate, char character)
 
 }
 /*----Fine Costruttore----*/
+bool Rock::get_is_pawn_enpassant() const
+{
+    return false;
+}
+
+void Rock::set_is_pawn_enpassant(bool enpassant)
+{
+    enpassant = false;
+}
 
 void Rock::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
 {

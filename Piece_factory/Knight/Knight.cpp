@@ -7,6 +7,15 @@ Knight::Knight(int pos, char character)
 
     }
 
+bool Knight::get_is_pawn_enpassant() const
+{
+    std::cout<<"sono un cavallo, non un pedone con enpassant"<<std::endl;
+    return false;
+}
+void Knight::set_is_pawn_enpassant(bool enpassant)
+{
+    enpassant = false;
+}
 
 void Knight::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
 {

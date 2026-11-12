@@ -15,8 +15,26 @@ Update_Moves::Update_Moves
     
 }
 
+int Update_Moves::get_debug_var() const
+{
+    return debug_var;
+}
+
+void Update_Moves::set_debug_var(int debug)
+{
+    debug_var=debug;
+}
+
 void Update_Moves::update_moves_all_piece()
 {
+    /*if(debug_var == 69)
+    {
+        std::cout<<"UPDATE_MOVES: ciao da update_all_piece\n";
+    }
+    if(debug_var == 96)
+    {
+        std::cout<<"UPDATE_MOVES: ciao da update_all_piece dopo unmake_move"<<std::endl;
+    }*/
     const auto& piece=fen_shared.get()->get_piece();   
     for(int i=0; i<64; ++i)
     {
@@ -25,11 +43,8 @@ void Update_Moves::update_moves_all_piece()
             piece[i]->update_legal_moves(fen_shared);
         }
     }
-    //std::cout<<"Ciao da update_moves_all_piece, entro in is_enpassant\n";
     enpassant_shared.get()->is_enpassant();
-    //std::cout<<"Ciao da update_moves_all_piece, entro in is_castling_dx\n";
     castling_shared.get()->is_castling_dx();
-    //std::cout<<"Ciao da update_moves_all_piece, entro in is_castling_sx\n";
     castling_shared.get()->is_castling_sx();
 }
 

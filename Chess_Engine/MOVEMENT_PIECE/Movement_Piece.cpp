@@ -21,6 +21,10 @@ int Movement_Piece::get_num_debug() const
     return num_debug;
 }
 
+bool Movement_Piece::get_is_case_enpassant() const
+{
+    return is_case_enpassant;
+}
 std::stack<Move> Movement_Piece::get_stack() const
 {
     return stack;
@@ -39,13 +43,13 @@ void Movement_Piece::set_piece_capture(char capture)
 bool Movement_Piece::handle_move(int from, int to)
 {
     /*--- INIZIO CONTROLLO PSEUDOMOSSA -----*/
-    //std::cout<<"ciao da handle_move\n";
     Piece* type_caracter = fen_shared.get()->get_piece()[from]; 
     
     bool to_is_good= false;
     
     if(type_caracter && type_caracter->get_legal_moves().size()==0)
     {
+        std::cout<<"MOSSA NON FATTA PERCHÈ IL PEZZO IN FROM HA 0 MOSSE LEGALI\n";
         return false;
     }
     
@@ -68,6 +72,7 @@ bool Movement_Piece::handle_move(int from, int to)
 
     if(!to_is_good)
     {    
+        std::cout<<"mossa non fatta perchè non trovata nelle mosse legali di tale pezzo\n";
         return false;
     }
     /*---- FINE CONTROLLO PSEUDOMOSSA MOSSA ----*/
@@ -149,14 +154,83 @@ bool Movement_Piece::handle_move(int from, int to)
         move.set_type_piece(PAWN);
     }
 
-    int debug_move = 0;
-    if(from == 13 && to == 29 && fen_shared.get()->get_fen_string() == "k7/5p2/8/6P1/2p5/8/3P4/7K b 35 0 ")
+    //Gestisco caso enpassant:
+    if(fen_shared.get()->get_is_enpassant())
     {
-        std::cout<<"Ciao da dentro handle_move!\n";
-        debug_move = 69;
+        if(fen_shared.get()->get_fen_string() == "kn6/1p1p4/pPpP1pp1/P1P2P2/Pp3p1p/1P2pPpP/4P1P1/6NK b  -  0 ")
+        {
+            num_debug = 69;
+        }
+
+        //ATTENZIONE: questo controllo da fare solamente con color offset
+        if(piece[move.get_to_square()])
+        {
+            piece_capture = piece[move.get_to_square()]->get_name_piece();
+        }
+        else
+        {
+            piece_capture = ' ';
+        }
+        
+        //Eseguo il movimento:
+        piece[move.get_to_square()]=piece[move.get_from_square()];
+        piece[move.get_from_square()]=nullptr;
+        
+        //Imposto la casella al pezzo mosso e anche l'attributo si è
+        //mosso
+        piece[move.get_to_square()]->set_square(move.get_to_square());        
+        piece[move.get_to_square()]->set_ismoved(true);
+        fen_shared.get()->set_is_moved(true,move.get_to_square());
+        fen_shared.get()->set_is_moved(false,move.get_from_square());
+
+        //RIGENERA LA NUOVA FEN_STRING:
+        std::string new_fen = fen_shared.get()->generate_fen_string();
+        fen_shared.get()->add_fen_to_map(new_fen);
+
+        is_case_enpassant = false;
+
+        int color_offset = move.get_color_piece() == WHITE ? 8 : -8;
+        
+        // Se la casella enpassant non è nullptr, elimina il pezzo
+        if
+        (
+            //DA CORREGGERE
+            fen_shared.get()->get_piece()[move.get_to_square()]->get_is_pawn_enpassant()
+        )
+        {
+            if(piece[move.get_to_square()+color_offset])
+            {
+                piece_capture = piece[move.get_to_square()+color_offset]->get_name_piece();
+                is_moved_piece_from_enpassant = piece[move.get_to_square()+color_offset]->get_ismoved();
+            }
+            
+            //Kill pezzo vittima enpassant:
+            delete fen_shared.get()->get_piece()[move.get_to_square()+color_offset];
+
+            fen_shared.get()->get_piece()[move.get_to_square()+color_offset]=nullptr;
+
+            //RIGENERA LA NUOVA FEN_STRING:
+            std::string new_fen = fen_shared.get()->generate_fen_string();
+            fen_shared.get()->add_fen_to_map(new_fen);
+            
+            is_case_enpassant = true;
+
+            //Pusho nuova mossa nello stack
+            stack.push(move);
+            
+            return true;
+        }
+        
+        //Pusho nuova mossa nello stack
+        stack.push(move);
+        return true;
+    }
+    else
+    {
+        std::cout<<"Il pezzo in to_square non ha potere enpassant"<<std::endl;
+        is_case_enpassant = false;
     }
 
-    //Gestisco la cattura:
     if(piece[move.get_to_square()]!=nullptr)
     {
         piece_capture = piece[move.get_to_square()]->get_name_piece();
@@ -170,7 +244,6 @@ bool Movement_Piece::handle_move(int from, int to)
     }        
     else
     {
-        //is_moved_piece_from = piece[move.get_from_square()]->get_ismoved();
         piece_capture = ' ';
     }
     
@@ -197,23 +270,20 @@ bool Movement_Piece::handle_move(int from, int to)
 
     stack.push(move);
 
-    if(debug_move == 69)
-    {
-        std::cout<<"Stampo fen fine mossa: "<<fen_shared.get()->get_fen_string()<<std::endl;
-    }
-
     return true;
 }
 
 bool Movement_Piece::unmake_move(int from, int to)
 {
-    //TODO: 
-    //Problema 21 viene registrato mosso poi a caso cambia e diventa non mosso
-    //Controlla il perchè succede
-    //Guarda la stampa prima di agire
     bool is_capture_case = false;
     const auto &piece = fen_shared.get()->get_piece();
 
+    if(fen_shared.get()->get_fen_string() == "kn6/1p1p4/pPpP1pp1/P1P2P2/5p1p/pP2pPpP/4P1P1/6NK w 32 0 ")
+    {
+        std::cout<<"----------CIAOOOOOOOO DA UNMAKE_MOVE-------------"<<std::endl;
+        num_debug = 96;
+    }
+    
     //1) Cancella l'ultima mossa dallo stack
     if(!stack.empty())
     {
@@ -223,17 +293,53 @@ bool Movement_Piece::unmake_move(int from, int to)
     //2) Rigenera il pezzo eventualmente mangiato
     if(isalpha(piece_capture)) //isalpha = se lettera
     {
-        piece[to] = piece[from];
-        piece[from] = nullptr;
+        if(num_debug == 96)
+        {
+            std::cout<<"to: "<<to<<" from: "<<from<<std::endl;
+        }
 
-        piece[from] = fen_shared.get()->get_create_ptr()->create_piece(piece_capture,from);
+        //HO FATTO QUESTA MODIFICA IMPORTANTE A LOGICA UNMAKE
+        if(piece[from]->get_is_pawn_enpassant())
+        {
+            if(num_debug == 96)
+            {
+                std::cout<<"Il pezzo in from è il pedone con potere enpassant"<<std::endl;
+            }
 
-        //Resetto attributi per i pezzi prima della mossa fatta
-        piece[to]->set_square(to);
-        piece[to]->set_ismoved(is_moved_piece_from);
+            int color_offset = piece[from]->get_color() == WHITE ? 8 : -8;
 
-        piece[from]->set_square(from);
-        piece[from]->set_ismoved(is_moved_piece_to);
+            if(num_debug == 96)
+            {
+                std::cout<<"color_offset: "<<color_offset<<std::endl;
+                std::cout<<"from + color_offset: "<<color_offset+from<<std::endl;
+                std::cout<<"FINE CASO ENPASSANT UNMAKE_MOVE"<<std::endl;
+            }
+            
+            //Riporto il pedone alla sua posizione di partenza
+            piece[to] = piece[from];
+            piece[from] = nullptr;
+
+            piece[from+color_offset] = fen_shared.get()->get_create_ptr()->create_piece(piece_capture,from+color_offset);
+            
+            //Resetto attributi per i pezzi prima della mossa fatta
+            piece[to]->set_square(to);
+            piece[to]->set_ismoved(is_moved_piece_from);
+            piece[from+color_offset]->set_square(from+color_offset);
+            piece[from+color_offset]->set_ismoved(is_moved_piece_from_enpassant);
+        }
+        else
+        {
+            piece[to] = piece[from];
+            piece[from] = nullptr;
+
+            piece[from] = fen_shared.get()->get_create_ptr()->create_piece(piece_capture,from);
+
+            //Resetto attributi per i pezzi prima della mossa fatta
+            piece[to]->set_square(to);
+            piece[to]->set_ismoved(is_moved_piece_from);
+            piece[from]->set_square(from);
+            piece[from]->set_ismoved(is_moved_piece_to);
+        }        
         //--------------------------------------------------------
         //RIGENERA LA NUOVA FEN_STRING:
         std::string new_fen = fen_shared.get()->generate_fen_string();
@@ -249,7 +355,8 @@ bool Movement_Piece::unmake_move(int from, int to)
         piece[from] = nullptr;
         
         //Aggiunta....
-        piece[to]->set_square(to);
+        if(piece[to])
+            piece[to]->set_square(to);
 
         //RIGENERA LA NUOVA FEN_STRING:
         std::string new_fen = fen_shared.get()->generate_fen_string();

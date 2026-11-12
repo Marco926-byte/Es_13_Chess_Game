@@ -161,7 +161,6 @@ public:
         return number_position;
     }      
 
-    //ATTENZIONE MOSSA 13->29 DEPTH 2
     int divide
     (
         int depth,
@@ -175,6 +174,7 @@ public:
         }
 
         engine_update_moves.get()->update_moves_all_piece();
+        
         chess_logic.get()->set_turn(playing_color);
 
         std::map<int,std::vector<int>> m_piece_move;
@@ -207,40 +207,17 @@ public:
         
         for(auto move : m_piece_move)
         {
+            
             int start_square_piece = move.first;
     
             for(auto i: move.second)
-            {   
+            {  
+                std::cout<<"preMOSSA: ["<<start_square_piece<<"->"<<i<<"]"<<"    DEPTH: "<<depth<<std::endl;
+                std::cout<<"FEN: "<<fen_string.get()->get_fen_string()<<std::endl;
+
                 //Importante variabile per gestire se è mosso oppure no
                 bool is_moved;
                 bool is_enpassant_divide;
-
-                if(start_square_piece == 34 && i == 42 && depth == 3)
-                {
-                    //std::cout<<"Ciao da divide, resetto num_debug"<<std::endl;
-                    engine.get()->set_num_debug(0);
-                }
-                if(start_square_piece == 13 && i == 29 && depth == 3)
-                {
-                    std::cout<<"---Inizio debug problema in questo ramo depth == 3.....\n";
-                    std::cout<<"fen: "<<fen_string.get()->get_fen_string()<<std::endl;
-                    engine.get()->set_num_debug(69);
-                    std::cout<<"num_debug == "<<engine.get()->get_num_debug()<<std::endl;
-                }
-
-                if
-                (
-                    (
-                        depth == 2
-                        ||
-                        depth == 1 
-                    )
-                    && 
-                    engine.get()->get_num_debug() == 69
-                )
-                {
-                    std::cout<<"[depth: "<<depth<<"-> MOSSA->(da: "<<start_square_piece<<" a: "<<i<<")]";
-                }
 
                 if(chess_logic.get()->get_turn()==WHITE)
                 {
@@ -262,20 +239,9 @@ public:
                 //Eseguo la mossa
                 bool execute_move = engine.get()->handle_move(start_square_piece,i);
 
-                if
-                (
-                    (
-                        depth == 2
-                        ||
-                        depth == 1 
-                    )
-                    && 
-                    engine.get()->get_num_debug() == 69
-                )
-                {
-                    std::cout<<" FEN: "<<fen_string.get()->get_fen_string()<<"\n";
-                }
-                
+                std::cout<<"dopoMOSSA: ["<<start_square_piece<<"->"<<i<<"]"<<"    DEPTH: "<<depth<<std::endl;
+                std::cout<<"FEN: "<<fen_string.get()->get_fen_string()<<std::endl;
+
                 if(!execute_move)
                 {
                     if(fen_string.get()->get_piece()[start_square_piece])
@@ -298,10 +264,18 @@ public:
                 
                 //Cambio turno e aggiorno le mosse legali per tutti i pezzi
                 chess_logic.get()->set_turn(next_turn);
+                
                 engine_update_moves.get()->update_moves_all_piece();
 
+                if(fen_string.get()->get_fen_string() == "kn6/1p1p4/pPpP1pp1/P1P2P2/P4p1p/1P2pPpP/4P1P1/6NK w 32 0 ")
+                {
+                    std::cout<<"-----$ATTENZIONE! IN QUESTA SITUAZIONE SPARISCE PEDONE CHE STA EFFETTUANDO ENPASSANT--------------"<<std::endl;
+                }
                 //3) Effettuo ricorsione 
+                std::cout<<"Effettuo ricorsione (depth -1)"<<std::endl;
                 number_position += divide(depth-1,initial_depth, next_turn);
+                
+                std::cout<<"dopoDIVIDE, mossa registrata: ["<<start_square_piece<<"->"<<i<<"]"<<"    DEPTH: "<<depth<<std::endl;
 
                 engine.get()->set_piece_capture(capture_piece);
                 engine_enpassant.get()->set_is_enpassant(is_enpassant_divide);
@@ -321,7 +295,9 @@ public:
                 }
 
                 chess_logic.get()->set_turn(playing_color);
+
                 engine_update_moves.get()->update_moves_all_piece();
+                std::cout<<"FEN: "<<fen_string.get()->get_fen_string()<<std::endl;
             }
         }
         if(depth==initial_depth)
@@ -528,6 +504,7 @@ TEST_F(Perft, debug_pawn_is_moved)
 
 TEST_F(Perft, debug_enpassant)
 {
+    //DA DEBUGGARE PROBLEMATICA
     std::string fen = "k7/5p2/8/6P1/2p5/8/3P4/7K b - - 0 1";
     fen_string.get()->set_board_fenstring(fen);
 
@@ -537,6 +514,20 @@ TEST_F(Perft, debug_enpassant)
     std::cout<<"---------------------------------\n";
     std::cout<<"| Nodi trovati: "<<a<<"             |"<<std::endl;
     std::cout<<"---------------------------------\n";        
+}
+
+TEST_F(Perft, enpassant_test_forzabro)
+{
+    std::string fen = "kn6/1p1p2p1/pPpP1p2/P1P2P2/1p3p1p/1P2pPpP/P3P1P1/6NK b - - 0 1";
+    fen_string.get()->set_board_fenstring(fen);
+
+    engine_update_moves.get()->update_moves_all_piece();
+    int a = divide(3,2,BLACK);
+
+    std::cout<<"---------------------------------\n";
+    std::cout<<"| Nodi trovati: "<<a<<"             |"<<std::endl;
+    std::cout<<"---------------------------------\n";        
+
 }
 
 TEST_F(Perft, Perft_divide_debug_3_error_pawn)

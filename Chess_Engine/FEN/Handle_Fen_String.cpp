@@ -598,6 +598,36 @@ void Handle_Fen_String::set_is_enpassant(bool enpassant)
     is_enpassant=enpassant;
 }
 
+void Handle_Fen_String::set_color_last_move(Color last)
+{
+    color_last_move = last;
+} 
+
+Color Handle_Fen_String::get_color_last_move() const
+{
+    return color_last_move;
+}
+
+int Handle_Fen_String::get_to_square_last_move() const
+{
+    return to_square_last_move;
+}
+
+void Handle_Fen_String::set_to_square_last_move(int to_square)
+{
+    to_square_last_move=to_square;
+}
+
+int Handle_Fen_String::get_from_square_last_move() const
+{
+    return from_square_last_move;
+}
+
+void Handle_Fen_String::set_from_square_last_move(int from_square)
+{
+    from_square_last_move = from_square;
+}
+
 void Handle_Fen_String::set_square_enpassant(int enpassant_square)
 {
     square_enpassant=enpassant_square;

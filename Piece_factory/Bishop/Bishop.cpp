@@ -7,6 +7,18 @@ Bishop::Bishop(int position, char character)
 
 }
 
+bool Bishop::get_is_pawn_enpassant() const
+{
+    std::cout<<"OOOH BROTHER, SO UN ALFIERE COME TI PERMETTI A CHIEDERMI SE SONO UN PEDONE CON ENPASSANT!\n";
+    return false;
+}
+
+void Bishop::set_is_pawn_enpassant(bool enpassant)
+{
+    std::cout<<"OOOH BROTHER, SO UN ALFIERE COME TI PERMETTI A CHIEDERMI SE SONO UN PEDONE! non ho enpassant...\n";
+    enpassant = false;
+}
+
 void Bishop::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart)
 {
     std::vector<int> legal_moves={};

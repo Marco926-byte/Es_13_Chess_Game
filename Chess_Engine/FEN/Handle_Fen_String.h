@@ -24,6 +24,11 @@ private:
     Handle_Chessboard* chess_turn_ptr=nullptr;
     std::shared_ptr<Find_King> find_king_smart;
 
+    Color color_last_move;
+
+    int to_square_last_move = 0;
+    int from_square_last_move = 0;
+
     Piece **piece;                      //Serve per controllare i pezzi
                                         //tramite puntatore nella scacchiera
 
@@ -50,7 +55,7 @@ public:
     void controll_piece(int i);
     void controll_piece_after_move(int i);
     void controll_piece_starter(int i);
-
+    void set_color_last_move(Color last);
     void decrease_count_move_black();
 
     //Aggiungi la fen alla mappa
@@ -61,15 +66,18 @@ public:
     Handle_Chessboard* get_turn_ptr() const;
     Find_King* get_find_king_ptr() const;
     bool get_is_enpassant() const;
-
+    Color get_color_last_move() const;
     std::map<int,bool> map_get_is_moved() const;
     std::string get_fen_string() const;
+    int get_to_square_last_move() const;
+    int get_from_square_last_move() const;
 
     void set_long_castling(bool long_castling);
     void set_short_castling(bool long_castling);
     void set_is_enpassant(bool enpassant);
     void set_is_last_move_black(bool is_black);
-    
+    void set_to_square_last_move(int to_square);
+    void set_from_square_last_move(int from_square);
     void set_board_fenstring(std::string fen_string);
     void set_square_enpassant(int enpassant_square);
     void set_is_moved(bool is_moved, int position_square);

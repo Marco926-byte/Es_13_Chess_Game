@@ -23,6 +23,8 @@ public:
 
     void handle_arrok(Piece**board, int rook_position, std::vector<Piece*>& piece_attacking);
 
+    bool get_is_pawn_enpassant() const override;
+    void set_is_pawn_enpassant(bool enpassant) override;
     bool is_attack(Piece **board, std::vector<Piece *> &pieces, std::vector<Piece *> &pieces_attacking_king);
     void get_attack(Piece **board, std::vector<int> &attacked_squares) override;
 

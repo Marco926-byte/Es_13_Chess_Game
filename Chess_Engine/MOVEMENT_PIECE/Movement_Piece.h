@@ -18,10 +18,13 @@ private:
     int draw_counter;   //Todo:
     
     char piece_capture= ' ';
+    
     bool is_moved_piece_to = false;
     bool is_moved_piece_from = false;
-    
-    int num_debug; //TODO: da togliere per favore ti prego non serve a nulla
+    bool is_moved_piece_from_enpassant = false;
+    bool is_case_enpassant = false;
+
+    int num_debug = 0; 
 
     std::stack<Move>stack;
 
@@ -43,6 +46,8 @@ public:
     void print_all_move();
 
     int get_num_debug() const;
+    bool get_is_case_enpassant() const;
+    
     void set_num_debug(int num);
 };
 

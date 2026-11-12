@@ -7,6 +7,16 @@ Queen::Queen(int position, char character)
 
     }
 
+bool Queen::get_is_pawn_enpassant() const
+{
+    return false;
+}
+
+void Queen::set_is_pawn_enpassant(bool enpassant)
+{
+    enpassant = false;
+}
+
 void Queen::update_legal_moves(std::shared_ptr<Handle_Fen_String> ptr_smart) 
 {
     std::vector<int> legal_moves={};

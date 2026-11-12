@@ -448,6 +448,8 @@ TEST_F(Move_Test, Is_Enpassant)
     std::cout<<"ciao dal test, entro in handle_move. Mossa 9->25\n";
     engine.get()->handle_move(from_piece_move,to_piece_move);
 
+    std::cout<<"Fen: "<<fen_string.get()->get_fen_string()<<std::endl;
+
     std::cout<<"ciao dal test, entro in update_all_piece 2)\n";
     engine_update_moves.get()->update_moves_all_piece();
 
@@ -457,25 +459,50 @@ TEST_F(Move_Test, Is_Enpassant)
     std::cout<<"ciao dal test, associo bool success all'esito dell'is_enpassant\n";
     bool success = engine_enpassant.get()->is_enpassant();
 
+    std::cout<<"FEN: "<<fen_string.get()->get_fen_string()<<std::endl;
+
     ASSERT_TRUE(success);
 }
 
 TEST_F(Move_Test, Is_Not_Enpassant)
 {
     std::string fen_start = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 3";
+    
+    std::cout<<"TEST: Entro in set_board_fenstring\n";
     fen_string.get()->set_board_fenstring(fen_start); 
  
+    std::cout<<"TEST: Entro in update_moves_all_piece\n";
     engine_update_moves.get()->update_moves_all_piece();
 
+    std::cout<<"TEST: Entro in is_enpassant\n";
     bool success = engine_enpassant.get()->is_enpassant();
+    
     ASSERT_FALSE(success);
 }
 
-TEST_F(Move_Test, handle_is_enpassant)
+TEST_F(Move_Test, Is_Not_Enpassant_bishop)
 {
-    std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
-    fen_string.get()->set_board_fenstring(fen_start); 
- 
+    std::string fen_start = "k7/1p6/8/P7/8/8/P7/K7 w - - 0 1";
+    
+    fen_string.get()->set_board_fenstring(fen_start);
+    engine_update_moves.get()->update_moves_all_piece();
+
+    int from_piece_move = 9;
+    int to_piece_move = 25;
+
+    engine.get()->handle_move(from_piece_move,to_piece_move);
+    
+    engine_update_moves.get()->update_moves_all_piece();
+    
+    bool success = engine.get()->get_is_case_enpassant();
+    
+    ASSERT_FALSE(success);
+}
+
+TEST_F(Move_Test, not_move_enpassant)
+{
+    std::string fen_start = "k7/1p6/8/P7/8/8/P7/K7 w KQkq - 0 3";
+    fen_string.get()->set_board_fenstring(fen_start);
     chess_logic.get()->set_turn(BLACK);
 
     engine_update_moves.get()->update_moves_all_piece();
@@ -484,23 +511,59 @@ TEST_F(Move_Test, handle_is_enpassant)
     int to_piece_move = 25;
 
     engine.get()->handle_move(from_piece_move,to_piece_move);
+    
+    engine_update_moves.get()->update_moves_all_piece();
+    chess_logic.get()->set_turn(WHITE);
+
+    from_piece_move = 48;
+    to_piece_move = 41;
+
+    bool success = engine.get()->handle_move(from_piece_move,to_piece_move);
+
+    ASSERT_FALSE(success);
+}
+
+TEST_F(Move_Test, handle_is_enpassant)
+{
+    std::cout<<"---INIZIO TEST HANDLE_IS_ENPASSANT---\n";
+    std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
+    fen_string.get()->set_board_fenstring(fen_start); 
+ 
+    chess_logic.get()->set_turn(BLACK);
 
     engine_update_moves.get()->update_moves_all_piece();
+
+    std::cout<<"Fen di partenza: "<<fen_string.get()->get_fen_string()<<std::endl;
+
+    int from_piece_move = 9;
+    int to_piece_move = 25;
+
+    engine.get()->handle_move(from_piece_move,to_piece_move);
+
+    std::cout<<"Fen dopo mossa 9->25: "<<fen_string.get()->get_fen_string()<<std::endl;
+
+    std::cout<<"TEST: Aggiorno le mosse dopo la mossa 9->25\n";
+    engine_update_moves.get()->update_moves_all_piece();
    
+
     int from_piece_move_enpassant = 24;
     int to_piece_move_enpassant = 17;
 
 
     chess_logic.get()->set_turn(WHITE);
     
-    engine.get()->handle_move(from_piece_move_enpassant,to_piece_move_enpassant);
-    bool success = engine_enpassant.get()->handle_capture_enpassant();
+    bool success = engine.get()->handle_move(from_piece_move_enpassant,to_piece_move_enpassant);
+    std::cout<<"Stampo fen dopo mossa da enpassant "<<fen_string.get()->get_fen_string()<<std::endl;
+    
+    //bool success = engine_enpassant.get()->handle_capture_enpassant();
 
     ASSERT_TRUE(success);   
 }
 
+
 TEST_F(Move_Test, not_handle_is_enpassant)
 {
+    std::cout<<"---INIZIO TEST_NOT_ENPASSANT---\n";
     std::string fen_start = "6k1/1p6/8/P7/8/8/8/6K1 w KQkq - 0 3";
     fen_string.get()->set_board_fenstring(fen_start); 
  
@@ -508,10 +571,13 @@ TEST_F(Move_Test, not_handle_is_enpassant)
 
     engine_update_moves.get()->update_moves_all_piece();
 
+    std::cout<<"FEN PARTENZA: "<<fen_string.get()->get_fen_string()<<std::endl;
     int from_piece_move = 9;
     int to_piece_move = 25;
 
     engine.get()->handle_move(from_piece_move,to_piece_move);
+    std::cout<<"FEN dopo mossa 9->25: "<<fen_string.get()->get_fen_string()<<std::endl;
+    
 
     engine_update_moves.get()->update_moves_all_piece();
    
@@ -522,8 +588,10 @@ TEST_F(Move_Test, not_handle_is_enpassant)
     chess_logic.get()->set_turn(WHITE);
     
     engine.get()->handle_move(from_piece_move_enpassant,to_piece_move_enpassant);
-    bool success = engine_enpassant.get()->handle_capture_enpassant();
-
+    std::cout<<"FEN dopo ipotetica mossa enpassant 24->16: "<<fen_string.get()->get_fen_string()<<std::endl;
+    
+    bool success = engine.get()->get_is_case_enpassant();
+    
     ASSERT_FALSE(success); 
 }
 

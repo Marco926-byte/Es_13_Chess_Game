@@ -150,6 +150,10 @@ public:
         (
             std::shared_ptr<Handle_Fen_String> ptr_smart
         )=0; 
+
+        virtual bool get_is_pawn_enpassant() const =0;
+        virtual void set_is_pawn_enpassant(bool enpassant) = 0;
+
         virtual void get_attack     //get_attack è uguale a handle_movement. 
         (
             Piece **board, 

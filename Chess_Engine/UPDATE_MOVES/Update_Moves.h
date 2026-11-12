@@ -19,6 +19,7 @@ private:
     std::shared_ptr<Castling> castling_shared;
 
     std::vector<int> attacked_square;
+    int debug_var = 0;
 public:
     Update_Moves
     (
@@ -27,6 +28,11 @@ public:
         Movement_Piece * movement,
         std::shared_ptr<Castling> castling
     );    
+
+    int get_debug_var() const;
+    void set_debug_var(int debug);
+
+    
     void update_moves_all_piece();
 
     void update_move_in_check

@@ -1,11 +1,16 @@
 DEVO:
 4. Gestire la fine del gioco.
 
-fai test controllo scacco due re entrano in gioco a caso
---Controlla doppio salto del pedone in perft-debug-test--
+TODO: 
+-)Attento test enpassant_test_forzabro mossa 33->40 fa il birbante, non riposiziona il pedone 
+killato da enpassant nella casella giusta
+$) Controlla output test e guarda l'unmake già impostato debug con numero 96
 
-TODO: Stockfish lavora con mosse pseudolegali e in move c'è il 
-controllo quindi modifica update_moves e move.
+Ricorda:
+
+F5 per usare il debugger
+
+problemi orario: touch e percorso dei file problematici
 
 cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella per 
                                                         debuggare con Valgrind
@@ -13,6 +18,8 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..                       Per creare la cartella p
 valgrind --leak-check=full --track-origins=yes ./w
                                                         Fa partire il memcheck
 
+valgrind --leak-check=full --track-origins=yes /home/marco/Documenti/Visual_Studio_Code_esercizi/es13Creare_wxBitmap/build/Test/w_test --gtest_filter=Perft.enpassant_test_forzabro
+                                                        Fa valgrind per test pazzerelli
 
 dialog_ref(static_cast<Es13&>(*wxTheApp->GetTopWindow()))  //Importante riferimento per ottenere es13
                                                             //come ottenere la finestra più importante
