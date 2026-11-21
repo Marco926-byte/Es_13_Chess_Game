@@ -241,6 +241,11 @@ public:
 
                 std::cout<<"dopoMOSSA: ["<<start_square_piece<<"->"<<i<<"]"<<"    DEPTH: "<<depth<<std::endl;
                 std::cout<<"FEN: "<<fen_string.get()->get_fen_string()<<std::endl;
+                std::cout<<"dopoMossa: La mappa enpassant registra..."<<std::endl;
+                for(const auto& itr : fen_string.get()->get_map_square_enpassant())
+                {
+                    std::cout<<" Chiave:["<<itr.first<<"] -> Enpassant?["<<itr.second<<"] "<<std::endl;
+                }
 
                 if(!execute_move)
                 {
@@ -297,7 +302,13 @@ public:
                 chess_logic.get()->set_turn(playing_color);
 
                 engine_update_moves.get()->update_moves_all_piece();
+                
                 std::cout<<"FEN: "<<fen_string.get()->get_fen_string()<<std::endl;
+                std::cout<<"dopo_unmake_move: La mappa enpassant registra..."<<std::endl;
+                for(const auto& itr : fen_string.get()->get_map_square_enpassant())
+                {
+                    std::cout<<" Chiave:["<<itr.first<<"] -> Enpassant?["<<itr.second<<"] "<<std::endl;
+                }
             }
         }
         if(depth==initial_depth)

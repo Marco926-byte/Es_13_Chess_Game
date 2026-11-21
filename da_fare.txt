@@ -2,9 +2,13 @@ DEVO:
 4. Gestire la fine del gioco.
 
 TODO: 
--)Attento test enpassant_test_forzabro mossa 33->40 fa il birbante, non riposiziona il pedone 
+-)Attento test enpassant_test_forzabro mossa 29->22 fa il birbante, non riposiziona il pedone 
 killato da enpassant nella casella giusta
-$) Controlla output test e guarda l'unmake già impostato debug con numero 96
+$) Dentro unmake voglio fare un for in cui itero tutti i valori all'interno della mappa 
+   is_enpassant, poi forrei fare un if e vedere se è from == valore interno alla mappa se
+   si allora sono nel caso unmake enpassant sennò bone normale come sempre
+   TODO: cerca la sintassi per fare il for perchè come chiave primaria la casella 
+   e seconda chiave il valore booleano
 
 Ricorda:
 

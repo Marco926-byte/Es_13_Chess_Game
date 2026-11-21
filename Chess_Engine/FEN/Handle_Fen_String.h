@@ -33,6 +33,8 @@ private:
                                         //tramite puntatore nella scacchiera
 
     std::map<int,bool> map_is_moved;
+    std::map<int,bool> map_is_square_enpassant;
+    //TODO: fai la mappa per registrare le caselle con enpassant
 
     bool is_long_castling= false;
     bool is_short_castling=false;
@@ -67,7 +69,16 @@ public:
     Find_King* get_find_king_ptr() const;
     bool get_is_enpassant() const;
     Color get_color_last_move() const;
-    std::map<int,bool> map_get_is_moved() const;
+
+    //TODO: Fare nuovo file per contenere le mappe conteggio is_moved e enpassant e 
+    //      e funzioni relative
+    std::map<int, bool> map_get_is_moved() const;
+    void eliminate_key_map_enpassant(int key);
+    std::map<int, bool> get_map_square_enpassant() const;
+    void set_is_moved(bool is_moved, int position_square);
+    void set_is_square_enpassant(bool is_enpassant, int position_square);
+    //------------------------------------------
+    
     std::string get_fen_string() const;
     int get_to_square_last_move() const;
     int get_from_square_last_move() const;
@@ -80,7 +91,9 @@ public:
     void set_from_square_last_move(int from_square);
     void set_board_fenstring(std::string fen_string);
     void set_square_enpassant(int enpassant_square);
-    void set_is_moved(bool is_moved, int position_square);
+
+    //TODO: fai anche per la mappa per enpassant set e get
+    
 
     ~Handle_Fen_String();
 };

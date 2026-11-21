@@ -30,9 +30,24 @@ std::map<int,bool> Handle_Fen_String::map_get_is_moved() const
     return map_is_moved;
 }
 
+std::map<int, bool> Handle_Fen_String::get_map_square_enpassant() const
+{
+    return map_is_square_enpassant;
+}
+
+void Handle_Fen_String::eliminate_key_map_enpassant(int key)
+{
+    map_is_square_enpassant.erase(key);
+}
+
 void Handle_Fen_String::set_is_moved(bool moved, int position_square)
 {
     map_is_moved[position_square]=moved;
+}
+
+void Handle_Fen_String::set_is_square_enpassant(bool is_enpassant, int square_enpassant)
+{
+    map_is_square_enpassant[square_enpassant] = is_enpassant;
 }
 
 void Handle_Fen_String::set_board_fenstring(std::string fen_string)

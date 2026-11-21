@@ -154,15 +154,23 @@ bool Movement_Piece::handle_move(int from, int to)
         move.set_type_piece(PAWN);
     }
 
-    //Gestisco caso enpassant:
-    if(fen_shared.get()->get_is_enpassant())
+    if
+    (
+        fen_shared.get()->get_fen_string() == "kn6/1p1p4/pPpP1pp1/P1P2P2/Pp3p1p/1P2pPpP/4P1P1/6NK b  -  0 "
+        &&
+        from==22
+        &&
+        to == 30
+    )
     {
-        if(fen_shared.get()->get_fen_string() == "kn6/1p1p4/pPpP1pp1/P1P2P2/Pp3p1p/1P2pPpP/4P1P1/6NK b  -  0 ")
-        {
-            num_debug = 69;
-        }
+        //num_debug == 69;
+    }
 
-        //ATTENZIONE: questo controllo da fare solamente con color offset
+    //Gestisco caso enpassant:
+    if(piece[from]->get_is_pawn_enpassant())
+    {
+        //std::cout<<"ciao sono entrato dentro caso enpassant handle_move"<<std::endl;
+
         if(piece[move.get_to_square()])
         {
             piece_capture = piece[move.get_to_square()]->get_name_piece();
@@ -182,7 +190,10 @@ bool Movement_Piece::handle_move(int from, int to)
         piece[move.get_to_square()]->set_ismoved(true);
         fen_shared.get()->set_is_moved(true,move.get_to_square());
         fen_shared.get()->set_is_moved(false,move.get_from_square());
-
+        
+        //Aggiunta per caso enpassant uguale a move...
+        fen_shared.get()->set_is_square_enpassant(true,move.get_to_square());
+        
         //RIGENERA LA NUOVA FEN_STRING:
         std::string new_fen = fen_shared.get()->generate_fen_string();
         fen_shared.get()->add_fen_to_map(new_fen);
@@ -194,7 +205,6 @@ bool Movement_Piece::handle_move(int from, int to)
         // Se la casella enpassant non è nullptr, elimina il pezzo
         if
         (
-            //DA CORREGGERE
             fen_shared.get()->get_piece()[move.get_to_square()]->get_is_pawn_enpassant()
         )
         {
@@ -276,9 +286,13 @@ bool Movement_Piece::handle_move(int from, int to)
 bool Movement_Piece::unmake_move(int from, int to)
 {
     bool is_capture_case = false;
+    bool is_enpassant_case = false;
     const auto &piece = fen_shared.get()->get_piece();
 
-    if(fen_shared.get()->get_fen_string() == "kn6/1p1p4/pPpP1pp1/P1P2P2/5p1p/pP2pPpP/4P1P1/6NK w 32 0 ")
+    if
+    (
+        fen_shared.get()->get_fen_string() == "kn6/1p1p4/pPpP1pP1/P1P5/1p3p1p/1P2pPpP/P3P1P1/6NK b  -  0 "   
+    )
     {
         std::cout<<"----------CIAOOOOOOOO DA UNMAKE_MOVE-------------"<<std::endl;
         num_debug = 96;
@@ -299,7 +313,28 @@ bool Movement_Piece::unmake_move(int from, int to)
         }
 
         //HO FATTO QUESTA MODIFICA IMPORTANTE A LOGICA UNMAKE
-        if(piece[from]->get_is_pawn_enpassant())
+        
+        for
+        (
+            const auto& itr : fen_shared.get()->get_map_square_enpassant()
+        )
+        {
+            if(itr.first==from && itr.second==true)
+            {
+                if(num_debug == 96 || num_debug == 69)
+                {
+                    std::cout<<"HO TROVATO LA CASELLA CON ENPASSANT = FROM!"<<std::endl;
+                    std::cout<<"itr.first è: "<<itr.first<<" itr.second è: "<<itr.second<<std::endl;
+                    std::cout<<"-------------------------\n";
+                    is_case_enpassant = true; //Aggiunto recentemente
+                }   
+                //TODO: caso pezzo ha fatto enpassant quindi ritorna pezzi con enpassant
+            }
+        }
+        //Fine modifica
+        //piece[from]->get_is_pawn_enpassant() -> is_case_enpassant cambiato 
+        //se rimetti torna tutto come prima :)
+        if(is_case_enpassant)
         {
             if(num_debug == 96)
             {
@@ -326,9 +361,17 @@ bool Movement_Piece::unmake_move(int from, int to)
             piece[to]->set_ismoved(is_moved_piece_from);
             piece[from+color_offset]->set_square(from+color_offset);
             piece[from+color_offset]->set_ismoved(is_moved_piece_from_enpassant);
+            
+            //Elimino enpassant dalla mappa enpassant
+            fen_shared.get()->eliminate_key_map_enpassant(from);
         }
         else
         {
+            if(num_debug == 96)
+            {
+                std::cout<<"Il pezzo nella casella: "<<from<<" non ha poteri enpassant, strano prima fai enpassant poi non hai più il potere.... dislike"<<std::endl;
+            }
+            
             piece[to] = piece[from];
             piece[from] = nullptr;
 
